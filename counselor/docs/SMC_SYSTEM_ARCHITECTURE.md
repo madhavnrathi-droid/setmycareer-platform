@@ -805,7 +805,7 @@ public class SynthesisOrchestrator(SmcDbContext db, IHttpClientFactory http, ICo
 ```
 
 **Where the AI keys live:** the LLM keys (`GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LLM_MODEL`,
-`STT_MODEL`) are environment variables **on the Python service** (Railway), read by
+`STT_MODEL`) are environment variables **on the Python service** (Vercel), read by
 `app/config.py`. The C# side needs only `LangGraph:BaseUrl` (+ optional shared
 `LangGraph:ApiKey` header if you enable one). The Gemini key used by the guest consolidator
 (`GEMINI_API_KEY`) stays on the Vercel serverless side. No AI key ever ships to a browser.
@@ -831,7 +831,7 @@ Complete key inventory across the system (names only):
 | Where | Keys |
 |---|---|
 | **C# API** (new) | `SMC_DB_CONNECTION`, `SMC_JWT_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `LANGGRAPH_BASE_URL`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` |
-| **LangGraph service** (Railway, existing) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID/SECRET`, `ZOHO_CLIENT_ID/…`, `PORT` |
+| **LangGraph service** (Vercel, existing) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID/SECRET`, `ZOHO_CLIENT_ID/…`, `PORT` |
 | **Vercel serverless** (existing, keeps running) | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `LIVEKIT_*`, `RAZORPAY_*`, `SUPABASE_URL`, `SUPABASE_KEY` (retired at Phase 3), `GOOGLE_ADS_*` |
 | **Frontend** (public by design) | `VITE_SMC_WRITES_ENABLED`, the Razorpay **publishable** key id only |
 

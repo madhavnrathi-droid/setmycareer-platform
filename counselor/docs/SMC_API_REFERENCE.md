@@ -15,7 +15,7 @@ The platform runs on **four API layers**. This document lists **every endpoint i
 | 1 | **New C# API** — the system to build | `https://api.setmycareer.com/api/` (new controllers) | **47** | Specified, ready to implement |
 | 2 | **Live SMC backend** — already yours | `https://api.setmycareer.com/api/` | **53** | Live in production |
 | 3 | **Vercel serverless** — AI, payments, cloud | `https://setmycareer-counselor.vercel.app/api/` | **11** | Live in production |
-| 4 | **LangGraph service** — the report brain | Railway (`LANGGRAPH_BASE_URL`) | **30** | Live; C# orchestrates it |
+| 4 | **LangGraph service** — the report brain | Vercel · `setmycareer.vercel.app` (`LANGGRAPH_BASE_URL`) | **30** | Live; C# orchestrates it |
 | | **Total** | | **141** | |
 
 **Conventions (all layers unless noted):** base `…/api/`, `Content-Type: application/json` (file upload = `multipart/form-data`), numeric ids sent as **strings**, success envelope `{ "success": true, "data": … }` / `{ "success": false, "message": "…" }`. CORS allows the two app origins for `GET, POST, PUT, DELETE, OPTIONS` + `Authorization`.
@@ -216,7 +216,7 @@ Ports of the interim cloud store + guest flow + payments.
 
 # Layer 4 — LangGraph service (the report brain)
 
-FastAPI on Railway (`uvicorn app.main:app`), reached via `LANGGRAPH_BASE_URL`. **30 endpoints.** The 7-agent career graph (`labor_retriever → career_metrics → evidence_verifier → behavioral_scientist → contradiction_agent → synthesis → counsellor_report`) lives here. The C# `SynthesisController` calls the two report endpoints; the rest support meetings, inventories, and the wellbeing bridge. AI keys (`GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LLM_MODEL`, `STT_MODEL`) live on **this** service.
+FastAPI served by **Vercel** at `setmycareer.vercel.app` via `api/index.py`, reached through `LANGGRAPH_BASE_URL`. (The `Procfile`/`railway.json` in the repo describe a superseded Railway path — verified against a live `/api/health` probe.) **30 endpoints.** The 7-agent career graph (`labor_retriever → career_metrics → evidence_verifier → behavioral_scientist → contradiction_agent → synthesis → counsellor_report`) lives here. The C# `SynthesisController` calls the two report endpoints; the rest support meetings, inventories, and the wellbeing bridge. AI keys (`GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LLM_MODEL`, `STT_MODEL`) live on **this** service.
 
 ## Core report + analysis
 
@@ -275,7 +275,7 @@ FastAPI on Railway (`uvicorn app.main:app`), reached via `LANGGRAPH_BASE_URL`. *
 | Location | Keys |
 |---|---|
 | **C# API** (new) | `SMC_DB_CONNECTION`, `SMC_JWT_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `LANGGRAPH_BASE_URL`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` |
-| **LangGraph service** (Railway) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ZOHO_CLIENT_ID`, `PORT` |
+| **LangGraph service** (Vercel) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ZOHO_CLIENT_ID`, `PORT` |
 | **Vercel serverless** | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `SUPABASE_URL`, `SUPABASE_KEY` (retired at Phase 3), `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_CURRENCY`, `GOOGLE_API_KEY` |
 | **Frontend** (public by design) | `VITE_SMC_WRITES_ENABLED`, Razorpay **publishable** key id only |
 
