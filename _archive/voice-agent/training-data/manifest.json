@@ -1,0 +1,36 @@
+{
+  "package": "setmycareer-voice-agent-knowledge",
+  "version": "0.1.0",
+  "created_for": "SMC Claude",
+  "intended_runtime": ["Claude Project", "LiveKit voice agent", "client-side AI counsellor"],
+  "sources": [
+    {
+      "name": "SetMyCareer website homepage and service navigation",
+      "url": "https://setmycareer.com/",
+      "accessed": "2026-06-19",
+      "usage": "Service facts, routing, audience segments, booking/contact categories, and FAQ process language."
+    },
+    {
+      "name": "SMC Claude existing backend",
+      "path": "../app/main.py",
+      "usage": "Existing API contracts for chat, inventories, career analysis, reports, counselor sessions, and meeting integrations."
+    }
+  ],
+  "files": [
+    {
+      "path": "setmycareer_service_facts.jsonl",
+      "type": "facts",
+      "commercial_use": "owned/brand facts; verify final claims with SetMyCareer before public launch"
+    },
+    {
+      "path": "dialogue_exemplars.jsonl",
+      "type": "conversation_examples",
+      "commercial_use": "synthetic examples written for this project"
+    },
+    {
+      "path": "safety_boundaries.jsonl",
+      "type": "policy",
+      "commercial_use": "project-authored safety policy"
+    }
+  ]
+}

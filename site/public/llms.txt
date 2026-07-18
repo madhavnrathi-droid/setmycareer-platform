@@ -1,0 +1,49 @@
+# SetMyCareer
+
+> SetMyCareer is a science-backed career counselling and assessment platform for students and professionals in India. Founded in 2010 by Dr. Nandkishore Rathi (PhD, IIT Bombay), it pairs validated psychometric assessments — aptitude, interest (RIASEC) and personality (Big Five) — with trained human counsellors and AI tools, to turn career decisions from guesswork into evidence. Tagline: "Decisions, not guesses."
+
+## What it is
+- A career-guidance service, not a job board. The output is a decision a person can explain and stand behind — what they chose, what they declined, and why.
+- For: students choosing a stream after Class 10, a degree/field after Class 12, and professionals considering a switch — primarily in India.
+- Why it matters: over 90% of Indian schools have no dedicated career counsellor, and the national counsellor-to-student ratio is roughly 1:3,000 against a recommended 1:250. Most students decide with little structured guidance.
+
+## The method (five steps)
+1. Assess — measure aptitude, interest and personality with validated psychometric instruments, not opinion.
+2. Interpret — a trained counsellor reads the scores as a pattern, not a verdict.
+3. Map — translate that into specific streams, courses and fields that fit the person.
+4. Decide — weigh each option against admission odds, return on investment and long-term fit.
+5. Support — stay with the student through admissions, transitions and the questions that follow.
+
+## Products
+- AI Career Counsellor — chat or voice guidance, grounded in the person's own results and the firm's practice.
+- Live Psychometric Assessments — aptitude, interest and personality, scored in real time.
+- AI Career Report — turns scores into matched paths, strengths and the reasoning behind each.
+- Career Intelligence — admission odds, ROI and scholarship routes set against the person's profile.
+- Packages: Career Clarity Index (free), Stream Selector (~₹1,990), Job Domain Selector (~₹2,490), Full Career Counselling (quoted).
+
+## Position on AI in career guidance
+AI should automate the measurement (consistent scoring) and retrieval (breadth of pathways), so the human counsellor is free to do the judgement: interpreting a score in a person's real context, and the conversation about what someone is willing to give up for a path. A generated report with no one to interpret it is data, not guidance.
+
+## Key facts
+- Founded: 2010. Founder: Dr. Nandkishore Rathi, PhD, IIT Bombay.
+- Approach: evidence-led; grounded in RIASEC (interests) and the Big Five (personality), plus aptitude testing.
+- Audience and market: India (streams: Science/Commerce/Arts; exams: JEE/NEET/CUET).
+
+## Site map (all sections)
+- Product (live demos, tour, dashboards, reports): https://site-madhavs-projects-56d7586e.vercel.app/product
+- The Framework (decision model + scientific foundation): https://site-madhavs-projects-56d7586e.vercel.app/framework
+- Solutions (students, parents, graduates, professionals, schools, colleges, organizations): https://site-madhavs-projects-56d7586e.vercel.app/solutions
+- Career Library (careers, degrees, skills, industries, emerging, comparisons): https://site-madhavs-projects-56d7586e.vercel.app/library
+- Resources (blog, guides): https://site-madhavs-projects-56d7586e.vercel.app/resources
+- Trust Center (methodology, research sources, privacy, AI ethics, FAQ): https://site-madhavs-projects-56d7586e.vercel.app/trust
+- Pricing: https://site-madhavs-projects-56d7586e.vercel.app/pricing
+- Book a session: https://site-madhavs-projects-56d7586e.vercel.app/book
+
+- Free Career Clarity Index (CRI for students / ECRI for professionals — 20 statements, 5 factor indices, instant report): https://site-madhavs-projects-56d7586e.vercel.app/cri
+
+## Links
+- Begin / client portal: https://setmycareer-counselor.vercel.app/portal
+- Main site: https://setmycareer.com
+- Insights / articles: https://site-madhavs-projects-56d7586e.vercel.app/blog
+- See the product work: https://site-madhavs-projects-56d7586e.vercel.app/product
+- The counsellor network (and how to join it): https://site-madhavs-projects-56d7586e.vercel.app/experts

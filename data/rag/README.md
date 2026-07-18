@@ -1,0 +1,1 @@
+# data/rag — retrieval corpora. frameworks.jsonl = chunked CBT/DBT/ACT/MI/WHO/CCI knowledge. counsel_chat + mh_chatbot_faq + mh_faq (processed/) double as RAG sources. Embeddings deferred to Stage 2 (data/embeddings).

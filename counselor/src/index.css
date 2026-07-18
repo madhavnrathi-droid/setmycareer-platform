@@ -1,0 +1,336 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Setmycareer counselor console — design tokens
+   Black & white first (#231F20 / #FFFFFF) · brand-blue accent
+   (#0574A9) · green only for positive metrics. Thin, airy, Carbon-like.
+   ============================================================ */
+:root {
+  --radius: 0.95rem;
+
+  /* Runtime-overridable font stacks — the Appearance setting swaps these. */
+  --font-sans-stack: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display-stack: "Montserrat", "Inter", sans-serif;
+  --font-mono-stack: "IBM Plex Mono", ui-monospace, monospace;
+  /* Brand wordmark — fixed serif identity (Cambo). Never re-themed by the
+     Appearance presets: the "Setmycareer" wordmark is always set in Cambo. */
+  --font-wordmark-stack: "Cambo", ui-serif, Georgia, serif;
+
+  --background: #ffffff;
+  --foreground: #231f20;
+  --card: #ffffff;
+  --card-foreground: #231f20;
+  --popover: #ffffff;
+  --popover-foreground: #231f20;
+
+  --primary: #231f20;          /* black — primary actions */
+  --primary-foreground: #ffffff;
+
+  --secondary: #f6f5f3;
+  --secondary-foreground: #231f20;
+  --muted: #f6f5f3;
+  --muted-foreground: #6e6c6b;
+  --accent: #e5f0f7;           /* blue-soft fill */
+  --accent-foreground: #0574a9;
+
+  --destructive: #ec2c2e;
+  --success: #1f9d6b;          /* positive deltas only */
+  --warning: #c0892d;
+
+  --border: #ecebe9;
+  --input: #ecebe9;
+  --ring: #0574a9;             /* brand blue focus ring */
+
+  --chart-1: #0574a9;
+  --chart-2: #1f9d6b;
+  --chart-3: #65368f;
+  --chart-4: #c0892d;
+  --chart-5: #ec2c2e;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #231f20;
+  --sidebar-primary: #231f20;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f6f5f3;
+  --sidebar-accent-foreground: #231f20;
+  --sidebar-border: #ecebe9;
+  --sidebar-ring: #0574a9;
+
+  /* Apple/Rams — frosted surfaces, hairlines, layered shadows */
+  --surface-frost: rgba(255, 255, 255, 0.72);        /* light frosted glass */
+  --surface-frost-strong: rgba(255, 255, 255, 0.86); /* stronger frosted glass */
+  --hairline: rgba(35, 31, 32, 0.08);                /* sub-border separators */
+
+  /* Apple-style layered shadow scale (soft, multi-stop) */
+  --shadow-1: 0 1px 2px rgba(35, 31, 32, 0.05);
+  --shadow-2: 0 2px 8px rgba(35, 31, 32, 0.06), 0 1px 2px rgba(35, 31, 32, 0.05);
+  --shadow-3: 0 8px 24px rgba(35, 31, 32, 0.08), 0 2px 6px rgba(35, 31, 32, 0.05);
+  /* soft neumorphic raise — a gentle bottom shadow + a 1px top highlight, for the
+     client portal's card surfaces (matches the soft-material reference decks) */
+  --shadow-4: 0 1px 1px rgba(35, 31, 32, 0.03), 0 10px 30px -8px rgba(35, 31, 32, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --shadow-float: 0 16px 48px rgba(35, 31, 32, 0.14), 0 4px 12px rgba(35, 31, 32, 0.08);
+
+  /* Apple-like spring-ish easing for CSS transitions */
+  --ease-out-expo: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dark {
+  --background: #16140f;
+  --foreground: #f7f6f4;
+  --card: #1d1a15;
+  --card-foreground: #f7f6f4;
+  --popover: #1d1a15;
+  --popover-foreground: #f7f6f4;
+  --primary: #f7f6f4;
+  --primary-foreground: #231f20;
+  --secondary: #262219;
+  --secondary-foreground: #f7f6f4;
+  --muted: #262219;
+  --muted-foreground: #a6a29a;
+  --accent: #0e2733;
+  --accent-foreground: #5cb6e0;
+  --destructive: #ec2c2e;
+  --success: #2bb37e;
+  --warning: #d39a3a;
+  --border: #2c281f;
+  --input: #2c281f;
+  --ring: #0574a9;
+  --sidebar: #1d1a15;
+  --sidebar-foreground: #f7f6f4;
+  --sidebar-primary: #f7f6f4;
+  --sidebar-primary-foreground: #231f20;
+  --sidebar-accent: #262219;
+  --sidebar-accent-foreground: #f7f6f4;
+  --sidebar-border: #2c281f;
+  --sidebar-ring: #0574a9;
+
+  /* Apple/Rams — frosted surfaces, hairlines, layered shadows (dark) */
+  --surface-frost: rgba(29, 26, 21, 0.72);
+  --surface-frost-strong: rgba(29, 26, 21, 0.86);
+  --hairline: rgba(247, 246, 244, 0.10);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-3: 0 8px 24px rgba(0, 0, 0, 0.44), 0 2px 6px rgba(0, 0, 0, 0.32);
+  --shadow-4: 0 1px 1px rgba(0, 0, 0, 0.30), 0 10px 30px -8px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-float: 0 16px 48px rgba(0, 0, 0, 0.56), 0 4px 12px rgba(0, 0, 0, 0.40);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* frosted surfaces + hairline (Apple/Rams) */
+  --color-surface-frost: var(--surface-frost);
+  --color-surface-frost-strong: var(--surface-frost-strong);
+  --color-hairline: var(--hairline);
+
+  /* layered elevation shadow scale */
+  --shadow-e1: var(--shadow-1);
+  --shadow-e2: var(--shadow-2);
+  --shadow-e3: var(--shadow-3);
+  --shadow-e4: var(--shadow-4);
+  --shadow-float: var(--shadow-float);
+
+  /* ink scale (B&W) */
+  --color-ink-900: #231f20;
+  --color-ink-700: #46413f;
+  --color-ink-600: #565150;
+  --color-ink-500: #6b6664;
+  --color-ink-400: #8a8684;
+  --color-ink-300: #a8a4a2;
+  --color-ink-200: #d7d4d2;
+  --color-ink-100: #eceae8;
+  --color-ink-050: #f6f5f4;
+  --color-canvas: #fbfaf9;
+
+  /* brand accent (interaction/identity only) */
+  --color-brand-50: #f1f8fb;
+  --color-brand-100: #e2f0f7;
+  --color-brand-200: #c2e0ee;
+  --color-brand-400: #2b8cbf;
+  --color-brand-500: #0574a9;
+  --color-brand-600: #045e87;
+  --color-brand-700: #034a6b;
+
+  /* semantic — data only, never chrome */
+  --color-well-50: #f1f9f4;
+  --color-well-100: #e4f2ea;
+  --color-well-500: #2a9560;
+  --color-well-600: #1f7a4d;
+  --color-well-700: #185f3c;
+  --color-risk-100: #fce6e6;
+  --color-risk-500: #ec2c2e;
+  --color-risk-600: #c42022;
+  --color-mind-50: #f7f2fa;
+  --color-mind-100: #efe7f4;
+  --color-mind-500: #65368f;
+  --color-mind-600: #5a2f80;
+  --color-mind-700: #492769;
+  --color-warn-50: #fdf8ef;
+  --color-warn-100: #fbf0dd;
+  --color-warn-200: #f3e1bf;
+  --color-warn-400: #dd9526;
+  --color-warn-500: #cc8210;
+  --color-warn-600: #b8740a;
+  --color-warn-700: #945d09;
+  --color-warn-800: #6f450a;
+
+  /* reference the overridable :root stacks so the Appearance setting can re-theme
+     fonts app-wide at runtime via documentElement.style.setProperty(...) */
+  --font-sans: var(--font-sans-stack);
+  --font-display: var(--font-display-stack);
+  --font-mono: var(--font-mono-stack);
+  /* brand wordmark utility (`font-wordmark`) — fixed Cambo serif identity */
+  --font-wordmark: var(--font-wordmark-stack);
+  /* editorial display serif (`font-editorial`) — SOURCE SERIF 4, the exact
+     editorial voice of the marketing site (site/), so the product & assessment
+     surfaces read in one professional, legible type system with it. */
+  --font-editorial: "Source Serif 4", "Fraunces", ui-serif, Georgia, serif;
+}
+
+/* ── the Compass signature gradient ────────────────────────────────────────
+   The AI/chat surface's one owned identity: SMC brand-blue → mind-violet.
+   Used for the Compass avatar ring, the answer-panel border, and the package
+   redirect link inside a chat answer — nowhere else (rationed, per craft R1). */
+:root {
+  --compass-gradient: linear-gradient(115deg, #0574a9 0%, #3f4bb8 48%, #65368f 100%);
+  --compass-gradient-soft: linear-gradient(115deg, #0574a90d, #65368f0d);
+}
+.compass-gradient-text {
+  background: var(--compass-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* a 1px gradient hairline via a masked border-box — no glow, just the identity */
+.compass-gradient-ring {
+  position: relative;
+}
+.compass-gradient-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--compass-gradient);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    /* tabular numerals everywhere — data-dense console */
+    font-feature-settings: "cv11", "ss01", "tnum";
+    margin: 0;
+  }
+  /* thin, slick defaults */
+  ::selection { background: var(--accent); color: var(--accent-foreground); }
+}
+
+/* ── the client-portal typography system — thin but very readable. One class on
+   the portal shell re-weights the whole dashboard coherently: display faces run
+   light with tight tracking, the heaviest utility weights step DOWN one notch
+   (semibold→500, bold→600) so hierarchy survives while the surface reads as a
+   calm professional SaaS. Unlayered on purpose so the two-class selectors win
+   over single-class Tailwind utilities. The test room keeps its own system. ── */
+.portal-type {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.portal-type .font-display { font-weight: 400; letter-spacing: -0.015em; }
+.portal-type .font-display.font-semibold { font-weight: 500; }
+.portal-type .font-display.font-bold { font-weight: 550; }
+.portal-type .font-editorial { font-weight: 300; letter-spacing: -0.01em; }
+.portal-type .font-semibold:not(.font-display) { font-weight: 500; }
+.portal-type .font-bold:not(.font-display) { font-weight: 600; }
+/* body copy breathes a little wider at light weights */
+.portal-type p, .portal-type li { letter-spacing: 0.003em; }
+
+/* ── the testing room — the full-screen instrument screens (TestRunner) match
+   the marketing fit-test's type exactly: IBM Plex Sans for reading copy, IBM
+   Plex Mono for counters/hints. Unlayered on purpose so it wins over the
+   font-mono utility inside the room. ── */
+.testroom {
+  font-family: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+.testroom .font-mono {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+/* completion-sequence lines mount one by one (so live regions announce them);
+   this gives each a soft entrance without opacity-toggling pre-rendered DOM */
+@keyframes testroom-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.testroom .fade-line {
+  animation: testroom-fade 0.5s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .testroom .fade-line { animation: none; }
+}
+
+
+/* ── guest assessment flow (/t/:token) — slow ambient drift for the bottom-edge
+   gradient glows; motion communicates "alive", never distracts ── */
+@keyframes gt-drift {
+  0% { transform: translateX(-2.5%) scale(1); }
+  50% { transform: translateX(2.5%) scale(1.06); }
+  100% { transform: translateX(-2.5%) scale(1); }
+}
+.gt-drift { animation: gt-drift 16s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .gt-drift { animation: none; }
+}

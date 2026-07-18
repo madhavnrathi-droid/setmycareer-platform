@@ -1,0 +1,546 @@
+[
+  {
+    "dataset_name": "esconv",
+    "source": "thu-coai/esconv",
+    "status": "processed",
+    "node_usage": [
+      "TherapyRouterNode",
+      "SupportStrategySelector"
+    ],
+    "license": "research-only (ESConv terms)",
+    "commercially_usable": false,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "evaluator + prompt-design only (research license)",
+    "rows": 13966,
+    "quality_score": 90,
+    "rank": "high",
+    "notes": "",
+    "processed_file": "data/processed/esconv.jsonl",
+    "safety_flagged_rows": 100
+  },
+  {
+    "dataset_name": "counsel_chat",
+    "source": "nbertagnolli/counsel-chat",
+    "status": "processed",
+    "node_usage": [
+      "RAG/Psychoeducation",
+      "EmpathyEvaluatorNode",
+      "NoteStyle"
+    ],
+    "license": "MIT (repo) / source counselchat.com",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "retrieval + may train (MIT; summarize verbatim)",
+    "rows": 2600,
+    "quality_score": 85,
+    "rank": "high",
+    "notes": "",
+    "processed_file": "data/processed/counsel_chat.jsonl",
+    "safety_flagged_rows": 468
+  },
+  {
+    "dataset_name": "empathetic_dialogues",
+    "source": "facebook/empathetic_dialogues",
+    "status": "processed",
+    "node_usage": [
+      "EmpathyEvaluatorNode",
+      "RewriteAgent"
+    ],
+    "license": "CC BY-NC 4.0",
+    "commercially_usable": false,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "evaluator only (NC)",
+    "rows": 47385,
+    "quality_score": 75,
+    "rank": "high",
+    "notes": "",
+    "processed_file": "data/processed/empathetic_dialogues.jsonl",
+    "safety_flagged_rows": 150
+  },
+  {
+    "dataset_name": "mentalchat16k",
+    "source": "ShenLab/MentalChat16K",
+    "status": "processed",
+    "node_usage": [
+      "EmpathyEvaluatorNode",
+      "NoteStyle",
+      "SupportStrategySelector"
+    ],
+    "license": "MIT",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "may train (MIT)",
+    "rows": 15964,
+    "quality_score": 70,
+    "rank": "high",
+    "notes": "",
+    "processed_file": "data/processed/mentalchat16k.jsonl",
+    "safety_flagged_rows": 724
+  },
+  {
+    "dataset_name": "go_emotions",
+    "source": "google-research-datasets/go_emotions",
+    "status": "processed",
+    "node_usage": [
+      "EmotionDetectionNode"
+    ],
+    "license": "Apache-2.0",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "may train (Apache)",
+    "rows": 53865,
+    "quality_score": 65,
+    "rank": "high",
+    "notes": "",
+    "processed_file": "data/processed/go_emotions.jsonl",
+    "safety_flagged_rows": 297
+  },
+  {
+    "dataset_name": "daic_woz",
+    "source": "dcapswoz.ict.usc.edu",
+    "rank": "high",
+    "status": "gated (USC ICT EULA)",
+    "license": "EULA",
+    "commercially_usable": false,
+    "node_usage": [
+      "SafetyNode",
+      "VoiceEmotionNode"
+    ],
+    "notes": "clinical depression interviews; no open substitute \u2014 apply",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "clpsych",
+    "source": "clpsych.org/shared-tasks",
+    "rank": "high",
+    "status": "gated (per-task DUA)",
+    "license": "DUA",
+    "commercially_usable": false,
+    "node_usage": [
+      "SafetyNode"
+    ],
+    "notes": "suicidality/distress language; apply per task",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "wesad",
+    "source": "WESAD (Uni Siegen)",
+    "rank": "high",
+    "status": "on-demand (audio_on_demand.py wesad)",
+    "license": "academic open",
+    "commercially_usable": "conditional",
+    "node_usage": [
+      "StressContext(HRV)"
+    ],
+    "notes": "wearable stress + HRV ~2.1GB; check terms before commercial training",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "lifesnaps",
+    "source": "zenodo 10.5281/zenodo.7229547",
+    "rank": "high",
+    "status": "on-demand (audio_on_demand.py lifesnaps)",
+    "license": "CC BY 4.0",
+    "commercially_usable": true,
+    "node_usage": [
+      "SleepMoodContext",
+      "ActivityMoodContext"
+    ],
+    "notes": "fitbit + mood EMA, 71 users x 4 months \u2014 best open sleep/activity\u2194mood set",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "studentlife",
+    "source": "studentlife.cs.dartmouth.edu",
+    "rank": "high",
+    "status": "downloadable (research license + citation)",
+    "license": "research-only",
+    "commercially_usable": false,
+    "licensing_confidence": "high (clear academic terms)",
+    "node_usage": [
+      "LongitudinalWellnessNode",
+      "LonelinessNode",
+      "BurnoutNode"
+    ],
+    "recommended_usage": "hidden-context model VALIDATION only \u2014 never ship text/derived weights commercially",
+    "notes": "48 students, 10wk: sleep/GPS/activity/phone/EMA mood \u2014 the canonical passive-sensing\u2194mood set"
+  },
+  {
+    "dataset_name": "swell_kw",
+    "source": "Radboud SWELL-KW (DANS)",
+    "rank": "high",
+    "status": "gated (DANS access request)",
+    "license": "research-only",
+    "commercially_usable": false,
+    "licensing_confidence": "medium (DANS terms; request required)",
+    "node_usage": [
+      "BurnoutNode",
+      "StressContext(HRV)"
+    ],
+    "recommended_usage": "HRV/stress feature research only",
+    "notes": "knowledge-work stress + HRV + facial/posture; apply via DANS"
+  },
+  {
+    "dataset_name": "extrasensory",
+    "source": "extrasensory.ucsd.edu",
+    "rank": "high",
+    "status": "downloadable (research use)",
+    "license": "research (CC BY-NC-SA-style)",
+    "commercially_usable": false,
+    "licensing_confidence": "medium",
+    "node_usage": [
+      "BehaviorNode",
+      "WellnessContextNode"
+    ],
+    "recommended_usage": "behavioral-context label schema reference; validation only",
+    "notes": "60 users, phone+watch context labels \u2014 good schema template for BehaviorNode"
+  },
+  {
+    "dataset_name": "mh_chatbot_faq",
+    "source": "heliosbrahma/mental_health_chatbot_dataset",
+    "status": "processed",
+    "node_usage": [
+      "RAG/Psychoeducation"
+    ],
+    "license": "MIT",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "retrieval only",
+    "rows": 171,
+    "quality_score": 85,
+    "rank": "medium",
+    "notes": "",
+    "processed_file": "data/processed/mh_chatbot_faq.jsonl",
+    "safety_flagged_rows": 44
+  },
+  {
+    "dataset_name": "mh_faq",
+    "source": "tolu07/Mental_Health_FAQ",
+    "status": "processed",
+    "node_usage": [
+      "RAG/Psychoeducation"
+    ],
+    "license": "MIT (card; Kaggle-origin FAQ)",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "retrieval only",
+    "rows": 98,
+    "quality_score": 85,
+    "rank": "medium",
+    "notes": "MIT on card but Kaggle-origin provenance \u2014 retrieval only",
+    "processed_file": "data/processed/mh_faq.jsonl",
+    "safety_flagged_rows": 19
+  },
+  {
+    "dataset_name": "meld",
+    "source": "declare-lab/MELD (text csvs)",
+    "status": "processed",
+    "node_usage": [
+      "VoiceEmotionNode(text-bootstrap)",
+      "ConversationalEmotion"
+    ],
+    "license": "research (MELD terms; scripted Friends dialogue)",
+    "commercially_usable": false,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "evaluator/bootstrap only (acted)",
+    "rows": 11703,
+    "quality_score": 70,
+    "rank": "medium",
+    "notes": "scripted TV dialogue (Friends) \u2014 acted emotion; eval/bootstrap only",
+    "processed_file": "data/processed/meld.jsonl",
+    "safety_flagged_rows": 8
+  },
+  {
+    "dataset_name": "emobank",
+    "source": "github.com/JULIELab/EmoBank",
+    "status": "processed",
+    "node_usage": [
+      "EmotionDetectionNode(intensity/VAD)"
+    ],
+    "license": "CC BY-SA 4.0",
+    "commercially_usable": "conditional",
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "may train w/ share-alike (CC BY-SA)",
+    "rows": 9776,
+    "quality_score": 55,
+    "rank": "medium",
+    "notes": "CC BY-SA: commercial OK with share-alike obligation on derived datasets",
+    "processed_file": "data/processed/emobank.jsonl",
+    "safety_flagged_rows": 35
+  },
+  {
+    "dataset_name": "emotion",
+    "source": "dair-ai/emotion",
+    "status": "processed",
+    "node_usage": [
+      "EmotionDetectionNode(ensemble)"
+    ],
+    "license": "educational/research (dair-ai terms)",
+    "commercially_usable": false,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "evaluator only",
+    "rows": 19947,
+    "quality_score": 55,
+    "rank": "medium",
+    "notes": "",
+    "processed_file": "data/processed/emotion.jsonl",
+    "safety_flagged_rows": 136
+  },
+  {
+    "dataset_name": "iemocap",
+    "source": "sail.usc.edu/iemocap",
+    "rank": "medium",
+    "status": "gated (release form)",
+    "license": "academic",
+    "commercially_usable": false,
+    "node_usage": [
+      "VoiceEmotionNode"
+    ],
+    "notes": "acted emotional speech",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "msp_improv",
+    "source": "UT Dallas MSP lab",
+    "rank": "medium",
+    "status": "gated (academic license)",
+    "license": "academic",
+    "commercially_usable": false,
+    "node_usage": [
+      "VoiceEmotionNode"
+    ],
+    "notes": "acted emotional speech",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "ravdess",
+    "source": "zenodo.org/record/1188976",
+    "rank": "medium",
+    "status": "on-demand (scripts/ingest/audio_on_demand.py ravdess)",
+    "license": "CC BY-NC-SA 4.0",
+    "commercially_usable": false,
+    "node_usage": [
+      "VoiceEmotionNode"
+    ],
+    "notes": "acted speech ~1.1GB",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "crema_d",
+    "source": "github.com/CheyneyComputerScience/CREMA-D",
+    "rank": "medium",
+    "status": "on-demand",
+    "license": "ODbL",
+    "commercially_usable": "conditional",
+    "node_usage": [
+      "VoiceEmotionNode"
+    ],
+    "notes": "acted speech ~2GB; ODbL share-alike on db",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "nsrr",
+    "source": "sleepdata.org (NSRR)",
+    "rank": "medium",
+    "status": "gated (NSRR DUA + IRB-style approval)",
+    "license": "DUA",
+    "commercially_usable": false,
+    "licensing_confidence": "low (per-cohort DUAs, clinical PHI)",
+    "node_usage": [
+      "SleepNode"
+    ],
+    "recommended_usage": "sleep-staging research only; do NOT use for product without legal review",
+    "notes": "large clinical PSG cohorts; heavy approval burden \u2014 overkill for Setmycareer now"
+  },
+  {
+    "dataset_name": "sleep_edfx",
+    "source": "physionet.org/content/sleep-edfx",
+    "rank": "medium",
+    "status": "open (PhysioNet, downloadable)",
+    "license": "ODC-BY 1.0",
+    "commercially_usable": true,
+    "licensing_confidence": "high (ODC-BY)",
+    "node_usage": [
+      "SleepNode"
+    ],
+    "recommended_usage": "EEG sleep-staging research; LOW product relevance (no mood labels)",
+    "notes": "open but it's polysomnography EEG, not lifestyle sleep \u2014 Setmycareer reads device sleep instead"
+  },
+  {
+    "dataset_name": "reality_mining",
+    "source": "realitycommons.media.mit.edu",
+    "rank": "medium",
+    "status": "gated (MIT Reality Commons registration)",
+    "license": "research agreement",
+    "commercially_usable": false,
+    "licensing_confidence": "medium",
+    "node_usage": [
+      "LonelinessNode",
+      "SocialHealthNode"
+    ],
+    "recommended_usage": "social-rhythm pattern reference only",
+    "notes": "2004 phone/proximity data \u2014 dated; concepts inform LonelinessNode, data itself low value"
+  },
+  {
+    "dataset_name": "daily_dialog",
+    "source": "li2017dailydialog/daily_dialog",
+    "status": "processed",
+    "node_usage": [
+      "ConversationalRealism"
+    ],
+    "license": "CC BY-NC-SA 4.0",
+    "commercially_usable": false,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "realism reference only (NC)",
+    "rows": 79921,
+    "quality_score": 60,
+    "rank": "experimental",
+    "notes": "generic chitchat; realism reference only \u2014 keep OUT of therapy-tone training mixes",
+    "processed_file": "data/processed/daily_dialog.jsonl",
+    "safety_flagged_rows": 67
+  },
+  {
+    "dataset_name": "meld_av",
+    "source": "affective-meld.github.io",
+    "rank": "experimental",
+    "status": "on-demand (full audio/video ~10GB)",
+    "license": "research",
+    "commercially_usable": false,
+    "node_usage": [
+      "VoiceEmotionNode"
+    ],
+    "notes": "fetch when voice training scheduled",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "friends_and_family",
+    "source": "realitycommons.media.mit.edu/friendsdataset4",
+    "rank": "experimental",
+    "status": "gated (registration)",
+    "license": "research agreement",
+    "commercially_usable": false,
+    "licensing_confidence": "medium",
+    "node_usage": [
+      "SocialHealthNode"
+    ],
+    "recommended_usage": "social-wellness concept reference",
+    "notes": "community-scale social + wellbeing; older, niche \u2014 revisit only if social graph ships"
+  },
+  {
+    "dataset_name": "psych_101",
+    "source": "marcelbinz/Psych-101",
+    "rank": "experimental",
+    "status": "registered, not downloaded",
+    "license": "Apache-2.0",
+    "commercially_usable": true,
+    "node_usage": [
+      "CognitionResearch(future)"
+    ],
+    "notes": "cognitive-experiment transcripts; not counseling \u2014 revisit later",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "mh_counseling",
+    "source": "Amod/mental_health_counseling_conversations",
+    "status": "processed",
+    "node_usage": [],
+    "license": "openrail",
+    "commercially_usable": true,
+    "licensing_confidence": "high (verified on HF card)",
+    "recommended_usage": "drop (duplicate of counsel_chat)",
+    "rows": 2015,
+    "quality_score": 70,
+    "rank": "avoid",
+    "notes": "99% duplicate of counsel_chat (Amod is counselchat-derived) \u2014 keep counsel_chat as canonical",
+    "processed_file": "data/processed/mh_counseling.jsonl",
+    "safety_flagged_rows": 373
+  },
+  {
+    "dataset_name": "psyqa",
+    "source": "thu-coai/PsyQA (official)",
+    "rank": "avoid",
+    "status": "excluded",
+    "license": "gated research agreement; HF mirrors unlicensed",
+    "commercially_usable": false,
+    "node_usage": [],
+    "notes": "apply officially if needed; Chinese-language, low fit for EN launch",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "empathetic_counseling_LuangMV97",
+    "source": "LuangMV97/Empathetic_counseling_Dataset",
+    "rank": "avoid",
+    "status": "excluded",
+    "license": "NONE declared",
+    "commercially_usable": false,
+    "node_usage": [],
+    "notes": "no license on card \u2014 legally unusable",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "psychology_10k",
+    "source": "samhog/psychology-10k",
+    "rank": "avoid",
+    "status": "excluded",
+    "license": "NONE declared",
+    "commercially_usable": false,
+    "node_usage": [],
+    "notes": "no license + GPT-generated provenance",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "felladrin_pretrain_mh",
+    "source": "Felladrin/pretrain-mental-health-counseling-conversations",
+    "rank": "avoid",
+    "status": "excluded",
+    "license": "openrail",
+    "commercially_usable": false,
+    "node_usage": [],
+    "notes": "merge of Amod/counsel-chat \u2014 would re-import our duplicates",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "reddit_mh_scrapes",
+    "source": "various (SWMH, subreddit dumps)",
+    "rank": "avoid",
+    "status": "excluded",
+    "license": "none/ToS-violating",
+    "commercially_usable": false,
+    "node_usage": [],
+    "notes": "no consent, redistribution prohibited, deanonymization risk",
+    "licensing_confidence": "medium",
+    "recommended_usage": "research/validation only \u2014 not for shipped model"
+  },
+  {
+    "dataset_name": "setmycareer_voice_agent_knowledge",
+    "source": "voice-agent/training-data/*.jsonl + https://setmycareer.com/",
+    "rank": "high",
+    "status": "curated",
+    "license": "brand/project-authored facts and synthetic examples",
+    "commercially_usable": true,
+    "licensing_confidence": "medium (brand facts should be owner-verified before launch)",
+    "node_usage": [
+      "ClaudeProjectKnowledge",
+      "VoiceAgentPrompting",
+      "BookingRouter",
+      "CareerCounsellorAssistant"
+    ],
+    "notes": "SetMyCareer service facts, safety boundaries, booking requirements, and synthetic voice/chat exemplars for the client-side and LiveKit/Claude agent.",
+    "recommended_usage": "RAG + system instructions + eval scenarios; do not fine-tune until service claims and booking policies are approved",
+    "processed_file": "voice-agent/training-data/manifest.json"
+  }
+]

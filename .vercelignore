@@ -1,0 +1,15 @@
+.env
+.env.local
+.venv
+frontend/node_modules
+data/raw
+data/processed
+data/finetune
+data/multimodal
+training
+scripts
+docs
+__pycache__
+*.pyc
+.DS_Store
+.git

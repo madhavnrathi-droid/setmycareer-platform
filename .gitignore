@@ -1,0 +1,89 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SECRETS — never commit. A secret committed once lives in git history forever,
+# on every clone, even after a later edit removes it. See docs/SECURITY.md.
+# ─────────────────────────────────────────────────────────────────────────────
+.env
+.env.*
+*.env
+!.env.example
+!.env.*.example
+*.local
+.claude/settings.local.json
+
+# credentials / keys of any shape
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+*service-account*.json
+*credentials*.json
+
+# Generated operational artefacts that embed live guest-test tokens
+counselor/docs/test-links-batch*.csv
+counselor/docs/test-links-batch*.xlsx
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Dependencies & builds
+# ─────────────────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Vercel link state — per-machine project ids, not source
+.vercel
+.vercel/
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Python
+# ─────────────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Databases & heavy generated data — regenerate via scripts/, never commit
+# ─────────────────────────────────────────────────────────────────────────────
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+data/raw/
+data/processed/
+data/embeddings/
+data/labeled/
+data/synthetic/
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Logs, caches, editor & OS noise
+# ─────────────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.cache/
+.temp/
+.tmp/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~

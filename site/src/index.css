@@ -1,0 +1,540 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SetMyCareer — monochrome editorial system.
+   Swiss grid · Comme des Garçons / Margiela restraint · IBM Plex (Carbon).
+   No colour. No rounded boxes. No shadows. Type + negative space only.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-ink: #0b0b0b;        /* near-black */
+  --color-ink-80: #1a1a1a;     /* body/serif — more ink, higher contrast */
+  --color-ink-60: #464646;     /* secondary body */
+  --color-ink-40: #6d6c68;     /* labels/metadata — AA (4.5:1+) on paper & paper-pure */
+  --color-ink-20: #c9c7c2;
+  --color-paper: #f3f2ee;       /* warm off-white */
+  --color-paper-pure: #faf9f6;
+  --color-line: rgba(11, 11, 11, 0.10);   /* dividers recede — quiet, not loud */
+  --color-line-faint: rgba(11, 11, 11, 0.06);
+
+  /* trajectory hues — the one sanctioned break from monochrome, on the career
+     terminal. purple = growth, red = decline, blue = flat/stagnant. Tuned to
+     read on warm off-white at ~3:1 (from the terminal research pass). */
+  --color-growth: #5b28b8;
+  --color-decline: #c0392b;
+  --color-flat: #2f6a9e;   /* darkened from #3474ad to clear 4.5:1 on warm paper */
+
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+  --font-wordmark: "Cambo", Georgia, serif;
+  /* the editorial voice (Field Notes / Resources / Videos / Pricing) — one clean,
+     professional serif (Source Serif 4) for display + titles + labels + reading.
+     No Didone / calligraphic drama; it reads as a designed system, not a template. */
+  --font-editorial: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-display-serif: "Source Serif 4", Georgia, serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--color-ink); color: var(--color-paper); }
+
+/* layered so Tailwind utilities (a later layer) can win — an unlayered `a{color:inherit}`
+   silently killed every text-* utility on anchors (unlayered beats @layer utilities). */
+@layer base {
+  a { color: inherit; text-decoration: none; }
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ── dark plate (for hero + dramatic sections) ── */
+.plate-dark { background: var(--color-ink); color: var(--color-paper); }
+.plate-dark ::selection { background: var(--color-paper); color: var(--color-ink); }
+
+/* ── typography ───────────────────────────────────────────────────────── */
+.kicker {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;   /* was 0.22em — tracking that reads as language, not texture */
+  text-transform: uppercase;
+  color: var(--color-ink-40);
+}
+.mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
+/* serif carries the editorial voice — real weight + generous leading so it reads
+   as ink, not a whisper */
+.serif { font-family: var(--font-serif); font-weight: 400; line-height: 1.6; }
+
+/* ── editorial serif system — the "publication" surfaces (Field Notes / Resources /
+   Videos / Pricing). One clean, professional serif (Source Serif 4) across display,
+   titles, decks, body and the ITALIC category labels — a designed type system, not a
+   fashion-magazine flourish. Scoped to .ed-* so the rest keeps its IBM Plex identity.
+   (Source Serif is lower-contrast than a Didone, so display weights run a step heavier
+   to hold their presence at large sizes.) */
+.ed-display { font-family: var(--font-display-serif); font-weight: 600; letter-spacing: -0.01em; line-height: 1.0; }
+.ed-display .b, .ed-display em { font-style: italic; font-weight: 600; }
+.ed-serif { font-family: var(--font-editorial); }
+.ed-title { font-family: var(--font-editorial); font-weight: 600; letter-spacing: -0.004em; line-height: 1.16; }
+.ed-title-xl { font-family: var(--font-editorial); font-weight: 500; letter-spacing: -0.01em; line-height: 1.06; }
+.ed-title-xl .b, .ed-title-xl em { font-style: italic; font-weight: 600; }
+/* the category label — italic serif, muted ink, NO dot, NO colour (the Ursula tag) */
+.ed-label { font-family: var(--font-editorial); font-style: italic; font-weight: 400; letter-spacing: 0.005em; color: var(--color-ink-40); }
+.ed-deck { font-family: var(--font-editorial); font-weight: 300; line-height: 1.5; color: var(--color-ink-60); }
+.ed-quote { font-family: var(--font-editorial); font-style: italic; font-weight: 300; line-height: 1.32; }
+/* a small-caps section eyebrow in the editorial serif (mastheads / dividers) */
+.ed-eyebrow { font-family: var(--font-editorial); font-style: italic; font-weight: 400; font-size: 14px; letter-spacing: 0.01em; color: var(--color-ink-40); }
+
+/* ── form fields — clean, high-contrast, sharp-cornered (SaaS-legible, not the
+   faint mono-caps + hairline underline that read as a whisper). Labels are
+   sentence-case ink; fields are bordered boxes with a real focus state. ── */
+.field-label {
+  display: block; margin-bottom: 0.5rem;
+  font-family: var(--font-sans); font-size: 12.5px; font-weight: 500;
+  letter-spacing: -0.005em; color: var(--color-ink-80);
+}
+.field-box {
+  width: 100%; border: 1px solid var(--color-ink-20); background: var(--color-paper-pure);
+  padding: 0.625rem 0.875rem; font-size: 15px; font-weight: 300; color: var(--color-ink);
+  transition: border-color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
+}
+.field-box::placeholder { color: var(--color-ink-40); font-weight: 300; }
+.field-box:hover:not(:focus) { border-color: var(--color-ink-40); }
+/* override the global input:focus wash/inset-underline (designed for underline
+   fields) — a bordered box wants a clean border + ring instead */
+.field-box:focus {
+  border-color: var(--color-ink); background: var(--color-paper-pure);
+  outline: none; box-shadow: 0 0 0 1px var(--color-ink);
+}
+
+/* ── Stripe-style nav panel — entrance pop for the ONE shared white panel;
+   switching groups never re-runs this (the panel persists, content slides). ── */
+.nav-pop { animation: nav-pop 0.26s var(--ease-out) both; transform-origin: top center; }
+@keyframes nav-pop {
+  from { opacity: 0; transform: translateY(7px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .nav-pop { animation: none; } }
+/* meganav content crossfade — the box glides, the CONTENT slides in from the
+   direction of travel (Stripe technique). Direction-aware; box stays fixed size. */
+.nav-content-r { animation: nav-in-r 0.5s var(--ease-out) both; }
+.nav-content-l { animation: nav-in-l 0.5s var(--ease-out) both; }
+@keyframes nav-in-r { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+@keyframes nav-in-l { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .nav-content-r, .nav-content-l { animation: none; } }
+
+/* ── solid-white floating bar (the compass pill) — full white per the client-
+   dashboard reference, not liquid glass; overflow-hidden clips the live shader
+   gradient flowing beneath the controls. ── */
+.bar-solid {
+  position: relative; overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(11, 11, 11, 0.08);
+  box-shadow:
+    0 6px 18px -6px rgba(11, 11, 11, 0.14),
+    0 26px 60px -20px rgba(11, 11, 11, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+/* the pill's input must NOT inherit the global input:focus wash + inset
+   underline (those are for the editorial underline fields) — unlayered + higher
+   specificity than `input:focus` so it wins */
+/* the chat/terminal inputs opt out of the global focus treatment (the tinted
+   box + dark underline the user asked us to drop). color:inherit keeps typed
+   text legible in BOTH the white pill (ink) and the dark terminal (paper);
+   currentColor+opacity dims the placeholder to match either background. */
+.bar-input:focus { background: transparent; box-shadow: none; color: inherit; }
+.bar-input:focus::placeholder { color: currentColor; opacity: 0.42; }
+/* no boxed focus ring on the chat input (it read as a weird black box); the
+   blinking caret is the focus cue. The whole pill gets a soft lift instead. */
+.compass-bar:focus-within { transform: translateY(-1px); }
+
+/* rolodex — a rotating question in the chat placeholder; each new line fades in
+   and nudges up (keyed remount replays it). Subtle, non-distracting. */
+.rolo-in { animation: rolo-in 0.55s var(--ease-out) both; }
+@keyframes rolo-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rolo-in { animation: none; } }
+
+/* live-dot — the quiet market-open pulse on the career terminal's status bar */
+.live-dot { animation: live-pulse 2.4s ease-in-out infinite; }
+@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+
+/* ── logo walls — real, full-colour brand logos on an otherwise monochrome site
+   (a deliberate colour break). No boxes; a pointer-driven 3D tilt + scale on
+   hover; the schools row drifts as a marquee. ── */
+.logo-art {
+  transition: transform 0.25s var(--ease-out), opacity 0.4s var(--ease-out);
+  transform-style: preserve-3d;
+}
+.logo-marquee .logo-cell:hover .logo-art { transform: scale(1.12); }
+.logo-row { display: flex; width: max-content; animation: logo-scroll var(--dur, 52s) linear infinite; }
+.logo-row.rev { animation-direction: reverse; }
+.logo-marquee:hover .logo-row { animation-play-state: paused; }
+@keyframes logo-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .logo-art { transition: none; } .logo-row { animation: none; } }
+
+/* Fluid display — thin by default, .b for bold accents (Swiss weight-mix) */
+.display {
+  font-weight: 200;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  font-size: clamp(2.75rem, 11vw, 11rem);
+}
+.display .b { font-weight: 600; }
+.h-xl { font-weight: 200; line-height: 1.0; letter-spacing: -0.03em; font-size: clamp(2.25rem, 6.5vw, 5.5rem); }
+.h-xl .b { font-weight: 600; }
+.h-lg { font-weight: 300; line-height: 1.05; letter-spacing: -0.025em; font-size: clamp(1.75rem, 4.2vw, 3.25rem); }
+.h-lg .b { font-weight: 600; }
+.lead { font-weight: 300; font-size: clamp(1.05rem, 1.6vw, 1.45rem); line-height: 1.5; letter-spacing: -0.012em; }
+
+/* anchored sections land below the fixed header */
+[id] { scroll-margin-top: 84px; }
+
+/* ── layout ──────────────────────────────────────────────────────────── */
+.wrap { width: 100%; max-width: 1440px; margin-inline: auto; padding-inline: clamp(20px, 5vw, 88px); }
+.hair { border-color: var(--color-line); }
+.hair-t { border-top: 1px solid var(--color-line); }
+.hair-b { border-bottom: 1px solid var(--color-line); }
+
+/* ── scroll progress ─────────────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+  background: #fff; transform: scaleX(0); transform-origin: left;
+  z-index: 9001; pointer-events: none; mix-blend-mode: difference; will-change: transform;
+}
+
+/* ── grain overlay ───────────────────────────────────────────────────── */
+.grain {
+  pointer-events: none;
+  position: fixed; inset: 0; z-index: 9000;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ── compass cursor ──────────────────────────────────────────────────────
+   A ring on the pointer with a needle on its rim that swings to point at the
+   nearest clickable. Over the hero it becomes a shooting-star logomark trail.
+   difference-blend = visible on black + white. */
+/* NO media query: `.cursor-on` only ever exists after JS saw a real (non-touch)
+   pointer move, so the class itself is the gate. Media queries ((hover)/(pointer),
+   any-*) misreported on touchscreen laptops & remote desktops and left users
+   cursorless — event-driven activation can't. */
+.cursor-on, .cursor-on a, .cursor-on button, .cursor-on input, .cursor-on textarea, .cursor-on [data-cursor], .cursor-on [role='button'] { cursor: none; }
+/* Windows High Contrast / forced-colors strips blend modes — the compass would be
+   invisible while the native cursor is hidden. Keep the native cursor there. */
+@media (forced-colors: active) {
+  .cursor-on, .cursor-on a, .cursor-on button, .cursor-on input, .cursor-on textarea, .cursor-on [data-cursor], .cursor-on [role='button'] { cursor: auto; }
+  .compass, .ctrail, .logolead, .logostar { display: none; }
+}
+/* no difference-blend support (old GPUs / disabled acceleration): white-on-white
+   would vanish — fall back to ink with a paper halo so it reads on any tone */
+@supports not (mix-blend-mode: difference) {
+  .compass, .ctrail, .logolead, .logostar { mix-blend-mode: normal; color: var(--color-ink); filter: drop-shadow(0 0 2px rgba(250, 249, 246, 0.95)); }
+  .ctrail { background: var(--color-ink); }
+}
+/* hidden until JS activates on a real mouse move (opacity 0 default → cursor-on 1) */
+.compass { position: fixed; top: 0; left: 0; z-index: 10600; pointer-events: none; mix-blend-mode: difference; color: #fff; will-change: transform; transition: opacity 0.25s; opacity: 0; }
+.cursor-on .compass { opacity: 1; }
+/* hide/show is a class, NEVER a tween — tweening opacity with overwrite kills
+   the quickTo position tweens and freezes the cursor permanently */
+.cursor-out .compass, .cursor-out .ctrail, .cursor-out .logolead, .cursor-out .logostar { opacity: 0 !important; }
+.ctrail, .logolead { transition: opacity 0.25s; }
+
+/* ── liquid glass ──
+   .glass = the milky frosted pill (Compass bar). .glass-milk = a stronger,
+   less-transparent milk for dropdown panels that sit over the dark hero, where
+   a thin glass reads see-through (matches the portal's rgba(255,255,255,0.86)
+   frost-strong). Both blur the backdrop; neither sets a radius so callers pick
+   sharp (site chrome) or rounded-full (the pill). */
+.glass {
+  background: rgba(244, 243, 239, 0.85);
+  -webkit-backdrop-filter: blur(26px) saturate(1.5);
+  backdrop-filter: blur(26px) saturate(1.5);
+  border: 1px solid rgba(11, 11, 11, 0.14);
+  /* two-layer shadow: a tight ambient + a soft cast so the floating bar clearly
+     lifts off the page */
+  box-shadow: 0 6px 18px -6px rgba(11, 11, 11, 0.20), 0 26px 60px -20px rgba(11, 11, 11, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.glass-milk {
+  background: rgba(246, 245, 241, 0.95);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  backdrop-filter: blur(30px) saturate(1.6);
+  border: 1px solid rgba(11, 11, 11, 0.12);
+  box-shadow: 0 22px 60px -24px rgba(11, 11, 11, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+/* ── the floating Compass bar: alive, not static ──
+   rises in on mount, lifts toward the pointer on hover (deeper shadow), and a
+   slow light sheen sweeps the glass so it reads as a live surface. The sheen is
+   a gfx overlay (skew is fine here — no photo is ever skewed). */
+.compass-bar {
+  position: relative; overflow: hidden;
+  transition: width 0.32s var(--ease-out), padding 0.32s var(--ease-out), transform 0.34s var(--ease-out), box-shadow 0.34s var(--ease-out);
+  animation: bar-rise 0.55s var(--ease-out);
+}
+.compass-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px -8px rgba(11, 11, 11, 0.26), 0 34px 74px -22px rgba(11, 11, 11, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.66);
+}
+.bar-sheen {
+  position: absolute; top: 0; bottom: 0; left: -45%; width: 34%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-16deg); pointer-events: none;
+  animation: bar-sheen 7.5s ease-in-out infinite;
+}
+@keyframes bar-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bar-sheen { 0%, 70% { left: -45%; opacity: 0; } 78% { opacity: 1; } 92%, 100% { left: 125%; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .compass-bar { animation: none; }
+  .compass-bar:hover { transform: none; }
+  .bar-sheen { display: none; }
+}
+
+/* ── career terminal: ticker marquee + monochrome range slider ── */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee { animation: marquee 44s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+.range-mono { -webkit-appearance: none; appearance: none; height: 2px; background: var(--color-line); cursor: pointer; }
+.range-mono:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 6px; }
+.range-mono::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%; background: var(--color-ink); cursor: pointer; }
+.range-mono::-moz-range-thumb { width: 15px; height: 15px; border: none; border-radius: 50%; background: var(--color-ink); cursor: pointer; }
+/* the circle — rides the pointer; this is the click hotspot */
+.compass .ring {
+  position: absolute; left: -8px; top: -8px; width: 16px; height: 16px;
+  border: 1.5px solid currentColor; border-radius: 50%; opacity: 0.85;
+  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out), left 0.25s var(--ease-out), top 0.25s var(--ease-out), opacity 0.25s;
+}
+.compass.near .ring { width: 21px; height: 21px; left: -10.5px; top: -10.5px; opacity: 1; }
+/* the arrow — pivots around the circle, tip pointing out toward the nearest control */
+.compass .arm { position: absolute; left: 0; top: 0; transform-origin: 0 0; transition: opacity 0.3s var(--ease-out); }
+.compass .arm .needle { position: absolute; left: -10px; top: -39px; width: 20px; height: 26px; transform-origin: 50% 100%; transition: transform 0.2s var(--ease-out); }
+.compass.near .arm .needle { transform: scale(1.12); }
+/* caret over text fields */
+.compass .caret { position: absolute; left: -1px; top: -12px; width: 2px; height: 24px; background: currentColor; opacity: 0; transition: opacity 0.2s; }
+.compass.is-text .arm, .compass.is-text .ring { opacity: 0; }
+.compass.is-text .caret { opacity: 1; }
+.compass.is-logo .arm, .compass.is-logo .ring { opacity: 0; }
+/* magnetic hover — the control the needle targets shows its hover state, so
+   aiming at a link already underlines it (aim = hover = click). */
+.magnet-hover.ul::after, .magnet-hover .ul::after { transform: scaleX(1); transform-origin: left; }
+.unlock.magnet-hover .more { max-height: 140px; opacity: 1; margin-top: 0.7rem; }
+.unlock.magnet-hover .lockmark { transform: rotate(45deg); opacity: 1; }
+a.magnet-hover[class*="hover:bg-paper-pure"] { background: var(--color-paper-pure); }
+a.magnet-hover[class*="hover:bg-paper"]:not([class*="hover:bg-paper-pure"]) { background: var(--color-paper); }
+a.magnet-hover[class*="hover:opacity-80"] { opacity: 0.8; }
+
+/* fading comet trail (normal mode) */
+.ctrail { position: fixed; top: 0; left: 0; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #fff; z-index: 10598; pointer-events: none; mix-blend-mode: difference; will-change: transform; opacity: 0; /* activation sets per-dot inline opacity */ }
+/* shooting-star logo trail (hero) — difference-blend so it shows on any B/W tone */
+.logostar { position: fixed; top: 0; left: 0; color: #fff; z-index: 10597; pointer-events: none; opacity: 0; mix-blend-mode: difference; will-change: transform, opacity; }
+/* the lead logomark — becomes the cursor over the hero */
+.logolead {
+  position: fixed; top: 0; left: 0; margin: -17px 0 0 -17px; color: #fff; z-index: 10600;
+  pointer-events: none; opacity: 0; mix-blend-mode: difference;
+  transition: opacity 0.25s var(--ease-out); will-change: transform, opacity;
+}
+.hero-cursor .logolead { opacity: 1; }
+.hero-cursor .ctrail { opacity: 0 !important; }
+
+/* ── hover-unlock (Wii-style progressive disclosure) ── */
+.unlock .more { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s var(--ease-out), opacity 0.4s var(--ease-out), margin-top 0.4s var(--ease-out); }
+.unlock:hover .more, .unlock:focus-within .more { max-height: 140px; opacity: 1; margin-top: 0.7rem; }
+.unlock .lockmark { transition: transform 0.45s var(--ease-out), opacity 0.3s; opacity: 0.4; }
+.unlock:hover .lockmark { transform: rotate(45deg); opacity: 1; }
+
+/* ── form focus: a soft active HIGHLIGHT, not a full black fill ──
+   a faint ink wash + a 2px ink accent underline marks the active field while
+   keeping typed text dark-on-light and legible (the old full invert read as a
+   heavy black box). */
+input, textarea { caret-color: var(--color-ink); transition: background-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out); }
+input:focus, textarea:focus {
+  background: rgba(11, 11, 11, 0.045); color: var(--color-ink); caret-color: var(--color-ink); outline: none;
+  box-shadow: inset 0 -2px 0 var(--color-ink);
+}
+input:focus::placeholder, textarea:focus::placeholder { color: var(--color-ink-40); }
+/* on dark plates, lift the field with a translucent wash + a paper accent underline */
+.plate-dark input:focus, .plate-dark textarea:focus { background: rgba(255, 255, 255, 0.12); color: var(--color-paper); caret-color: var(--color-paper); box-shadow: inset 0 -2px 0 var(--color-paper); }
+.plate-dark input:focus::placeholder { color: rgba(243, 242, 238, 0.4); }
+
+/* ── generative splash ── */
+.splash { position: fixed; inset: 0; z-index: 9800; background: var(--color-ink); overflow: hidden; }
+.splash canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ── editorial (blog body) ───────────────────────────────────────────── */
+/* Newsreader for a genuine magazine read; the h2 stays sans-caps for editorial
+   contrast against the serif column. */
+.editorial { font-family: var(--font-editorial); font-weight: 400; }
+.editorial p { font-size: 1.16rem; line-height: 1.72; margin: 0 0 1.35em; color: var(--color-ink-80); }
+.editorial p:first-of-type::first-letter { font-family: var(--font-display-serif); font-weight: 500; float: left; font-size: 3.1em; line-height: 0.78; padding: 0.06em 0.12em 0 0; color: var(--color-ink); }
+.editorial h2 {
+  font-family: var(--font-sans); font-weight: 600; font-size: 0.82rem;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-ink);
+  margin: 2.4em 0 0.9em;
+}
+
+/* ── reveal (GSAP toggles via .is-in) ────────────────────────────────── */
+[data-reveal] { opacity: 0; transform: translateY(22px); }
+[data-reveal].is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+
+/* split-text lines — bottom padding keeps descenders (g/y/p) inside the mask
+   while the line animates; the negative margin cancels the layout cost */
+.line-mask { overflow: hidden; }
+.sr-line { padding-bottom: 0.12em; margin-bottom: -0.12em; }
+
+/* ── marquee ─────────────────────────────────────────────────────────── */
+.marquee { display: inline-flex; white-space: nowrap; will-change: transform; }
+
+/* ── b/w image treatment ─────────────────────────────────────────────── */
+.bw { filter: grayscale(1) contrast(1.05); }
+.bw-hi { filter: grayscale(1) contrast(1.12) brightness(0.96); }
+
+/* hide scrollbars on horizontal strips */
+.no-bar { scrollbar-width: none; }
+.no-bar::-webkit-scrollbar { display: none; }
+
+/* ── buttons ─────────────────────────────────────────────────────────────
+   One system: outline by default, ink fill sweeps up on hover (transform-only),
+   .btn--solid reserved for the single primary CTA per view (Von Restorff). */
+.btn {
+  position: relative; display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.78rem 1.5rem; min-height: 44px; /* Fitts: comfortable target */
+  font-size: 13px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap;
+  border: 1px solid var(--color-ink); color: var(--color-ink); background: transparent;
+  overflow: hidden; transition: color 0.3s var(--ease-out);
+}
+.btn > * { position: relative; z-index: 1; }
+.btn::before {
+  content: ""; position: absolute; inset: -1px; background: var(--color-ink);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.32s var(--ease-out);
+}
+.btn:hover, .btn.magnet-hover, .btn:focus-visible { color: var(--color-paper); }
+.btn:hover::before, .btn.magnet-hover::before, .btn:focus-visible::before { transform: scaleY(1); }
+/* on dark plates */
+.btn--dark { border-color: var(--color-paper); color: var(--color-paper); }
+.btn--dark::before { background: var(--color-paper); }
+.btn--dark:hover, .btn--dark.magnet-hover, .btn--dark:focus-visible { color: var(--color-ink); }
+/* the one act-here CTA */
+.btn--solid { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+.btn--solid::before { background: var(--color-paper); }
+.btn--solid:hover, .btn--solid.magnet-hover, .btn--solid:focus-visible { color: var(--color-ink); }
+/* the act-here CTA on a dark plate — the inverted twin of .btn--solid (paper
+   fill, ink sweep on hover). Same rule applies: ONE per view. */
+.btn--solid-dark { background: var(--color-paper); color: var(--color-ink); border-color: var(--color-paper); }
+.btn--solid-dark::before { background: var(--color-ink); }
+.btn--solid-dark:hover, .btn--solid-dark.magnet-hover, .btn--solid-dark:focus-visible { color: var(--color-paper); }
+.btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.btn .btn-arrow { transition: transform 0.3s var(--ease-out); }
+.btn:hover .btn-arrow, .btn.magnet-hover .btn-arrow { transform: translate(2px, -2px); }
+
+/* link with animated underline */
+.ul { position: relative; }
+.ul::after {
+  content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%;
+  background: currentColor; transform: scaleX(0); transform-origin: right;
+  transition: transform 0.5s var(--ease-out);
+}
+.ul:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* ── product demos (Session 3) ───────────────────────────────────────────── */
+/* Career-Intelligence 3D ring */
+.ring-spin { animation: ring-spin 34s linear infinite; }
+@keyframes ring-spin { to { transform: rotateY(360deg); } }
+/* AI-counsellor typing indicator */
+.dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(243, 242, 238, 0.6); display: inline-block; animation: dotpulse 1.1s infinite ease-in-out; }
+.dots i:nth-child(2) { animation-delay: 0.15s; }
+.dots i:nth-child(3) { animation-delay: 0.3s; }
+/* ink dots — the typing indicator on a LIGHT bubble */
+.dots-ink i { width: 5px; height: 5px; border-radius: 50%; background: rgba(11, 11, 11, 0.42); display: inline-block; animation: dotpulse 1.1s infinite ease-in-out; }
+.dots-ink i:nth-child(2) { animation-delay: 0.15s; }
+.dots-ink i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dotpulse { 0%, 100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 0.9; transform: translateY(-2px); } }
+
+/* product frames — Apple-style rounded corners + a soft depth shadow. A rationed
+   exception to the site's flat rule, reserved for real product screenshots. */
+.elev { box-shadow: 0 30px 64px -30px rgba(11, 11, 11, 0.30), 0 10px 26px -14px rgba(11, 11, 11, 0.13); }
+.elev-sm { box-shadow: 0 18px 40px -24px rgba(11, 11, 11, 0.28), 0 6px 16px -10px rgba(11, 11, 11, 0.12); }
+
+/* product showcase — feature crossfade + lightbox open */
+@keyframes fpfade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes lbfade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lbzoom { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+/* chat demo — message rise + caret blink */
+@keyframes chatrise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* fullscreen lightbox — hide the app chrome (top nav + floating chat bar) */
+html.lightbox-open [data-nav],
+html.lightbox-open [data-careerbar] { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.2s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .ring-spin { animation: none; }
+  .dots i { animation: none; opacity: 0.6; }
+}
+
+/* ── Legal documents (src/content/legal/*.md via LegalMarkdown) ───────────────
+   Clean long-form reading: a comfortable measure, generous rhythm, hairline
+   tables. AA-legible throughout (no sub-4.5:1 body text). */
+.legal-doc { max-width: 72ch; font-size: 15px; line-height: 1.72; color: var(--color-ink-80, #2b2a27); }
+.legal-doc > * + * { margin-top: 1.05em; }
+.legal-doc h2 { margin-top: 2.4em; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; color: var(--color-ink); scroll-margin-top: 6rem; }
+.legal-doc h2:first-child { margin-top: 0; }
+.legal-doc h3 { margin-top: 1.9em; font-size: 1.02rem; font-weight: 600; color: var(--color-ink); scroll-margin-top: 6rem; }
+.legal-doc h4 { margin-top: 1.5em; font-size: 0.86rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-60); }
+.legal-doc p { color: var(--color-ink-80, #2b2a27); }
+.legal-doc strong { font-weight: 600; color: var(--color-ink); }
+.legal-doc code { font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.86em; background: var(--color-paper-2, #f2f0ea); padding: 0.1em 0.4em; border-radius: 4px; }
+.legal-doc a.lg-a { color: var(--color-growth); border-bottom: 1px solid color-mix(in srgb, var(--color-growth) 34%, transparent); }
+.legal-doc a.lg-a:hover { border-bottom-color: var(--color-growth); }
+.legal-doc ul, .legal-doc ol { padding-left: 1.35em; }
+.legal-doc li { margin-top: 0.4em; padding-left: 0.2em; }
+.legal-doc ul li { list-style: none; position: relative; }
+.legal-doc ul li::before { content: "—"; position: absolute; left: -1.35em; color: var(--color-ink-40); }
+.legal-doc ol { list-style: decimal; }
+.legal-doc blockquote { border-left: 2px solid var(--color-ink-20, #d8d4ca); padding-left: 1.1em; color: var(--color-ink-60); font-style: italic; }
+.legal-doc hr { border: 0; border-top: 1px solid var(--color-line); margin: 2.2em 0; }
+.lg-tablewrap { overflow-x: auto; margin-top: 1.2em; border: 1px solid var(--color-line); border-radius: 10px; }
+.lg-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.lg-table th, .lg-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--color-line); vertical-align: top; }
+.lg-table th { font-weight: 600; color: var(--color-ink); background: var(--color-paper-2, #f4f2ec); white-space: nowrap; }
+.lg-table tr:last-child td { border-bottom: 0; }
+
+/* ── editorial feed imagery — normalise wildly different artworks into one
+   curated tone: slight desaturation, unified contrast, gentle lift (spec: the
+   grid should read as one publication, not a gallery of unrelated pictures) */
+/* light touch only — the abstract works should stay vivid (the OpenAI-gradient
+   energy), just pulled into one tonal family */
+.edit-img { filter: saturate(0.92) contrast(0.96) brightness(1.02); }
+.group:hover .edit-img { filter: saturate(1) contrast(1) brightness(1); }
+@media (prefers-reduced-motion: reduce) { .edit-img { transition: none !important; } }
+/* bento tiles — the remounted rotation image fades in once LOADED (is-loaded is
+   set by onLoad / the cache-complete ref guard), so a swap reads as a soft
+   cross-fade instead of a black-tile pop; hover zoom rides the same transition */
+.bento-img { opacity: 0; transition: opacity 600ms ease, transform 900ms cubic-bezier(0.16, 1, 0.3, 1); }
+.bento-img.is-loaded { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .bento-img { transition: none !important; opacity: 1; } }
+/* placeholder markers that MUST be filled before customer launch */
+.lg-confirm { background: color-mix(in srgb, var(--color-growth) 16%, transparent); color: var(--color-growth); border-bottom: 1px dashed var(--color-growth); padding: 0 0.25em; border-radius: 3px; font-size: 0.9em; font-weight: 500; }
+
+/* ── flowing gradient ring — a thin conic band that circles a card's interior
+   (pricing product boxes). Transform-only rotation on an oversized inner layer;
+   the mask shows just the ring. No WebGL cost. ── */
+.grad-ring-spin { animation: grad-ring-spin 16s linear infinite; }
+@keyframes grad-ring-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .grad-ring-spin { animation: none; } }

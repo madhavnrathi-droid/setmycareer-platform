@@ -1,0 +1,92 @@
+{
+  "version": "0.1.0",
+  "base_api_env": "SMC_API_BASE",
+  "tools": [
+    {
+      "name": "answer_career_question",
+      "backend": "POST /api/chat",
+      "purpose": "Generate a grounded career-counselling answer from user context and project knowledge.",
+      "input_schema": {
+        "message": "string",
+        "mode": "reflect | strategize | decide | review | prepare | challenge",
+        "context": "string",
+        "history": [{ "role": "user | assistant", "content": "string" }]
+      },
+      "output_schema": {
+        "reply": "string"
+      },
+      "voice_policy": "Keep spoken responses short. If output is long, summarize and offer to send details in chat."
+    },
+    {
+      "name": "score_client_inventory",
+      "backend": "POST /api/inventories/score",
+      "purpose": "Score RIASEC and Big Five inventory responses, optionally merging into the user's career profile.",
+      "input_schema": {
+        "user_id": "string optional",
+        "riasec_responses": "array optional",
+        "big_five_responses": "array optional"
+      },
+      "output_schema": {
+        "riasec": "object|null",
+        "big_five": "object|null"
+      },
+      "voice_policy": "Do not administer long inventories by voice unless the user explicitly wants it; prefer sending a form."
+    },
+    {
+      "name": "analyze_career_session",
+      "backend": "POST /api/career/analyze",
+      "purpose": "Run the SetMyCareer career pipeline over a transcript or structured session notes.",
+      "input_schema": {
+        "transcript": "string",
+        "career_profile": "object optional",
+        "mental_health_context": "object optional",
+        "user_id": "string optional",
+        "session_id": "string optional"
+      },
+      "output_schema": {
+        "career_index": "number optional",
+        "confidence": "string optional",
+        "scores": "object",
+        "composites": "object",
+        "moves": "array",
+        "citations": "array"
+      },
+      "voice_policy": "Use after a meaningful transcript exists; never pretend analysis ran if the tool is unavailable."
+    },
+    {
+      "name": "draft_booking_request",
+      "backend": "TODO booking CRM/calendar endpoint",
+      "purpose": "Collect the minimum fields needed to request a SetMyCareer counsellor booking.",
+      "input_schema": {
+        "name": "string",
+        "phone_or_whatsapp": "string",
+        "profile_segment": "string",
+        "service_need": "string",
+        "preferred_slot": "string",
+        "city_or_timezone": "string optional",
+        "consent_to_contact": "boolean"
+      },
+      "output_schema": {
+        "status": "drafted | submitted | needs_human_followup",
+        "message": "string",
+        "booking_id": "string optional"
+      },
+      "voice_policy": "Confirm the phone number and consent before submitting. Do not claim the booking is confirmed unless the backend confirms it."
+    },
+    {
+      "name": "dispatch_meeting_bot",
+      "backend": "POST /api/meetings/bot",
+      "purpose": "Send a notetaker bot to a counselling meeting when configured.",
+      "input_schema": {
+        "user_id": "string optional",
+        "meeting_url": "string",
+        "bot_name": "string optional"
+      },
+      "output_schema": {
+        "bot_id": "string optional",
+        "status": "string optional"
+      },
+      "voice_policy": "Only use after the user or counsellor explicitly requests meeting recording/notetaking and consent has been captured."
+    }
+  ]
+}
