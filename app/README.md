@@ -60,7 +60,7 @@ app/
 │
 ├── db.py            persistence dispatcher — resolves one backend at import
 ├── db_appwrite.py   Appwrite backend (the live one)
-├── db_postgres.py   Postgres/Supabase backend (used when DATABASE_URL is set)
+├── db_postgres.py   Postgres backend (used only when DATABASE_URL is set — it isn't)
 │
 ├── bridge.py        wellbeing-context bridge
 ├── meetings.py      Recall.ai meeting bot (joins Zoom/Meet/Teams)
@@ -81,13 +81,27 @@ Copy [`../.env.example`](../.env.example) to `.env` at the repository root:
 | `GROQ_API_KEY` | **Required** — every LLM route |
 | `OPENROUTER_API_KEY` | Optional paid fallback when Groq's free tier is exhausted |
 | `LLM_MODEL`, `STT_MODEL` | Model overrides (production runs `openai/gpt-oss-120b`) |
-| `DATABASE_URL` | Optional — Supabase Postgres; omit to run stateless |
+| `DATABASE_URL` | Optional — any Postgres; omit to run stateless. **Not set in production** |
 | `APPWRITE_*` | Optional — the live persistence backend |
 | `RECALL_API_KEY` | Optional — meeting bot |
 | `GOOGLE_CLIENT_*`, `ZOHO_CLIENT_*` | Optional — calendar/meeting OAuth |
 
 With no keys the service still starts; LLM routes return a clear "not configured" error rather
 than failing obscurely.
+
+### Which persistence backend you get
+
+`db.py` resolves exactly one backend at import, in this order:
+
+1. `APPWRITE_API_KEY` + `APPWRITE_PROJECT_ID` set → **Appwrite**
+2. else `DATABASE_URL` set → **Postgres**
+3. else → **no-op**, and the service still boots
+
+The Vercel project `setmycareer` sets `APPWRITE_*` and no `DATABASE_URL`, so production resolves
+to Appwrite at step 1 — `DATABASE_URL` is never consulted there. It stays a real option: point it
+at any Postgres to run `db_postgres.py` instead. This service has never depended on Supabase, and
+the app-layer Supabase store the `counselor/` app used was retired on 2026-07-19 without touching
+anything here.
 
 ---
 

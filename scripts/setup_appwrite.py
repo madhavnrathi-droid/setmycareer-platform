@@ -7,7 +7,7 @@ Run once after setting APPWRITE_ENDPOINT / APPWRITE_PROJECT_ID / APPWRITE_API_KE
     pip install appwrite
     python scripts/setup_appwrite.py
 
-Mirrors the Supabase schema. Safe to re-run — "already exists" errors are ignored.
+Mirrors the schema in supabase/migrations/. Safe to re-run — "already exists" errors are ignored.
 """
 from __future__ import annotations
 

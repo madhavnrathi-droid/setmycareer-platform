@@ -5,24 +5,49 @@ One app, three doors: **client portal** `/portal/*`, **counsellor console** `/`,
 who-gets-what-feedback — as the ground truth for E2E testing with the three test logins.
 
 Generated 2026-07-12 from a four-agent sweep of the codebase. File references are exact.
+**Updated 2026-07-19: Plane B was retired — §1 rewritten, everything downstream of it re-read
+accordingly.**
 
 ---
 
 ## 1. The two data planes (the single most important fact)
 
-| | **Plane A — live SMC backend** | **Plane B — app cloud store (Supabase)** |
+| | **Plane A — live SMC backend** | **Plane B — app cloud store (RETIRED 2026-07-19)** |
 |---|---|---|
-| Base | `https://api.setmycareer.com/api/` (CORS `*`, no auth token) | `POST /api/cloud` → Supabase PostgREST (server-held key) |
-| Holds | Identity (numeric user ids), navigator roster (81), sold services/packages, sessions-of-record, counsellor comments (notes), uploaded report PDFs, Zoho calendar | Bookings, in-app calendar, client↔counsellor messages, test results, wallet/credits/purchases, AI chats (≤50/user) |
-| Writes | Gated client-side by `VITE_SMC_WRITES_ENABLED` (**ON** in .env.local + Vercel prod). Gate is client-side only. | Open POST; scoped by `(app, user_id)`; **no RLS yet** — scoping is by convention |
-| Tables | remote FastAPI | `app_state` (key/value docs) + `app_chats` |
+| Base | `https://api.setmycareer.com/api/` (CORS `*`, no auth token) | `POST /api/cloud` → **disabled**; returns `{"ok":false,"disabled":true}` at HTTP 200 |
+| Holds | Identity (numeric user ids), navigator roster (81), sold services/packages, sessions-of-record, counsellor comments (notes), uploaded report PDFs, Zoho calendar. **Completed test results are pushed here too.** | Held bookings, in-app calendar, client↔counsellor messages, test results, wallet/credits/purchases, AI chats (≤50/user) — **all of it now lives in the browser only** |
+| Writes | Gated client-side by `VITE_SMC_WRITES_ENABLED` (**ON** in .env.local + Vercel prod). Gate is client-side only. | No writes reach a server. `src/lib/cloud.ts` sets `serverReachable = false` on the `disabled` flag and every store falls back to per-user-namespaced `localStorage` |
+| Tables | remote FastAPI | `app_state` + `app_chats` — the Postgres behind them was deleted; `SUPABASE_URL` / `SUPABASE_KEY` removed from Vercel prod |
 
-Identity resolution for Plane B (`src/lib/cloud.ts:22`): counsellor/admin ⇒ `localStorage["smc.auth.session"]`;
-client ⇒ `localStorage["smc.portal.account"]`. Scope strings like `client:29232`, `counsellor:2038`.
+**This is a designed, tested fallback — not a crash.** Portal sign-in, dashboard and Reports were
+verified rendering with zero console errors after the change. The cloud code was kept on purpose:
+`src/server/cloud-core.ts` speaks plain PostgREST, so pointing those two env vars at **any** Postgres
+re-enables the whole layer with no app changes. Read it as present-but-unconfigured.
 
-**Key `app_state` docs:** `shared.messages` (thread, client-scoped), `shared.bookings` (client-scoped),
-`shared.test_results` (digest only), `portal.wallet`, `purchases:<clientId>` (server purchase ledger),
+**What that costs, concretely:**
+- **No cross-device sync.** Everything below that says "cloud" now means "this browser".
+- **No durability.** Clearing browser data wipes app-layer state outright.
+- **No shared admin state.** Coupons, refunds and client-overrides are per-browser.
+- **Unaffected:** clients, counsellors, sessions and uploaded reports (Plane A), plus completed
+  test results, which are pushed to Plane A.
+
+Identity resolution (`src/lib/cloud.ts:22`) is unchanged and still scopes local storage:
+counsellor/admin ⇒ `localStorage["smc.auth.session"]`; client ⇒ `localStorage["smc.portal.account"]`.
+Scope strings like `client:29232`, `counsellor:2038`.
+
+**Former `app_state` docs** — these keys still exist in code and still work per-browser:
+`shared.messages` (thread, client-scoped), `shared.bookings` (client-scoped),
+`shared.test_results` (digest only), `portal.wallet`, `purchases:<clientId>` (the purchase ledger),
 `calendar-events` (per-counsellor).
+
+**RELEASE BLOCKER — marketing-site purchases no longer grant packages.** The flow was
+`site/src/pages/Checkout.tsx` → `POST /api/razorpay` action `verify` → `recordServerPurchase()`
+writes `purchases:<clientId>` → `syncWalletAndPurchases()` (`src/portal/portal-store.ts`) reads it
+back and grants the package exactly once. Both halves now no-op, so the customer is charged and gets
+nothing in the portal. Payment verification itself is correct and deliberately best-effort — *a
+store failure never invalidates a genuine payment* — and Razorpay is the authoritative record of the
+money. Latent today (deployed key is `rzp_test_…`), but **must be fixed before live Razorpay keys**.
+The real fix is the purchase/entitlement endpoints in [`BACKEND_API_SPEC.md`](BACKEND_API_SPEC.md).
 
 ---
 

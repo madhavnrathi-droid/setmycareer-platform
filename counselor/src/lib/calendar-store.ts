@@ -1,4 +1,4 @@
-// Our OWN calendar — persistent events backed by the cloud store (Supabase via
+// Our OWN calendar — events kept in the browser-local store (the cloud store via
 // /api/cloud), scoped to the signed-in user, with a LiveKit room per event. This
 // replaces the Zoho calendar so SetMyCareer runs scheduling + video entirely on
 // LiveKit (no Zoho subscription). Local-first (works offline / in the demo) with

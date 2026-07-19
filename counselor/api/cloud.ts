@@ -1,6 +1,9 @@
 // Vercel Edge function: POST /api/cloud
-// Relays the browser's app-native persistence (chats + per-user state) to
-// Supabase via the shared cloud-core, using server-only Supabase credentials.
+// Relays the browser's app-native persistence (chats + per-user state) to a
+// PostgREST backend via the shared cloud-core, using server-only credentials.
+//
+// SUPABASE_URL / SUPABASE_KEY are UNSET in production as of 2026-07-19, so this
+// answers {ok:false, disabled:true} and the client stays local-only by design.
 import { runCloud } from "../src/server/cloud-core"
 
 export const config = { runtime: "edge" }

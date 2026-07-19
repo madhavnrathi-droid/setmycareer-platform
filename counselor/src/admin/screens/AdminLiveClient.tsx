@@ -266,7 +266,7 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
   }
   async function saveRegen() {
     if (!regen) return
-    const ok = await saveRegenReport({ clientId, name, html: regen.html, narrative: regen.narrative })
+    const ok = await saveRegenReport({ clientId, name, html: regen.html })
     if (ok) setRegen(null)
   }
 

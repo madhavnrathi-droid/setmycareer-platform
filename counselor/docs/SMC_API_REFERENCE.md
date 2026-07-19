@@ -201,16 +201,30 @@ Ports of the interim cloud store + guest flow + payments.
 | Route | Runtime | Methods | Purpose | Keys used |
 |---|---|---|---|---|
 | `/api/assistant` | Edge | POST, OPTIONS | Compass chat — Groq → OpenRouter failover, audience-scoped personas (client / counsellor / admin), grounded in the user's own data. | `GROQ_API_KEY`, `OPENROUTER_API_KEY` |
-| `/api/cloud` | Edge | POST | Interim per-user store (Supabase): `{kind:"state"\|"chats", op:…}`. **Layer 1 §H replaces this.** | `SUPABASE_URL`, `SUPABASE_KEY` |
+| `/api/cloud` | Edge | POST | Interim per-user store: `{kind:"state"\|"chats", op:…}`. **DISABLED since 19 Jul 2026** — the interim Postgres was retired and its two credentials removed, so every call returns `{"ok":false,"disabled":true}` at HTTP 200 and the app falls back to per-user-namespaced browser storage. The route and `src/server/cloud-core.ts` are retained deliberately: cloud-core speaks plain PostgREST, so setting the two keys to any Postgres re-enables the layer unchanged. **Layer 1 §H replaces this permanently.** | `SUPABASE_URL`, `SUPABASE_KEY` — **both unset** |
 | `/api/consolidate` | Edge | POST | Guest-battery synthesis into one on-screen report. | `GEMINI_API_KEY` |
 | `/api/fit-report` | Edge | POST | Marketing fit-test → AI package-fit report. | `GROQ_API_KEY` |
 | `/api/livekit-token` | Edge | POST | Mint a LiveKit room token for a session/call. | `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` |
 | `/api/marketing` | Edge | POST | Google-Ads spend/metrics for the admin marketing screen. | `GOOGLE_ADS_*` |
 | `/api/notes` | Edge | POST | Transcript/notes helper (session recap processing). | `GROQ_API_KEY` |
-| `/api/providers` | Node | GET, POST | Real API-usage/provider data for the admin API screen. | (reads platform state) |
-| `/api/razorpay` | **Node** | POST, OPTIONS | Create order + **HMAC-verify** payment. Node runtime is required (Razorpay 406s on Edge). | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` |
+| `/api/providers` | Node | GET, POST | Real API-usage/provider data for the admin "API & usage" screen. Reports **four** providers: Razorpay, OpenRouter, Groq, LiveKit. (It no longer reports a store provider or store record-counts — that entry was removed with the interim store on 19 Jul 2026.) | (reads platform state) |
+| `/api/razorpay` | **Node** | POST, OPTIONS | Create order + **HMAC-verify** payment. Node runtime is required (Razorpay 406s on Edge). **Verification works; the entitlement grant does not** — see the release blocker below. | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` |
 | `/api/report` | Edge | POST | Counsellor career-report generation (McKinsey-grade). | `GROQ_API_KEY` / `OPENROUTER_API_KEY` |
 | `/api/transcribe` | Edge | POST | Speech-to-text for live session transcripts. | `GROQ_API_KEY` (Whisper) |
+
+> **RELEASE BLOCKER — `/api/razorpay` verifies payments but can no longer grant entitlements.**
+> The marketing-site purchase path was: `site/src/pages/Checkout.tsx` → `POST /api/razorpay` action
+> `verify` → `recordServerPurchase()` writes `purchases:<clientId>` into the `/api/cloud` store → the
+> portal's `syncWalletAndPurchases()` reads it back and grants the package exactly once. With
+> `/api/cloud` disabled the write returns `false` and the read returns `null`, so **a marketing-site
+> purchase does not grant the package in the portal**; the customer is charged and receives nothing.
+> Signature verification is unaffected and behaves correctly — it is best-effort by design, so a
+> store failure never invalidates a genuine payment, and Razorpay remains the authoritative record
+> of the money.
+> **Latent, not active:** the deployed key is `rzp_test_…` (test mode — confirmed by probing
+> `POST /api/razorpay {"action":"config"}`), so no real money flows through this path today.
+> **This must be resolved before switching to LIVE Razorpay keys.** The fix is Layer 1
+> `Checkout/Create` + `Checkout/Verify` (§H above), which grant server-side on a verified signature.
 
 ---
 
@@ -276,10 +290,10 @@ FastAPI served by **Vercel** at `setmycareer.vercel.app` via `api/index.py`, rea
 |---|---|
 | **C# API** (new) | `SMC_DB_CONNECTION`, `SMC_JWT_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `LANGGRAPH_BASE_URL`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` |
 | **LangGraph service** (Vercel) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ZOHO_CLIENT_ID`, `PORT` |
-| **Vercel serverless** | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `SUPABASE_URL`, `SUPABASE_KEY` (retired at Phase 3), `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_CURRENCY`, `GOOGLE_API_KEY` |
+| **Vercel serverless** | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_REFRESH_TOKEN`, `GOOGLE_ADS_CURRENCY`, `GOOGLE_API_KEY`. **`SUPABASE_URL` + `SUPABASE_KEY` were removed on 19 Jul 2026** — `/api/cloud` still reads them, so re-setting them to any Postgres re-enables that layer, but nothing is configured today. |
 | **Frontend** (public by design) | `VITE_SMC_WRITES_ENABLED`, Razorpay **publishable** key id only |
 
-Razorpay runs on **TEST keys** today; switching to LIVE is a deliberate, separate change (architecture doc §2.10 Phase 3).
+Razorpay runs on **TEST keys** today; switching to LIVE is a deliberate, separate change (architecture doc §2.10 Phase 3) and is currently **blocked** by the entitlement gap noted under Layer 3.
 
 ---
 
@@ -299,7 +313,7 @@ Razorpay runs on **TEST keys** today; switching to LIVE is a deliberate, separat
 | Admin oversight / reschedule / revoke / archive | `Admin/*`, `Sessions/Reschedule` (L1) |
 | Compass chat (all doors) | `Chats/*` (L1) + `/api/assistant` (L3) |
 | Client ↔ counsellor messaging | `Messages/*` (L1) |
-| Package & credits / checkout | `Checkout/Create` + `Checkout/Verify` (L1) + `/api/razorpay` (L3) |
+| Package & credits / checkout | `Checkout/Create` + `Checkout/Verify` (L1) + `/api/razorpay` (L3) — **L1 is now the only working grant path; see the Layer 3 release blocker** |
 | Guest test links (`/t/…`) | `GuestLinks/*` (L1) + `/api/consolidate` (L4-adjacent) |
 | Live video/voice calls | `/api/livekit-token` (L3) |
 | Document uploads (mark-sheets etc.) | `Reports/uploadReport` (L2 — already yours) |
@@ -307,3 +321,7 @@ Razorpay runs on **TEST keys** today; switching to LIVE is a deliberate, separat
 | Marketing spend, API-usage screens | `/api/marketing`, `/api/providers` (L3) |
 
 Every user-facing action maps to a real endpoint. Nothing is left without a home.
+
+**One caveat as of 19 Jul 2026:** the rows served by `/api/cloud` (app state, chats, messages,
+bookings, credits) map to a **specified** home, not a live one — the interim store was retired and
+those rows currently persist only in the user's browser. Layer 1 §H is what makes them real.

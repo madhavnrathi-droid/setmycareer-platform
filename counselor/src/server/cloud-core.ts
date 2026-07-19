@@ -1,8 +1,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Cloud store core — the server side of SetMyCareer's app-native persistence.
 //
-// The browser NEVER talks to Supabase directly; it only POSTs to /api/cloud, and
-// this stateless core relays to Supabase PostgREST with a server-only key. Two
+// ⚠️ CURRENTLY DORMANT (2026-07-19). The Supabase project this pointed at was
+// retired, and SUPABASE_URL / SUPABASE_KEY are unset in production. With no
+// config this returns {ok:false, disabled:true} at HTTP 200 and the browser
+// falls back to per-user localStorage — a designed, tested path, not a failure.
+// The code is kept deliberately: it speaks plain PostgREST, so ANY Postgres
+// re-enables the server store by setting those two env vars. No code change.
+//
+// The browser NEVER talks to the database directly; it only POSTs to /api/cloud,
+// and this stateless core relays to PostgREST with a server-only key. Two
 // tables, both scoped by (app, user_id):
 //   • app_chats — saved AI conversations (one row each, ≤50/user enforced client-side)
 //   • app_state — generic per-user key/value documents (every former localStorage store)
@@ -11,13 +18,13 @@
 // dev (Vite middleware) and prod (Vercel function) both call, so they're identical.
 //
 // Security: access is function-gated. Per-user Postgres RLS (auth.uid()) and a
-// service-role key are the next hardening step once Supabase Auth is wired into
-// the UI; until then the user_id scoping here is the isolation boundary.
+// service-role key are required hardening BEFORE any future server store is
+// switched on; until then the user_id scoping here is the isolation boundary.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface CloudEnv {
-  url?: string // SUPABASE_URL  e.g. https://xxxx.supabase.co
-  key?: string // SUPABASE_KEY  (anon/publishable for now; service-role later)
+  url?: string // SUPABASE_URL — PostgREST base, e.g. https://xxxx.supabase.co (unset)
+  key?: string // SUPABASE_KEY — anon/publishable key (unset; service-role later)
 }
 
 const APPS = new Set(["counsellor", "client", "admin"])

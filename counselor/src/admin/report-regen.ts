@@ -7,9 +7,15 @@
 // admission preferences — into the new McKinsey-grade narrative, which we render
 // to a self-contained report DOCUMENT (HTML; the in-app viewer + the backend both
 // render HTML, and no PDF dependency is needed — same proven path as the Sigma
-// report upload). On confirm it is saved to BOTH:
-//   • the client's LIVE SetMyCareer record (Reports/uploadReport) — confirm + write-gated
-//   • the admin DB (Supabase app_state, app="admin") so the office keeps a copy
+// report upload). On confirm it is saved to the client's LIVE SetMyCareer record
+// (Reports/uploadReport) — confirm + write-gated.
+//
+// There used to be a second write here — an "office copy" into the Supabase-backed
+// admin app_state. That store was retired on 2026-07-19, and the write silently
+// no-opped (cloudStateSetFor RETURNS false when the cloud is unconfigured; it does
+// not throw) while the success toast still claimed the admin records were updated.
+// The write is gone rather than papered over: the live record IS the copy, and the
+// admin reads it back through the same client record.
 //
 // NOTHING is generated or written for legacy clients, and nothing writes unless
 // the operator confirms AND live writes are enabled — there is no mass auto-run.
@@ -19,7 +25,6 @@ import { toast } from "sonner"
 import { uploadReport, normalizeQA, type UserSession, type CareerExplorerQA } from "@/lib/smc-live-api"
 import { SMC_WRITES_ENABLED } from "@/lib/smc-api"
 import { invalidateUser } from "@/lib/live-queries"
-import { cloudStateSetFor } from "@/lib/cloud"
 import type { AINarrative } from "@/server/report-core"
 
 const clean = (v?: unknown) => { const s = v == null ? "" : String(v).trim(); return s && s !== "None" && s !== "null" && s !== "undefined" ? s : "" }
@@ -128,21 +133,18 @@ export function narrativeToHtml(name: string, n: AINarrative): string {
 
 /** Persist a regenerated report: client's LIVE record + the admin DB. Confirm-gated
  *  and write-flag-gated — never writes silently or in bulk. Returns true on success. */
-export async function saveRegenReport(input: { clientId: string; name: string; html: string; narrative: AINarrative }): Promise<boolean> {
+export async function saveRegenReport(input: { clientId: string; name: string; html: string }): Promise<boolean> {
   if (!SMC_WRITES_ENABLED) { toast.error("Live writes are off in this environment — can't save to the client's account."); return false }
-  const ok = window.confirm(`Save the regenerated new-format report to ${input.name}'s SetMyCareer account and the admin records?\n\nThis writes to their live record.`)
+  const ok = window.confirm(`Save the regenerated new-format report to ${input.name}'s SetMyCareer account?\n\nThis writes to their live record.`)
   if (!ok) return false
   const reportName = `Career Report (new format) — ${input.name}`
   try {
-    // 1) admin DB copy (Supabase app_state, app="admin") — keep the office's copy first
-    await cloudStateSetFor("admin", String(input.clientId), "regen-report", {
-      name: reportName, html: input.html, narrative: input.narrative, savedAt: new Date().toISOString(),
-    })
-    // 2) the client's LIVE SetMyCareer record (shows in portal + counsellor + admin)
+    // The client's LIVE SetMyCareer record — the single place this is stored.
+    // Portal, counsellor and admin all read it back from here.
     const file = new File([input.html], `Career_Report_${input.clientId}.html`, { type: "text/html" })
     await uploadReport(String(input.clientId), reportName, file)
     invalidateUser(input.clientId)
-    toast.success("New-format report saved — to the client's account and the admin records.")
+    toast.success("New-format report saved to the client's account.")
     return true
   } catch (e) {
     toast.error((e as Error).message || "Couldn't save the report. Please try again.")

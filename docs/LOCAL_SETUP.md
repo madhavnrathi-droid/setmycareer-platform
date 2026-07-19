@@ -46,10 +46,6 @@ LIVEKIT_URL=
 LIVEKIT_API_KEY=
 LIVEKIT_API_SECRET=
 
-# App cloud store (chats + per-user state)
-SUPABASE_URL=
-SUPABASE_KEY=
-
 # Writes to the live backend — leave false unless you mean it
 VITE_SMC_WRITES_ENABLED=false
 ```
@@ -63,6 +59,35 @@ in dev exactly as they do in production — they share the same code in `src/ser
 
 **Getting signed in:** the portal's *Create account* button makes a local account in one click.
 For accounts with real data, see [`counselor/docs/E2E_TEST_MAP.md`](../counselor/docs/E2E_TEST_MAP.md).
+
+### The app cloud store is off — locally and in production
+
+There is one more pair of variables, and it is **not currently set anywhere**:
+
+```bash
+# App cloud store (Compass chats + per-user app state) — OPTIONAL, NOT SET
+# Leave blank to run local-only. This is what production does too.
+SUPABASE_URL=
+SUPABASE_KEY=
+```
+
+The Supabase project that backed this was retired on **2026-07-19**, and both variables were
+removed from the `setmycareer-counselor` Vercel project. With them unset, `POST /api/cloud`
+returns `{"ok":false,"disabled":true}` at HTTP 200 — a deliberate signal, not an error.
+`src/lib/cloud.ts` reads it, sets `serverReachable = false`, and stores everything in
+`localStorage` namespaced per user. Expect that locally; it is the same behaviour production has.
+
+What this changes while you develop:
+
+- **No cross-device sync.** State lives in the browser you created it in.
+- **No durability.** Clearing site data wipes chats, bookings, wallet and admin state.
+- **Admin state is per-browser.** Coupons, refunds and client overrides don't leave your machine.
+- **Unaffected:** clients, counsellors, sessions and uploaded reports — those come from
+  `api.setmycareer.com`, and completed test results are pushed there.
+
+The server code is intact. `src/server/cloud-core.ts` talks plain PostgREST, so pointing those
+two variables at **any** Postgres with the schema in [`../supabase/migrations/`](../supabase/migrations/)
+brings the store back — no code change.
 
 ---
 
@@ -102,7 +127,7 @@ Copy `.env.example` to `.env` and fill what you need:
 ```bash
 GROQ_API_KEY=          # required — everything LLM-shaped needs this
 OPENROUTER_API_KEY=    # optional paid fallback
-DATABASE_URL=          # optional — Supabase Postgres; omit to run stateless
+DATABASE_URL=          # optional — any Postgres; omit to run stateless. Not set in production.
 APPWRITE_*=            # optional — the live persistence backend
 RECALL_API_KEY=        # optional — meeting bot that joins Zoom/Meet/Teams
 ```
@@ -149,6 +174,8 @@ python scripts/preprocess/build_rag.py
 |---|---|
 | Portal says "account is closed" or signs you straight out | A local admin flag. Clear it: `localStorage.removeItem("smc.account.state"); localStorage.removeItem("smc.portal.revoked")` then reload. |
 | Compass chat returns nothing | No `GROQ_API_KEY`. The UI now shows an error row rather than hanging. |
+| `/api/cloud` returns `{"ok":false,"disabled":true}` | Expected. No `SUPABASE_URL`/`SUPABASE_KEY` is set anywhere since the store was retired; the app runs local-only. Not a bug. |
+| Chats, bookings or admin overrides disappeared | App-layer state lives in `localStorage` only. Clearing site data, a different browser or a different profile all start empty. |
 | Razorpay checkout 406s | The function must run on the **Node** runtime, not Edge — Razorpay rejects Edge. |
 | Blank white app after an edit | Usually a module-eval TDZ error: a top-level call to a `const` arrow function declared lower in the file. `tsc` won't catch it. Check the browser console. |
 | Test scores look wrong | Ability keys are **uppercase** (`VA`, `CA`, `NA`…). Lowercase keys won't resolve to labels. |

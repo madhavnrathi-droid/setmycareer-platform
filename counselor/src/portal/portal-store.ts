@@ -664,6 +664,12 @@ export function spendAI(kind: "chat" | "voice", n = 1): boolean {
 // against api/razorpay, whose verify writes "purchases:<clientId>") are consumed
 // here EXACTLY once: the record is rewritten consumed:true on the server BEFORE
 // any grant is applied, so retries and second devices can never re-grant.
+//
+// RELEASE BLOCKER (2026-07-19): with the cloud store retired, cloudStateGetAllFor
+// returns null and syncWalletAndPurchases() bails at the `if (!all) return` below.
+// Marketing-site purchases therefore never grant in the portal. Latent today (the
+// deployed Razorpay key is rzp_test_*), but it MUST be fixed before live keys.
+// See the matching note on recordServerPurchase in api/razorpay.ts.
 
 const WALLET_KEY = "portal.wallet"
 interface WalletDoc { credits: PortalCredits; purchases: Purchase[]; plan?: PortalPlanId; updatedAt: string }

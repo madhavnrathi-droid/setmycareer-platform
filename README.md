@@ -45,7 +45,7 @@ SetMyCareer/
 ├── scripts/     data pipelines — ingestion, RAG index build, dataset refresh
 ├── data/        datasets (heavy artefacts gitignored — regenerate via scripts/)
 ├── docs/        engineering docs + therapy frameworks that feed the RAG index
-├── supabase/    SQL migrations for the `setmycareer` Postgres schema
+├── supabase/    SQL migrations for the app-layer schema — no database currently runs them
 └── _archive/    superseded code kept for reference — see _archive/README.md
 ```
 
@@ -105,6 +105,17 @@ Full instructions: **[`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md)**
 > `api/index.py`, confirmed against `/api/health`. Those files are kept only so the history
 > reads sensibly; don't treat them as current.
 
+> **On the app cloud store.** The product app can persist app-layer state and Compass chats to a
+> Postgres via `POST /api/cloud`, but **nothing is configured** — the Supabase project behind it
+> was retired on 2026-07-19 and `SUPABASE_URL`/`SUPABASE_KEY` were removed from
+> `setmycareer-counselor`.
+> `/api/cloud` answers `{"ok":false,"disabled":true}` at HTTP 200 and the client falls back to
+> `localStorage` per user. That fallback is designed and tested, not a failure.
+>
+> Clients, counsellors, sessions and reports are **unaffected** — they live in the .NET backend.
+> What's gone is cross-device sync, durability and shared admin state. The server code was kept,
+> so any Postgres re-enables it. Detail: [`docs/DEPLOYMENTS.md`](docs/DEPLOYMENTS.md).
+
 ---
 
 ## The stack
@@ -115,7 +126,7 @@ Full instructions: **[`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md)**
 | Serverless functions | **TypeScript** on Vercel (Edge + Node runtimes) |
 | AI / report engine | **Python** · FastAPI + LangGraph (7-agent career pipeline) |
 | Company backend | **C#** / ASP.NET — separate repo; spec in `SMC_SYSTEM_ARCHITECTURE.md` §2 |
-| Data | Postgres (Supabase), Appwrite, generated datasets under `data/` |
+| Data | .NET backend (system of record) · Appwrite (Python service) · browser `localStorage` (app layer — no server store) · datasets under `data/` |
 
 Three languages, each doing a job it suits: TypeScript where the browser is, Python where the
 LLM/agent ecosystem lives, C# where the company's existing data already sits.

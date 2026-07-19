@@ -1,6 +1,6 @@
 // API & usage — REAL infrastructure status. The live SetMyCareer Core API health
 // probe sits up top; below it, each provider's genuine connection + usage, pulled
-// live from /api/providers (Razorpay transactions, Supabase stored records,
+// live from /api/providers (Razorpay transactions,
 // OpenRouter credits). Groq + LiveKit show connection status only — they have no
 // public usage API, and we never fabricate a number to fill the gap.
 
@@ -117,7 +117,7 @@ export function AdminApi() {
       </div>
 
       <p data-reveal className="text-[11.5px] text-ink-300">
-        Razorpay, Supabase and OpenRouter report live figures from their own APIs. Groq and LiveKit have no public usage feed, so they show connection status only — no number is ever invented to fill the gap. Keys are server-side environment variables, never exposed to the browser.
+        Razorpay and OpenRouter report live figures from their own APIs. Groq and LiveKit have no public usage feed, so they show connection status only — no number is ever invented to fill the gap. Keys are server-side environment variables, never exposed to the browser.
       </p>
     </div>
   )

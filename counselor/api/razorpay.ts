@@ -108,10 +108,25 @@ export const CORS_HEADERS: Record<string, string> = {
   "access-control-allow-headers": "content-type",
 }
 
-/** Supabase credentials for the server-side purchase ledger (optional). */
+/** Postgres/PostgREST credentials for the server-side purchase ledger (optional).
+ *  CURRENTLY UNSET — the Supabase project behind this was retired 2026-07-19, so
+ *  recordServerPurchase() returns false and no purchase is ledgered server-side.
+ *  Payment verification is unaffected (it is best-effort by design), but see the
+ *  RELEASE BLOCKER note on recordServerPurchase before switching to live keys. */
 export interface StoreEnv { url?: string; key?: string }
 
-/** Record a VERIFIED purchase into the Supabase app_state store — the exact
+/** RELEASE BLOCKER (2026-07-19): this is INERT until a server store is configured.
+ *  The marketing-site checkout flow depended on it end-to-end:
+ *    site/src/pages/Checkout.tsx → /api/razorpay verify → recordServerPurchase()
+ *    writes "purchases:<clientId>" → portal-store.syncWalletAndPurchases() reads it
+ *    back and grants the package exactly once.
+ *  With no store, the write returns false and the read returns null, so a
+ *  marketing-site purchase NEVER grants the package in the portal — the customer is
+ *  charged and receives nothing. Harmless today because the deployed key is
+ *  rzp_test_* (test mode), but this MUST be resolved before live keys go in.
+ *  Proper fix: the purchase/entitlement endpoints in docs/BACKEND_API_SPEC.md.
+ *
+ *  Record a VERIFIED purchase into the app_state store — the exact
  *  table/columns/headers cloud-core uses (app_state: app, user_id, key, value,
  *  updated_at; merge-duplicates upsert), inlined because this file must stay
  *  self-contained (Node serverless can't import ../src). Appends

@@ -161,7 +161,8 @@ We use trusted third-party providers to run the Services. They process your data
 | Real-time audio/video | Power live voice and video sessions | **LiveKit** |
 | Session capture/recording | Join, record and process meetings | **Recall.ai** |
 | AI models / inference | Power the AI coach and report generation | **Groq**, **OpenRouter** (and the model providers they route to) |
-| Cloud database & app backend | Store your account, assessment and app data | **Supabase** |
+| Cloud database & app backend | Store your account, assessment and app data | **SetMyCareer Core API** (our own system, not a third party) |
+| In-browser storage | Keep your drafts, chat history and preferences on your own device | Your browser's local storage — not transmitted to us |
 | Cloud hosting & infrastructure | Host the website and app | [CONFIRM: hosting provider, e.g. Vercel / cloud region] |
 | Analytics & product telemetry | Understand and improve usage | [CONFIRM: analytics provider(s)] |
 | Communications | Send email/SMS/notifications | [CONFIRM: email/SMS provider(s)] |

@@ -240,7 +240,6 @@ const INTEGRATIONS: { name: string; purpose: string; where: string }[] = [
   { name: "OpenRouter", purpose: "LLM fallback (same Llama 3.3 70B)", where: "Server env" },
   { name: "Razorpay", purpose: "Payments, coupons & refunds", where: "Server env (test mode)" },
   { name: "LiveKit", purpose: "Video / voice session rooms", where: "Server-issued tokens" },
-  { name: "Supabase", purpose: "Chats + app state persistence", where: "Server env" },
   { name: "Google Ads", purpose: "Marketing performance", where: "Server env · dev-token pending" },
 ]
 

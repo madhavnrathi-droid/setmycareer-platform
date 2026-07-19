@@ -56,7 +56,7 @@ src/
 api/                  Vercel functions (every server-only secret lives behind these)
 ├── assistant.ts        Edge · Compass chat — Groq → OpenRouter → Gemini failover
 ├── razorpay.ts         Node · order creation + HMAC verification   ← must stay Node
-├── cloud.ts            Edge · per-user state + chats (Supabase)
+├── cloud.ts            Edge · per-user state + chats — store unconfigured (see below)
 ├── livekit-token.ts    Edge · video/voice room tokens
 ├── consolidate.ts      Edge · guest-battery synthesis (Gemini)
 ├── report.ts           Edge · counsellor report generation
@@ -64,8 +64,38 @@ api/                  Vercel functions (every server-only secret lives behind th
 ├── notes.ts            Edge · session-notes helper
 ├── fit-report.ts       Edge · marketing fit-test report
 ├── marketing.ts        Edge · Google Ads spend metrics
-└── providers.ts        Node · live provider usage for the admin API screen
+└── providers.ts        Node · live provider usage (Razorpay, OpenRouter, Groq, LiveKit)
 ```
+
+---
+
+## Where app state lives (since 19 Jul 2026)
+
+The interim cloud store is **retired**. `POST /api/cloud` now answers `{"ok":false,"disabled":true}`
+at HTTP 200, `src/lib/cloud.ts` flips `serverReachable = false`, and every cloud-backed store falls
+back to per-user-namespaced `localStorage`. This is the **designed fallback, not a crash** — portal
+sign-in, dashboard and Reports all render with zero console errors.
+
+| | |
+|---|---|
+| **Unaffected** | Clients, counsellors, sessions and uploaded reports — those live in the .NET backend at `api.setmycareer.com`. Completed test results are pushed there too. |
+| **Lost** | Cross-device sync · durability (clearing browser data wipes app-layer state) · shared admin state (coupons, refunds and client overrides are now per-browser) |
+
+The cloud code was kept **on purpose**. `src/server/cloud-core.ts` speaks plain PostgREST, so
+pointing `SUPABASE_URL` + `SUPABASE_KEY` at *any* Postgres re-enables the whole layer with no app
+changes. Treat it as present-but-unconfigured.
+
+> ⚠️ **RELEASE BLOCKER — a marketing-site purchase no longer grants the package.**
+> The flow was `site/src/pages/Checkout.tsx` → `POST /api/razorpay` action `verify` →
+> `recordServerPurchase()` writes `purchases:<clientId>` → the portal's `syncWalletAndPurchases()`
+> (`src/portal/portal-store.ts`) reads it back and grants the package exactly once. With no store the
+> write returns `false` and the read returns `null`, so the customer **is charged and receives
+> nothing in the portal**. Payment verification itself still works correctly — it is explicitly
+> best-effort, *a store failure never invalidates a genuine payment* — and Razorpay remains the
+> authoritative record of the money. **Latent, not active**: the deployed key is `rzp_test_…`, so no
+> real money flows through it yet. **This must be resolved before switching to live Razorpay keys.**
+> The real fix is the backend purchase/entitlement endpoints in
+> [`docs/BACKEND_API_SPEC.md`](docs/BACKEND_API_SPEC.md).
 
 ---
 
@@ -126,3 +156,5 @@ npx vercel --prod --yes    # deploy
 | **Ability score keys** | Uppercase (`VA`, `SA`, `RA`, `NA`, `MA`, `CL`, `CA`). Lowercase won't resolve to labels and users see raw codes. |
 | **`VITE_SMC_WRITES_ENABLED=true`** | Writes to the **real production backend**. Keep it `false` locally. |
 | **Portal "account closed"** | A local admin flag, not a server state. Clear `smc.account.state` and `smc.portal.revoked` from localStorage. |
+| **App state vanishes** | Expected since the cloud store was retired — clearing browser data wipes it, and nothing follows you to a second device. See [Where app state lives](#where-app-state-lives-since-19-jul-2026). |
+| **A test purchase grants nothing** | Not a bug you introduced — the marketing-site checkout can't grant packages without a server store. Same section, RELEASE BLOCKER note. |

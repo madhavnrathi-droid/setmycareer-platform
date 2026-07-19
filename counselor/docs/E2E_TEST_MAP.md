@@ -22,10 +22,21 @@ everything else under `AppShell` (counsellor). **Two data planes** back them:
   navigators, packages, sold services, live sessions, uploaded report PDFs, counsellor notes.
   Numeric user ids. Reads are open (no token); writes are client-gated by
   `VITE_SMC_WRITES_ENABLED` (currently **ON**, local + prod).
-- **Plane B — app cloud store** (Supabase via `POST /api/cloud`, ops `state:getAll|set|remove`,
+- **Plane B — app cloud store** (`POST /api/cloud`, ops `state:getAll|set|remove`,
   `chats:list|upsert|remove|clear`; two tables `app_state` + `app_chats`, scoped by
   `(app, user_id)`): everything conversational — bookings, calendar, messages, test-result
-  digests, wallet/credits, AI chats. **No per-user RLS yet — id scoping is the only boundary.**
+  digests, wallet/credits, AI chats.
+  **⚠️ Plane B is OFF as of 19 Jul 2026.** The Supabase project behind it was retired and
+  `SUPABASE_URL`/`SUPABASE_KEY` are unset, so `/api/cloud` answers
+  `{"ok":false,"disabled":true}` (HTTP 200) and `src/lib/cloud.ts` sets
+  `serverReachable = false`. Everything above still works, but **per browser only** — it
+  now lives in localStorage namespaced `key::app:userId`.
+
+  **What this changes when you test:** nothing syncs across devices or browsers, and a
+  second tester signed in as the same client sees an empty slate rather than the first
+  tester's data. Clearing site data wipes it. If you are verifying a cross-role hand-off
+  (client books → counsellor sees it), **you must drive both roles in the same browser
+  profile**, or Plane B data will look silently missing. Plane A is unaffected.
 
 Identity: counsellor/admin read `localStorage["smc.auth.session"]`; client reads
 `localStorage["smc.portal.account"]` (`src/lib/cloud.ts`). LiveKit (`/api/livekit-token`) and

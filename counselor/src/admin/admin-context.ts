@@ -94,7 +94,7 @@ export function buildAdminContext(clients: CompanyClient[], live?: AdminLiveSnap
   L.push("Expansion-ready (high health, mid-journey): " + (expansion.length ? expansion.map(({ c, s }) => `${c.name} [${s}, ${STAGE_LABEL[c.stage]}]`).join("; ") : "none right now") + ".")
 
   L.push("\n== API & INFRA ==")
-  L.push("Real stack: SetMyCareer Core API (clients/sessions/reports), Groq (Llama 3.3 70B LLM + Whisper STT), OpenRouter (LLM fallback), LiveKit (video/voice rooms), Razorpay (payments), Supabase (chats + app state). Live per-provider usage (Razorpay transactions, Supabase record counts, OpenRouter credits) is on the API & usage screen; there is no synthetic provider-spend figure.")
+  L.push("Real stack: SetMyCareer Core API (clients/sessions/reports), Groq (Llama 3.3 70B LLM + Whisper STT), OpenRouter (LLM fallback), LiveKit (video/voice rooms), Razorpay (payments). Chats and app state are stored in the browser only — the Supabase cloud store was retired on 2026-07-19, so nothing app-layer is persisted server-side. Live per-provider usage (Razorpay transactions, OpenRouter credits) is on the API & usage screen; there is no synthetic provider-spend figure.")
 
   L.push("\n== SUPPORT & SENTIMENT ==")
   L.push(`Speed-to-lead ${sup.speedToLeadMin} min. First response ${sup.firstResponseHrs}h. Resolution ${sup.resolutionHrs}h. CSAT ${sup.csat}%. CES ${sup.ces}/5. NPS ${sup.nps}. SLA attainment ${sup.slaAttainment}%. Open tickets ${sup.ticketsOpen} (${sup.ticketsWeek}/week).`)

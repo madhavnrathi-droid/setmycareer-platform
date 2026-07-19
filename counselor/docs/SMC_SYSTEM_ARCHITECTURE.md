@@ -34,7 +34,7 @@ Production app: `https://setmycareer-counselor.vercel.app`
 
 **Two data planes** back the app today (details §1.8):
 - **Plane A — the live SMC backend** (`https://api.setmycareer.com/api/`): identity, navigators, packages, sold services, sessions, uploaded report PDFs, notes. *Already yours.*
-- **Plane B — interim cloud store** (Supabase via the app's `/api/cloud`): bookings, messages, in-app test results, credits, AI chats, app state. **Part 2 of this document is the C# system that replaces Plane B on your servers** — and formalises the new product surfaces (final battery results, profiles, session transcripts, synthesis, guest links).
+- **Plane B — interim cloud store** (the app's `/api/cloud`): bookings, messages, in-app test results, credits, AI chats, app state. **As of 19 Jul 2026 this plane is unconfigured** — the interim Postgres behind it was retired, `/api/cloud` returns `{"ok":false,"disabled":true}`, and the app runs on per-user-namespaced browser storage for all of it (details §1.8). **Part 2 of this document is the C# system that replaces Plane B on your servers** — and formalises the new product surfaces (final battery results, profiles, session transcripts, synthesis, guest links). Part 2 is now the *only* durable home planned for this data, which raises its priority.
 
 ### Demo access (for anyone reviewing the product)
 
@@ -195,6 +195,21 @@ app's APIs. All wiring verified live (HTTP 200) on 18 Jul 2026:
 | VCLP programmes (`/programs/:slug`) | application form (done-state confirmation) |
 | Legal footer (12 docs, `/legal/*`) | also linked from the portal sign-up consent line |
 
+> **RELEASE BLOCKER (19 Jul 2026) — the site checkout no longer grants entitlements.**
+> The grant path was: `site/src/pages/Checkout.tsx` → `POST /api/razorpay` action `verify` →
+> `recordServerPurchase()` writes `purchases:<clientId>` into the Plane-B store → the portal's
+> `syncWalletAndPurchases()` (`src/portal/portal-store.ts`) reads it back and grants the package
+> exactly once. With Plane B unconfigured (§1.8) the write returns `false` and the read returns
+> `null`, so **a marketing-site purchase does not grant the package in the portal** — the customer
+> is charged and receives nothing. HMAC payment verification itself is unaffected and correct: it
+> is deliberately best-effort, so a store failure never invalidates a genuine payment, and Razorpay
+> remains the authoritative record of the money.
+> **Severity is latent, not active** — the deployed key is `rzp_test_…` (test mode), so no real
+> money moves through this path today. **It must be resolved before the TEST → LIVE Razorpay key
+> switch** (§2.10 Phase 3). The fix is `Checkout/Create` + `Checkout/Verify` (§2.5-H), which write
+> `Purchase(paid)` + `CreditLedger` grants server-side and remove the browser from the grant path
+> entirely.
+
 ## 1.7 The three lifecycles (how the product actually flows)
 
 **Client** — Marketing page → `/portal` create account (or OTP sign-in) → **profile intake**
@@ -215,16 +230,33 @@ lands in the audit log.
 
 ## 1.8 Data planes today → target
 
+**Plane B was switched off on 19 Jul 2026.** The interim Postgres it relayed to was deleted and its
+two credentials (`SUPABASE_URL`, `SUPABASE_KEY`) were removed from the Vercel project. `POST
+/api/cloud` now returns `{"ok":false,"disabled":true}` at **HTTP 200**; `src/lib/cloud.ts` reads that
+flag, sets `serverReachable = false`, and every cloud-backed store falls back to per-user-namespaced
+browser storage. This is a **designed, tested fallback, not an outage** — portal sign-in, dashboard
+and Reports were verified rendering with zero console errors after the change.
+
+- **Unaffected:** everything on Plane A. Clients, counsellors, sessions and uploaded reports live in
+  the .NET backend at `api.setmycareer.com`, and completed test results are pushed there too.
+- **Lost until Part 2 ships:** cross-device sync; durability (clearing browser data wipes app-layer
+  state); shared admin state — coupons, refunds and client overrides are now per-browser.
+- **Not deleted:** the cloud layer is *present but unconfigured*. `src/server/cloud-core.ts` speaks
+  plain PostgREST, so setting those two environment variables to **any** Postgres re-enables the
+  entire layer with no application changes. It is also the file that becomes a thin adapter over
+  `State/*` + `Chats/*` when the C# API lands (§2.10).
+
 | Data | Today | Target (Part 2) |
 |---|---|---|
 | Identity, navigators, packages, sold services, live sessions, report PDFs, notes | **Plane A** — live `api.setmycareer.com` | unchanged (already yours) |
-| Bookings, messages, credits, AI chats, app state | **Plane B** — Supabase via app `/api/cloud` | **C# API** (§2.5 A–F) — swap point is a single file (`src/lib/cloud.ts`) |
-| Final-battery results + payloads | browser + cloud digest | **C# API** `Tests/*` (§2.5-C) — append-only |
-| Profile intake | browser + cloud | **C# API** `Profile/*` (§2.5-B) |
-| Session transcripts + timestamped notes | browser (counsellor) / cloud | **C# API** `Sessions/*` (§2.5-D) |
-| Synthesis (LangGraph report) | Railway FastAPI, results ephemeral | **C# API** `Synthesis/*` (§2.5-E) — jobs + stored results |
+| Bookings, messages, credits, AI chats, app state | **Plane B unconfigured since 19 Jul 2026** — browser-local, per-user-namespaced | **C# API** (§2.5 A–F) — swap point is a single file (`src/lib/cloud.ts`) |
+| Final-battery results + payloads | browser (completed results also pushed to Plane A) | **C# API** `Tests/*` (§2.5-C) — append-only |
+| Profile intake | browser | **C# API** `Profile/*` (§2.5-B) |
+| Session transcripts + timestamped notes | browser (counsellor) | **C# API** `Sessions/*` (§2.5-D) |
+| Synthesis (LangGraph report) | Vercel FastAPI, results ephemeral | **C# API** `Synthesis/*` (§2.5-E) — jobs + stored results |
 | Guest link results | that browser only | **C# API** `GuestLinks/*` (§2.5-H) |
-| Admin flags (revoke), agreements | localStorage | **C# API** `Admin/*`, `Counsellor/*` (§2.5-F/G) |
+| Admin flags (revoke), agreements, coupons/refunds | localStorage (per-browser) | **C# API** `Admin/*`, `Counsellor/*` (§2.5-F/G) |
+| Purchases + credit grants | **broken** — see the release blocker in §1.6 | **C# API** `Checkout/*` (§2.5-H) |
 
 ---
 
@@ -407,7 +439,7 @@ public class PortalAccessFlag : Row
     public string ByAdminUserId { get; set; } = "";
 }
 
-/// Generic per-user app state (replaces Supabase app_state). Key examples:
+/// Generic per-user app state (replaces the interim store's app_state). Key examples:
 /// "shared.bookings", "calendar-events", "wallet", "portal.profile.draft".
 public class AppState : Row
 {
@@ -417,7 +449,7 @@ public class AppState : Row
     public string ValueJson { get; set; } = "";
 }
 
-/// AI chat threads (replaces Supabase app_chats). Cap 50 per (App, UserId): on insert
+/// AI chat threads (replaces the interim store's app_chats). Cap 50 per (App, UserId): on insert
 /// beyond the cap, archive the oldest — do not delete.
 public class ChatThread : Row
 {
@@ -664,6 +696,10 @@ Direct ports of the interim cloud store + guest flow (contracts already exercise
   `Checkout/Verify` (`CheckoutVerifyReq` — HMAC `order_id|payment_id` with the Razorpay
   secret; only a verified signature writes `Purchase(paid)` + `CreditLedger` grants).
   Mirrors the app's existing `/api/razorpay` serverless flow so either can fulfil.
+  **Priority:** this pair is the fix for the release blocker in §1.6 — since 19 Jul 2026 the
+  serverless flow verifies payments correctly but can no longer grant anything, so `Checkout/Verify`
+  is the only planned path back to a working purchase → entitlement loop, and the Razorpay TEST →
+  LIVE switch is gated on it.
 
 ### Reference implementation — two controllers in full
 
@@ -832,10 +868,11 @@ Complete key inventory across the system (names only):
 |---|---|
 | **C# API** (new) | `SMC_DB_CONNECTION`, `SMC_JWT_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `LANGGRAPH_BASE_URL`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` |
 | **LangGraph service** (Vercel, existing) | `GROQ_API_KEY`, `LLM_MODEL`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `STT_MODEL`, `GOOGLE_CLIENT_ID/SECRET`, `ZOHO_CLIENT_ID/…`, `PORT` |
-| **Vercel serverless** (existing, keeps running) | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `LIVEKIT_*`, `RAZORPAY_*`, `SUPABASE_URL`, `SUPABASE_KEY` (retired at Phase 3), `GOOGLE_ADS_*` |
+| **Vercel serverless** (existing, keeps running) | `GEMINI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `GROQ_API_KEY`, `LIVEKIT_*`, `RAZORPAY_*`, `GOOGLE_ADS_*`. `SUPABASE_URL` + `SUPABASE_KEY` were **removed on 19 Jul 2026** (§1.8); the reader is retained so the layer can be re-pointed at any Postgres, but nothing is set today. |
 | **Frontend** (public by design) | `VITE_SMC_WRITES_ENABLED`, the Razorpay **publishable** key id only |
 
-Razorpay is on **TEST keys** today (doctrine: live keys are a deliberate, separate switch).
+Razorpay is on **TEST keys** today (doctrine: live keys are a deliberate, separate switch — and are
+currently **blocked** by the checkout entitlement gap in §1.6).
 
 ## 2.8 Security hardening (ship with, not after)
 
@@ -869,21 +906,27 @@ Razorpay is on **TEST keys** today (doctrine: live keys are a deliberate, separa
 | Admin revoke portal access | localStorage flag | `Admin/RevokePortalAccess` (cross-device at last) |
 | Counsellor agreement gate | localStorage | `Counsellor/Agreement` |
 | Counsellor calendar blocks | calendar events | `Counsellor/Blocks` |
-| Package & credits balances | wallet state | `CreditLedger` via `Accounts/Me`; grants via `Checkout/Verify` |
-| Checkout | `/api/razorpay` | `Checkout/Create` + `Checkout/Verify` (either fulfils) |
-| Compass chats (all 3 doors) | Supabase app_chats | `Chats/*` |
-| Client↔counsellor messages | cloud state | `Messages/*` |
-| App state (bookings, calendar, wallet…) | Supabase app_state | `State/*` |
+| Package & credits balances | wallet state (browser-local) | `CreditLedger` via `Accounts/Me`; grants via `Checkout/Verify` |
+| Checkout | `/api/razorpay` — verifies correctly but **grants nothing** (§1.6) | `Checkout/Create` + `Checkout/Verify` (server-side grant) |
+| Compass chats (all 3 doors) | browser-local (`app_chats` store retired) | `Chats/*` |
+| Client↔counsellor messages | browser-local, same browser only | `Messages/*` |
+| App state (bookings, calendar, wallet…) | browser-local (`app_state` store retired) | `State/*` |
 | Guest links mint / take / store | localStorage per browser | `GuestLinks/*` |
 | Document uploads | live `Reports/uploadReport` | unchanged (already yours) |
 
 ## 2.10 Migration order & go-live checklist
 
-**Phase 1 — stand up, dual-write (no user-visible change)**
+> **Sequencing changed on 19 Jul 2026.** The interim store was retired ahead of this plan (§1.8), so
+> there is no longer a second system to dual-write against — Phase 1 is now a **single** cut from
+> browser-local storage straight onto the C# API, and Phase 3 step 6 is already done. Two
+> consequences: nothing has to be migrated out of the interim DB, and every day before Phase 1 lands
+> is a day app-layer state is per-browser and non-durable.
+
+**Phase 1 — stand up, write through (no user-visible change)**
 1. Create the DB tables (one EF migration), deploy the API, smoke `api/Health`.
-2. Frontend: point `src/lib/cloud.ts` writes at BOTH `/api/cloud` (Supabase) and the new
-   `State/Chats` endpoints (it is the single swap point — one file).
-3. `Tests/Submit`, `Profile/Upsert`, `Sessions/*` dual-write the same way.
+2. Frontend: point `src/lib/cloud.ts` at the new `State/Chats` endpoints (it is the single swap
+   point — one file, and `/api/cloud` is already inert so there is nothing to dual-write to).
+3. `Tests/Submit`, `Profile/Upsert`, `Sessions/*` write through the same way.
 
 **Phase 2 — flip reads + close the loops**
 4. Reads move to the C# API; verify parity on the three E2E logins (client 31369,
@@ -893,9 +936,15 @@ Razorpay is on **TEST keys** today (doctrine: live keys are a deliberate, separa
 5. Turn on JWT enforcement for writes; then reads.
 
 **Phase 3 — retire the interim**
-6. Supabase tables exported + archived (never deleted), `/api/cloud` returns 410,
-   `SUPABASE_*` env vars removed.
+6. ~~Interim store retired, `/api/cloud` disabled, `SUPABASE_*` env vars removed.~~
+   **Done 19 Jul 2026, ahead of schedule.** `/api/cloud` returns `{"ok":false,"disabled":true}` at
+   HTTP 200 (not 410 — the app treats it as a soft "unconfigured" signal and falls back cleanly).
+   The route and `src/server/cloud-core.ts` are deliberately retained, so this step is reversible by
+   setting two environment variables.
 7. Razorpay: swap TEST → LIVE keys (deliberate, separate change), ₹1 smoke purchase.
+   **Gated on the §1.6 checkout release blocker** — do not perform this step until `Checkout/Create`
+   + `Checkout/Verify` (§2.5-H) are live and a verified payment grants the package server-side.
+   Switching keys first means real customers pay and receive nothing.
 
 **Definition of "live":** all §2.9 rows on the new API, the three E2E logins pass the
 Phase-2 parity list, `Synthesis/Latest` returns a stored report for a fresh battery, and the
@@ -929,7 +978,9 @@ audit trail shows every admin action taken during the test pass.
    Reports hub renders the stored blueprint.
 
 *Steps 1–4 were executed against the current build on 18 Jul 2026 (see the audit log in the
-session notes); step 5 runs on TEST keys; step 6 goes live with §2.6.*
+session notes); step 6 goes live with §2.6. **Step 5 cannot pass on the current build** — it runs on
+TEST keys, and since 19 Jul 2026 a verified payment grants nothing (§1.6). It becomes a real test
+only once `Checkout/Verify` (§2.5-H) is live; it is also the acceptance test for that endpoint.*
 
 ### Ship-readiness audit (18 Jul 2026) — every touchpoint swept, no empty feedback loops
 

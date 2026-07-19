@@ -2,11 +2,21 @@
 
 This is the complete list of backend work that **only your backend team can do** — the
 things I cannot do from the frontend, and the **new API endpoints** the app needs so that
-chats, app-state, messaging, bookings and test results can live on **your** server
-(`api.setmycareer.com`) instead of the interim Supabase database.
+chats, app-state, messaging, bookings, test results and purchases can live on **your** server
+(`api.setmycareer.com`).
 
 Today the app already uses your live backend for **clients, sessions, notes, reports,
 navigators, packages**. The items below are the gaps.
+
+> **🔴 Status change, 19 Jul 2026 — this is no longer a nice-to-have.**
+> The interim Postgres (Supabase) that held all of the data below was **retired**, and its two
+> credentials were removed from the app's hosting. `POST /api/cloud` now returns
+> `{"ok":false,"disabled":true}` and the app falls back to per-user browser storage — a designed,
+> tested fallback, so nothing crashes, but it means: **no cross-device sync, no durability
+> (clearing browser data wipes it), and no shared admin state.** Your endpoints are now the *only*
+> planned durable home for this data. Everything in your own database — clients, counsellors,
+> sessions, uploaded reports, and the test results the app pushes to you — is unaffected.
+> Section **G** is a **release blocker** on taking real money. Please read it first.
 
 ---
 
@@ -20,11 +30,13 @@ navigators, packages**. The items below are the gaps.
 | D | **Booking requests** | client asks for a session before it's a sold service | 3 |
 | E | **In-app test results** | Big-Five / RIASEC / Sigma results taken in the app | 2 |
 | F | **Coupons & refunds ledger** | currently only in the browser | 4 |
+| G | **🔴 Purchases & entitlements** | **RELEASE BLOCKER** — a paid checkout currently grants nothing | 2 |
 | — | **Security & infra** (§3) | auth tokens, password **hashing**, CORS, authorization | — |
 
-Until these exist, that data is stored in a **Supabase Postgres DB** (free, Mumbai) that
-only our serverless function touches — see §5 for the trivial swap once your endpoints
-are live.
+Until these exist, all of that data lives **only in the user's browser** (per-user-namespaced
+`localStorage`). It was previously mirrored to an interim Postgres via our own serverless
+function; that database was retired on **19 Jul 2026**, so there is now no server-side copy
+and nothing to migrate out — see §5.
 
 ---
 
@@ -144,6 +156,49 @@ POST  Commerce/Coupons/Delete  { id }                              → { success
 POST  Commerce/Refunds/List    {}                                  → { success, data: Refund[] }
 ```
 
+### G. 🔴 Purchases & entitlements — **RELEASE BLOCKER**
+
+**Symptom:** a customer completes checkout on the marketing site, Razorpay charges them, and the
+package **never appears in their portal**.
+
+**Why.** The grant loop ran through the interim store, not through your backend:
+
+```
+site/src/pages/Checkout.tsx
+  → POST /api/razorpay { action: "verify", … }        (HMAC-verifies the signature — still correct)
+  → recordServerPurchase() writes "purchases:<clientId>" into app_state
+  → portal-store.syncWalletAndPurchases() reads it back and grants the package exactly once
+```
+
+With the interim store gone, the write returns `false` and the read returns `null`, so **both halves
+of the loop no-op**. The payment is real; the entitlement is lost.
+
+**What is NOT broken:** signature verification itself. It is best-effort by design — *a store
+failure never invalidates a genuine payment* — so we never reject money we actually received.
+**Razorpay remains the authoritative record of every transaction**, so no payment is unrecoverable;
+an affected purchase can be reconciled from the Razorpay dashboard and granted manually.
+
+**Severity today: LATENT, not active.** The deployed key is `rzp_test_…` (test mode, confirmed by
+probing `POST /api/razorpay {"action":"config"}`), so no real money flows through this path yet.
+**It becomes an active revenue-and-trust incident the moment live Razorpay keys go in — so this must
+be resolved before that switch.**
+
+**The fix (server-side grant, browser removed from the loop).** These two endpoints are already
+specified in full in [`SMC_SYSTEM_ARCHITECTURE.md`](SMC_SYSTEM_ARCHITECTURE.md) §2.5-H and listed in
+[`SMC_API_REFERENCE.md`](SMC_API_REFERENCE.md) Layer 1 §H:
+
+```
+POST  Checkout/Create  { tierId, … }                        → { success, data: { orderId, amount } }
+      // amount comes from YOUR server-side price catalog — never from the client
+POST  Checkout/Verify  { orderId, paymentId, signature }     → { success, data: Purchase }
+      // HMAC-verify "order_id|payment_id"; ONLY a valid signature writes Purchase(paid)
+      // + the credit grants. Idempotent on paymentId so a retried verify never double-grants.
+```
+
+The portal then reads granted purchases + balances from `Accounts/Me` (§2.5-A of the architecture
+doc), which removes the browser from the entitlement path entirely. Until these ship, treat live
+Razorpay keys as blocked.
+
 ---
 
 ## 3. Security & infrastructure — **only your team can do these**
@@ -202,20 +257,31 @@ UI, and the PDF export.
 ## 5. Migration path (when your endpoints are live)
 
 The app talks to a single internal function, **`/api/cloud`** (`src/server/cloud-core.ts`),
-for chats + app-state. It currently relays to Supabase. When endpoints **A** and **B** above
-exist on your backend, the swap is ~20 lines in `cloud-core.ts`:
+for chats + app-state. It used to relay to the interim Postgres; since **19 Jul 2026** it is
+unconfigured and returns `{"ok":false,"disabled":true}`, and the browser client
+(`src/lib/cloud.ts`) falls back to per-user-namespaced `localStorage`.
+
+**Two things this changes for you, both in your favour:**
+
+1. **There is nothing to migrate.** No interim database has to be exported, reconciled or
+   cut over. Whatever exists when your endpoints go live simply starts persisting.
+2. **The swap is unchanged and still ~20 lines** in `cloud-core.ts`. That file speaks plain
+   PostgREST over two environment variables, so it can be pointed at *any* Postgres — or,
+   preferably, replaced with calls to your endpoints:
 
 ```
-// from (Supabase PostgREST):
+// from (PostgREST against the interim store — now unset):
 fetch(`${SUPABASE_URL}/rest/v1/app_chats?...`, { headers: { apikey, authorization } })
 // to (your backend):
 fetch(`https://api.setmycareer.com/api/Chats/List`, { method:'POST', body: JSON.stringify({ app, user_id }) })
 ```
 
-No UI changes. Messaging/bookings/test-results (**C/D/E**) would similarly replace the
-browser-local stores with calls to your new endpoints, behind the same client helpers.
+No UI changes. Messaging/bookings/test-results (**C/D/E**) and purchases (**G**) would similarly
+replace the browser-local stores with calls to your new endpoints, behind the same client helpers.
 
-The Supabase DB can then be retired (or kept as a cache) — your call.
+Suggested order, by user-visible cost of *not* having it: **G** (money — release blocker),
+then **B**+**A** (app state + chats — restores cross-device sync for everything at once),
+then **C**/**D**/**E**, then **F**.
 
 ---
 

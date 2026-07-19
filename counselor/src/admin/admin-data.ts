@@ -71,7 +71,7 @@ export const COUNSELLORS: Counsellor[] = []
 
 // NOTE: provider usage/cost is no longer modelled here. The API & usage screen
 // (src/admin/screens/AdminApi.tsx) reads REAL figures live from /api/providers
-// (Razorpay transactions, Supabase record counts, OpenRouter credits) — no
+// (Razorpay transactions, OpenRouter credits) — no
 // synthetic provider table.
 
 // ── Revenue by product ───────────────────────────────────────────────────────

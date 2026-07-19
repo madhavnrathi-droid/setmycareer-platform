@@ -9,7 +9,6 @@
 //
 // What's genuinely fetchable, and from where:
 //   • Razorpay   → GET /v1/payments (trailing 30d): real transaction count + captured ₹.
-//   • Supabase   → PostgREST count=exact on app_chats + app_state: real stored-record totals.
 //   • OpenRouter → GET /api/v1/auth/key: real credits used / limit / remaining (USD).
 //   • Groq       → no public usage/billing API → connection status only (key present).
 //   • LiveKit    → no simple usage feed → connection status only (keys present).
@@ -20,7 +19,6 @@
 
 export interface ProvidersEnv {
   razorpay?: { id?: string; secret?: string }
-  supabase?: { url?: string; key?: string }
   openrouter?: string
   groq?: string
   livekit?: { key?: string; secret?: string; url?: string }
@@ -90,37 +88,6 @@ async function razorpay(id?: string, secret?: string): Promise<ProviderStatus> {
 }
 const API_RZP = "https://api.razorpay.com/v1"
 
-// ── Supabase: real stored-record counts via PostgREST count=exact ──
-async function supabase(url?: string, key?: string): Promise<ProviderStatus> {
-  const base: ProviderStatus = { id: "supabase", name: "Supabase", purpose: "Cloud persistence (chats + app state)", configured: Boolean(url && key), ok: false, metrics: null }
-  if (!url || !key) return { ...base, note: "Set SUPABASE_URL + SUPABASE_KEY to read stored-record counts." }
-  const root = url.replace(/\/$/, "") + "/rest/v1"
-  const countOf = async (table: string): Promise<number | null> => {
-    // No `select` column — app_state has a composite key (app,user_id,key) and no
-    // `id`, so selecting a specific column 400s. count=exact reports the total in
-    // the Content-Range header regardless of which rows the body returns.
-    const r = await fetch(`${root}/${table}?limit=1`, {
-      headers: { apikey: key, authorization: `Bearer ${key}`, prefer: "count=exact" },
-    })
-    if (!r.ok) throw new Error(`${table} HTTP ${r.status}`)
-    const cr = r.headers.get("content-range") || ""
-    const total = cr.includes("/") ? Number(cr.split("/")[1]) : NaN
-    return Number.isFinite(total) ? total : null
-  }
-  try {
-    const [chats, state] = await Promise.all([countOf("app_chats"), countOf("app_state")])
-    return {
-      ...base, ok: true,
-      metrics: [
-        { label: "Saved chats", value: chats == null ? "—" : chats.toLocaleString("en-IN") },
-        { label: "App-state records", value: state == null ? "—" : state.toLocaleString("en-IN") },
-      ],
-    }
-  } catch (e) {
-    return { ...base, error: e instanceof Error ? e.message : "Supabase error" }
-  }
-}
-
 // ── OpenRouter: real credit usage for the key (/auth/key) ──
 async function openrouter(key?: string): Promise<ProviderStatus> {
   const base: ProviderStatus = { id: "openrouter", name: "OpenRouter", purpose: "LLM fallback (Llama 3.3 70B)", configured: Boolean(key), ok: false, metrics: null }
@@ -144,14 +111,12 @@ function configuredOnly(id: string, name: string, purpose: string, ok: boolean, 
 }
 
 export async function runProviders(env: ProvidersEnv = {}): Promise<Response> {
-  const [rzp, sb, or] = await Promise.all([
+  const [rzp, or] = await Promise.all([
     razorpay(env.razorpay?.id, env.razorpay?.secret),
-    supabase(env.supabase?.url, env.supabase?.key),
     openrouter(env.openrouter),
   ])
   const providers: ProviderStatus[] = [
     rzp,
-    sb,
     or,
     configuredOnly("groq", "Groq", "Primary LLM (Llama 3.3 70B) + Whisper STT", Boolean(env.groq), "Connected · usage metered at Groq (no public billing API)."),
     configuredOnly("livekit", "LiveKit", "Video / voice session rooms", Boolean(env.livekit?.key && env.livekit?.secret), "Connected · room minutes metered at LiveKit."),
@@ -166,7 +131,6 @@ export default async function handler(req: any, res: any) {
   try {
     const response = await runProviders({
       razorpay: { id: process.env.RAZORPAY_KEY_ID, secret: process.env.RAZORPAY_KEY_SECRET },
-      supabase: { url: process.env.SUPABASE_URL, key: process.env.SUPABASE_KEY },
       openrouter: process.env.OPENROUTER_API_KEY,
       groq: process.env.GROQ_API_KEY,
       livekit: { key: process.env.LIVEKIT_API_KEY, secret: process.env.LIVEKIT_API_SECRET, url: process.env.LIVEKIT_URL },
