@@ -26,13 +26,12 @@ const LABEL: Record<string, string> = {
   "minors-parental-consent": "Children & Parental Consent",
   "counsellor-expert-terms": "Counsellor & Expert Terms",
   "grievance-redressal": "Grievance Redressal",
-  "sub-processors": "Sub-processors",
 }
 
 export const LEGAL_GROUPS: { title: string; slugs: string[] }[] = [
   { title: "Policies", slugs: ["privacy-policy", "terms-of-service", "refund-cancellation-policy", "cookie-policy", "acceptable-use-policy", "disclaimer", "delivery-policy"] },
   { title: "Consents & disclosures", slugs: ["counselling-consent", "minors-parental-consent"] },
-  { title: "Trust & governance", slugs: ["grievance-redressal", "sub-processors"] },
+  { title: "Trust & governance", slugs: ["grievance-redressal"] },
   { title: "For counsellors & experts", slugs: ["counsellor-expert-terms"] },
 ]
 

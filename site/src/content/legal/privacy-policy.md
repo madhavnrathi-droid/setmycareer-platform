@@ -135,13 +135,13 @@ Our assessments, AI coach and reports use algorithms and AI to generate guidance
 
 ## 5. How we use AI, and the safeguards that apply
 
-The AI career coach (text and live voice) and parts of our report generation rely on AI models, some of which are operated by our sub-processors (section 6). To deliver these features:
+The AI career coach (text and live voice) and parts of our report generation rely on AI models, some of which are operated by specialist providers on our behalf (section 6). To deliver these features:
 
 - your prompts, messages and the relevant context (which may include assessment results and profile information) are sent to the AI provider to generate a response;
 - for the **live voice** coach, your speech is converted to text and processed in real time;
 - outputs are **guidance only** and can be incomplete or wrong — please use judgement and speak to a human counsellor for important decisions.
 
-**Safeguards.** We instruct our AI sub-processors, by contract, **not to use your content to train their general models** and to process it only to provide the service to us [CONFIRM this is reflected in each provider agreement]. We minimise the personal data we send, apply access controls, and monitor for misuse. You can raise any concern about an AI output through our grievance channel (section 11). We do not use AI to make final, legally significant decisions about you without human involvement (section 4.2).
+**Safeguards.** We instruct the providers behind these AI features, by contract, **not to use your content to train their general models** and to process it only to provide the service to us [CONFIRM this is reflected in each provider agreement]. We minimise the personal data we send, apply access controls, and monitor for misuse. You can raise any concern about an AI output through our grievance channel (section 11). We do not use AI to make final, legally significant decisions about you without human involvement (section 4.2).
 
 ---
 
@@ -152,22 +152,23 @@ We do **not sell your personal data.** We share it only as described here.
 ### 6.1 Counsellors, navigators and domain experts
 When you book or attend a session, the relevant **counsellor, navigator or domain expert** receives the information they need to help you — for example, your name, relevant profile and assessment results, and the session recording, transcript and notes for that session. Counsellors and experts are independent contractors/practitioners who are contractually required to keep your data confidential and to use it only to provide the Services to you.
 
-### 6.2 Service providers (sub-processors)
-We use trusted third-party providers to run the Services. They process your data **on our instructions** under data-processing agreements, only for the purposes we set. The categories, and the main providers in each, are:
+### 6.2 Service providers
+We use trusted third-party providers to run the Services. They process your data **on our instructions** under data-processing agreements, only for the purposes we set — they may not use it for their own purposes. These are the categories of provider we rely on:
 
-| Category | What they do | Providers (illustrative) |
-|---|---|---|
-| Payment processing | Take payments; fraud checks | **Razorpay** (India); card processor(s) (US) [CONFIRM] |
-| Real-time audio/video | Power live voice and video sessions | **LiveKit** |
-| Session capture/recording | Join, record and process meetings | **Recall.ai** |
-| AI models / inference | Power the AI coach and report generation | **Groq**, **OpenRouter** (and the model providers they route to) |
-| Cloud database & app backend | Store your account, assessment and app data | **SetMyCareer Core API** (our own system, not a third party) |
-| In-browser storage | Keep your drafts, chat history and preferences on your own device | Your browser's local storage — not transmitted to us |
-| Cloud hosting & infrastructure | Host the website and app | [CONFIRM: hosting provider, e.g. Vercel / cloud region] |
-| Analytics & product telemetry | Understand and improve usage | [CONFIRM: analytics provider(s)] |
-| Communications | Send email/SMS/notifications | [CONFIRM: email/SMS provider(s)] |
+| Category | What they do for us |
+|---|---|
+| Payment processing | Take payments and run fraud checks. Our payment gateway is **Razorpay**, which is the name you will see against the charge on your statement and the route any refund travels back along. |
+| Real-time audio and video | Carry the live voice and video for your sessions. |
+| Session capture and transcription | Record a session where you have consented, and produce the transcript. |
+| AI models and inference | Power the AI career coach and help generate your report. |
+| Application data storage | Hold your account, assessment results and reports. This is our own system, not a third party. |
+| Hosting and infrastructure | Serve the website and app. |
+| Analytics | Help us understand and improve how the Services are used, subject to your cookie choices (see our Cookie Policy). |
+| Email, SMS and notifications | Deliver sign-in codes, booking confirmations and service messages. |
 
-We keep an up-to-date internal list of sub-processors and will provide further detail on request via grievance@setmycareer.com [CONFIRM].
+Some of your drafts, chat history and preferences are also kept in **your own browser's storage** on your device, and are not transmitted to us.
+
+We keep an up-to-date internal record of every provider we use, the data each one receives and the country it is processed in. **If you would like that detail for your own data, ask us at grievance@setmycareer.com [CONFIRM] and we will provide it.** We name our payment gateway above because you will encounter it directly; we do not publish our full vendor list, as doing so would expose our security surface without telling you anything more about how your data is handled.
 
 ### 6.3 Schools, colleges and organisations (B2B)
 If you access the Services through your school, college or employer, we may share relevant results and reports with that organisation **as agreed in our contract with them and disclosed to you** at the point of collection. Where the organisation determines the purposes of processing, it acts as a separate controller/Data Fiduciary and its own privacy notice also applies.
@@ -291,7 +292,7 @@ When you delete your account or successfully exercise an erasure right, we remov
 
 ## 12. How we protect your data (security)
 
-We implement reasonable technical and organisational security measures appropriate to the sensitivity of the data, including: encryption of data in transit (TLS) and encryption of sensitive data at rest; hashing of passwords; role-based access controls and the principle of least privilege; restricted access to session recordings, transcripts and government IDs; network and application security controls; logging and monitoring; vendor due-diligence and data-processing agreements with our sub-processors; and staff confidentiality obligations. In India, we maintain reasonable security practices consistent with the **IT Act, 2000** and the **SPDI Rules, 2011**, and we align with the security expectations of the DPDP Act.
+We implement reasonable technical and organisational security measures appropriate to the sensitivity of the data, including: encryption of data in transit (TLS) and encryption of sensitive data at rest; hashing of passwords; role-based access controls and the principle of least privilege; restricted access to session recordings, transcripts and government IDs; network and application security controls; logging and monitoring; vendor due-diligence and data-processing agreements with every provider that handles your data; and staff confidentiality obligations. In India, we maintain reasonable security practices consistent with the **IT Act, 2000** and the **SPDI Rules, 2011**, and we align with the security expectations of the DPDP Act.
 
 No method of transmission or storage is completely secure, so we cannot guarantee absolute security. If a personal-data breach occurs that is likely to affect you, we will notify you and the relevant authorities (including the **Data Protection Board of India** and, where applicable, US and EU/UK regulators) as and when the law requires. Please help protect your account by keeping your password confidential and telling us promptly about any suspected unauthorised use.
 
