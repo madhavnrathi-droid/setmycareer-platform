@@ -126,7 +126,9 @@ right rail tabs (Notes / Split / Transcript / Chat), ring panel (client), record
 
 - **Tests:** 3 instruments (personality/interest free, aptitude ₹799 premium). Real scoring
   engine (`src/lib/sigma/engine.ts`) — **never touch**; reflections are unscored side-data.
-  Results save to `smc.portal.testresults` + mirror a **digest** to cloud `shared.test_results`.
+  Results save to `smc.portal.testresults` + mirror a **digest** to cloud `shared.test_results`
+  — **that mirror no-ops since 19 Jul 2026** (§0), so the digest is per-browser. Completed results
+  are still pushed to the **live backend**, which is the durable copy.
   Premium unlock flag `smc.portal.purchasedtests` is **local-only** (doesn't follow devices).
 - **Reports:** per-test report re-runs the engine live; "Save to profile" is confirm+write-gated
   → `Reports/uploadReport` (Plane A). AI Career Report = `/api/report` (Groq llama-3.3-70b +
@@ -135,7 +137,28 @@ right rail tabs (Notes / Split / Transcript / Chat), ring panel (client), record
   doc if a backend PDF exists.
 - **Compass:** `/api/assistant`, 4 personas by audience (client/counsellor/admin/visitor),
   generative-UI cards. Client chat/voice spend Career/Voice Credits (`spendAI`); counsellor/admin
-  are free. Chats persist to `app_chats` (≤50/user), shared bar↔full-page.
+  are free. Chats persist to `app_chats` (≤50/user), shared bar↔full-page — **per browser since
+  19 Jul 2026**; a chat started on one machine is not there on another.
+
+### ⚠️ RELEASE BLOCKER — a marketing-site purchase grants nothing (do not test-buy for real)
+
+`site/src/pages/Checkout.tsx` → `POST /api/razorpay` action `verify` → `recordServerPurchase()`
+wrote `purchases:<clientId>` into Plane B → the portal's `syncWalletAndPurchases()`
+(`src/portal/portal-store.ts`) read it back and granted the package exactly once. With Plane B off,
+the write returns `false` and the read returns `null`: **the customer is charged and the package
+never appears in their portal.**
+
+Payment verification itself still works correctly — it is explicitly best-effort, so *a store
+failure never invalidates a genuine payment* — and **Razorpay remains the authoritative record of
+the money**, so an affected purchase can be reconciled from the dashboard and granted by hand.
+
+**Latent, not active:** the deployed key is `rzp_test_…` (test mode, confirmed by probing
+`POST /api/razorpay {"action":"config"}`), so no real money moves through this path today.
+**Must be resolved before switching to live Razorpay keys.** The real fix is the
+purchase/entitlement endpoints in [`BACKEND_API_SPEC.md`](BACKEND_API_SPEC.md) §G.
+
+When you exercise checkout in an E2E pass, expect the portal to show **no** new package — that is
+this known blocker, not a new defect.
 
 ---
 
@@ -172,8 +195,12 @@ founder's Gmail so OTPs land in his inbox.
   the client shows in counsellor 4104's live caseload (`getclientbynaviId`), and the portal now
   resolves the dedicated counsellor from the purchase package's `navigator_id`
   (fix in `src/portal/counsellors.ts` — works on any device, no session required).
-- Cloud `portal.wallet` for client 31369 seeded generous: 20 sessions, 400 AI min,
-  1000 career credits, 500 voice credits, plan `premium` — syncs down on login everywhere.
+- ~~Cloud `portal.wallet` for client 31369 seeded generous: 20 sessions, 400 AI min,
+  1000 career credits, 500 voice credits, plan `premium` — syncs down on login everywhere.~~
+  **Void since 19 Jul 2026** — that seed lived in Plane B and went with it. The wallet is now
+  browser-local, so **client 31369 starts with a default wallet in every fresh browser** and the
+  seed does not sync down on login anywhere. Re-seed locally in the testing browser if a scenario
+  needs credits, or re-point `SUPABASE_URL`/`SUPABASE_KEY` at a Postgres and seed once (§0).
 
 **Known account-level caveats to watch during testing:**
 - Client display name is null on the backend (`UpdateSignUp` payload rejected); portal shows
@@ -198,7 +225,8 @@ founder's Gmail so OTPs land in his inbox.
   timestamped transcript, live; serialised onto the session on end. (Chromium only.)
 - **Call — notes/transcript persist** — `completeBooking` now mirrors the completed session
   (duration + timestamped notes + transcript) to the cloud, so it follows the client to every
-  device and the counsellor's copy stays in sync.
+  device and the counsellor's copy stays in sync. *(The code fix stands, but since 19 Jul 2026 the
+  mirror target is gone — the sync is per-browser until a server store returns. See §0.)*
 - **Compass grounding** — the full-page client guide (`PortalTherapy`) now passes the assessment
   summary as `reportContext` (parity with the floating bar + voice).
 
@@ -220,6 +248,12 @@ founder's Gmail so OTPs land in his inbox.
 
 ## 10. Known remaining feedback gaps (next iteration)
 
+- **🔴 A marketing-site purchase grants no package** (§5 blocker). Release-blocking for live
+  Razorpay keys; fix is `BACKEND_API_SPEC.md` §G.
+- **Everything below that says "cross-device" is now blocked on Plane B** (§0). Since 19 Jul 2026
+  the app-layer store is per-browser, so these gaps cannot be closed by mirroring to the cloud —
+  they close when the backend endpoints in `BACKEND_API_SPEC.md` ship. The "Fix" column in §6
+  should be read the same way: "mirror to cloud" now means "call the new server endpoint".
 - Client books → counsellor's **Calendar** doesn't show it yet (only admin does); no notification.
   Counsellor-scheduled calendar events don't create a client booking.
 - Notification bell has **no producer** (message/booking/report/test never notify).

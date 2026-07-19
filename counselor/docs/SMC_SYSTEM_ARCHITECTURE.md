@@ -780,7 +780,9 @@ public class SessionsController(SmcDbContext db, Audit audit) : ControllerBase
 ## 2.6 LangGraph synthesis integration
 
 The report brain is the **existing Python FastAPI + LangGraph service** (repo root `app/`,
-deployed on Railway, started via `uvicorn app.main:app`). Its graph
+deployed on **Vercel** at `setmycareer.vercel.app` via `api/index.py`; locally `uvicorn
+app.main:app`). The `Procfile` / `railway.json` at the repo root are superseded leftovers —
+the live host is Vercel, verified by probing `/api/health`. Its graph
 (`app/career/graph.py`) runs seven agents in sequence:
 
 ```
@@ -856,7 +858,7 @@ variables / your secret store — values are never committed anywhere.
   "ConnectionStrings": { "Smc": "" },              // env: SMC_DB_CONNECTION
   "Jwt": { "Issuer": "api.setmycareer.com", "Secret": "" },   // env: SMC_JWT_SECRET (256-bit)
   "Razorpay": { "KeyId": "", "KeySecret": "" },    // env: RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET
-  "LangGraph": { "BaseUrl": "", "ApiKey": "" },    // env: LANGGRAPH_BASE_URL (Railway URL)
+  "LangGraph": { "BaseUrl": "", "ApiKey": "" },    // env: LANGGRAPH_BASE_URL (e.g. https://setmycareer.vercel.app)
   "LiveKit": { "Url": "", "ApiKey": "", "ApiSecret": "" },    // env: LIVEKIT_URL / LIVEKIT_API_KEY / LIVEKIT_API_SECRET
   "Cors": { "Origins": [ "https://setmycareer-counselor.vercel.app", "https://setmycareer.com" ] }
 }

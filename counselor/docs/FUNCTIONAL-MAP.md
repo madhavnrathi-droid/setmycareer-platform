@@ -110,4 +110,11 @@ red and counts up. Ring: counsellor opening the room fires `startCallInvite` →
 - **C6. "Recording bot on" pill is static** — shows regardless of any actual recording.
 - **C7. Counsellor has no live-call banner** (`LiveCallBanner` is dead code).
 
-**In-call chatbot**: both sides, same `/api/assistant` (audience-swit
+**In-call chatbot**: both sides, same `/api/assistant` (audience-swapped per role) and deliberately
+**free** — it does not call `spendAI`, so in-call questions never burn the client's credits. This is
+intended behaviour, not an accounting gap.
+
+> _The line above was truncated mid-sentence when this file was first generated (it stopped at
+> "audience-swit" at exactly 8 KB). Completed 2026-07-19 from the same finding recorded in
+> [`E2E_TEST_MAP.md`](E2E_TEST_MAP.md) §3.7. If you find other sections that end abruptly, suspect
+> the same write truncation rather than a deliberate omission._
