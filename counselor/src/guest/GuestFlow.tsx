@@ -11,7 +11,7 @@ import { pfinItems, PFIN_SCALE } from "./personality-final"
 import { ifinItems, IFIN_SCALE } from "./interest-final"
 import { ABILITY_SECTIONS, ABILITY_TOTAL_MINUTES, sectionItemCount } from "./ability-bank"
 import { SJTS, FC_BLOCKS, CCPA_LIK } from "./ccpa"
-import { useGuest, updateGuest, resetGuest, guestStage, itemOrder, pendingClosure, type GuestDetails, type GuestState, type GuestTestId, type GuestTrack } from "./guest-store"
+import { useGuest, getGuest, updateGuest, resetGuest, guestStage, itemOrder, pendingClosure, type GuestDetails, type GuestState, type GuestTestId, type GuestTrack } from "./guest-store"
 import { LikertRunner } from "./LikertRunner"
 import { AbilityRunner } from "./AbilityRunner"
 import { CcpaRunner } from "./CcpaRunner"
@@ -617,6 +617,21 @@ function GuestLikert({ token, test, dark, onToggle }: { token: string; test: "pe
     return out
   }
 
+  // Response-time capture — INTEREST only (its reliability index reads them;
+  // wiring the personality runner too would be change without a consumer).
+  // The runner reports times in DISPLAY order; un-permute exactly like answers,
+  // then keep the FIRST recorded time per item (stored value wins) so a resumed
+  // sitting can never overwrite a real first-exposure read with null or a
+  // revisit. Old attempts simply have no interestTimes — the report degrades
+  // honestly to "Not recorded for this attempt".
+  const saveTimes = test === "interest"
+    ? (times: (number | null)[]) => {
+        const prev = getGuest(token).interestTimes ?? []
+        const fresh = toOriginal(times)
+        updateGuest(token, { interestTimes: fresh.map((t, k) => prev[k] ?? t) })
+      }
+    : undefined
+
   return (
     <LikertRunner
       key={test}
@@ -628,6 +643,7 @@ function GuestLikert({ token, test, dark, onToggle }: { token: string; test: "pe
       answers={displayAnswers}
       chaptered={false}
       onSave={(answers) => updateGuest(token, { [key]: toOriginal(answers) } as Partial<GuestState>)}
+      onTimes={saveTimes}
       onDone={(answers) => updateGuest(token, { [key]: toOriginal(answers), [doneKey]: new Date().toISOString() } as Partial<GuestState>)}
     />
   )

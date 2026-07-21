@@ -6,12 +6,13 @@
 // stylesheet, because nothing is stored on any server.
 
 import { useMemo, useState } from "react"
-import { Download, Sparkles, ShieldCheck, Loader2 } from "lucide-react"
+import { Download, Sparkles, ShieldCheck, Loader2, ChevronDown } from "lucide-react"
 import { GlowField, TopBar, TEST_HUE, type OnlyTest } from "./GuestFlow"
 import { ABILITY_SECTIONS, rawScore } from "./ability-bank"
 import { scoreAbilitySection, normBandFor, ABILITY_MEANING, type AbilityScore } from "./ability-norms"
 import { scorePfin, type PfinResult } from "./personality-final"
-import { scoreIfin, type IfinResult, type IfinClusterScore } from "./interest-final"
+import { scoreIfin, ifinBand, ifinPairConsistency, ifinTiming, type IfinResult, type IfinClusterScore } from "./interest-final"
+import { IREPORT, clusterDef, weDef, jcDef } from "./interest-defs"
 import { scoreCcpa, type CcpaResult, type MostLeast } from "./ccpa"
 import { useGuest, updateGuest, resetGuest } from "./guest-store"
 
@@ -24,17 +25,77 @@ interface AiSummary {
   subjects?: string[]
 }
 
-/* a compact 0–100 bar row used across sections */
-function BarRow({ i, label, value, right, mutStyle }: { i?: number; label: string; value: number; right?: string; mutStyle: React.CSSProperties }) {
+/* a small labelled chip used in the executive summary */
+function SumChip({ label, value, mutStyle }: { label: string; value: string; mutStyle: React.CSSProperties }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: i ? `1px solid var(--gline)` : undefined }}>
-      {i != null && <span className="w-5 shrink-0 text-[11px] tabular-nums" style={mutStyle}>{i}</span>}
-      <p className="w-[42%] min-w-0 truncate text-[12.5px]">{label}</p>
-      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full" style={{ background: "var(--gline)" }}>
-        <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, value))}%`, background: "var(--gfg)" }} />
+    <span className="inline-flex items-baseline gap-1.5 rounded-full border px-3 py-1 text-[11.5px]" style={{ borderColor: "var(--gline)" }}>
+      <span style={mutStyle}>{label}</span>
+      <span className="font-medium">{value}</span>
+    </span>
+  )
+}
+
+/* an interest bar row that toggles its definition inline (screen only — print
+   uses the per-section glossaries instead) */
+function DefBarRow({ i, label, value, right, def, mutStyle }: {
+  i: number; label: string; value: number; right?: React.ReactNode; def: string; mutStyle: React.CSSProperties
+}) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="gt-row" style={{ borderTop: i ? "1px solid var(--gline)" : undefined }}>
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-2 text-left">
+        <span className="w-5 shrink-0 text-[11px] tabular-nums" style={mutStyle}>{i + 1}</span>
+        <p className="w-[40%] min-w-0 truncate text-[12.5px]">{label}</p>
+        <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full" style={{ background: "var(--gline)" }}>
+          <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, value))}%`, background: "var(--gfg)" }} />
+        </div>
+        <span className="w-8 shrink-0 text-right text-[12.5px] tabular-nums">{Math.round(value)}</span>
+        <span className="flex w-[112px] shrink-0 items-center justify-end text-right text-[10.5px]" style={mutStyle}>{right}</span>
+        <ChevronDown className="gt-noprint size-3.5 shrink-0 transition-transform" style={{ ...mutStyle, transform: open ? "rotate(180deg)" : undefined }} />
+      </button>
+      {open && (
+        <p className="gt-noprint px-4 pb-3 pl-12 pr-10 text-[12px] leading-relaxed" style={mutStyle}>{def}</p>
+      )}
+    </div>
+  )
+}
+
+/* section-level "How to read this" disclosure — screen only */
+function HowToRead({ children, mutStyle }: { children: React.ReactNode; mutStyle: React.CSSProperties }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="gt-noprint mt-2">
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
+        className="inline-flex items-center gap-1.5 text-[11.5px] font-medium underline-offset-4 hover:underline" style={mutStyle}>
+        How to read this
+        <ChevronDown className="size-3" style={{ transform: open ? "rotate(180deg)" : undefined }} />
+      </button>
+      {open && <div className="mt-2 rounded-xl border p-3.5 text-[12px] leading-relaxed" style={{ borderColor: "var(--gline)", background: "var(--gcard)", ...mutStyle }}>{children}</div>}
+    </div>
+  )
+}
+
+interface GlossEntry { name: string; chip: string; band: string; def: string }
+
+/* print-only personalized glossary: two columns, each entry = name + the
+   taker's score + band + the verbatim definition */
+function PrintGlossary({ title, entries, mutStyle }: { title: string; entries: GlossEntry[]; mutStyle: React.CSSProperties }) {
+  return (
+    <div className="gt-printonly mt-4">
+      <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mutStyle}>{title}</p>
+      <div className="gt-glossary mt-2">
+        {entries.map((e) => (
+          <div key={e.name} className="gt-glossentry">
+            <p className="text-[11px]">
+              <span className="font-semibold">{e.name}</span>{" "}
+              <span className="rounded-full border px-1.5 text-[10px] tabular-nums" style={{ borderColor: "var(--gline)" }}>{e.chip}</span>{" "}
+              <span style={mutStyle}>{e.band}</span>
+            </p>
+            <p className="mt-0.5 text-[10px] leading-snug" style={{ ...mutStyle, whiteSpace: "normal", wordBreak: "normal", overflowWrap: "anywhere" }}>{e.def}</p>
+          </div>
+        ))}
       </div>
-      <span className="w-9 shrink-0 text-right text-[12.5px] tabular-nums">{Math.round(value)}</span>
-      {right && <span className="w-[86px] shrink-0 text-right text-[11px]" style={mutStyle}>{right}</span>}
     </div>
   )
 }
@@ -75,6 +136,20 @@ export function GuestReport({ token, dark, onToggle, only }: { token: string; da
   // hobby-gap callouts (|HCG| > 20 per the manual's interpretation table)
   const hobbyGaps = interest.clusters.filter((c): c is IfinClusterScore & { hcg: number } => c.hcg != null && Math.abs(c.hcg) > 20)
 
+  // interest reliability inputs — pair agreement across the 88 construct pairs
+  // and per-item response times (recorded only for newer attempts)
+  const pairCheck = useMemo(() => ifinPairConsistency(state.interest ?? []), [state.interest])
+  // Displayed confidence folds pair consistency into the flag-based level: a
+  // taker whose paired statements disagree should never read "High" beside an
+  // 8% consistency figure. Capped, never raised.
+  const effectiveConfidence = useMemo(() => {
+    const order = ["Low", "Moderate", "High"] as const
+    const base = interest.flags.confidence
+    const cap = pairCheck.consistency == null ? "High" : pairCheck.consistency < 50 ? "Low" : pairCheck.consistency < 75 ? "Moderate" : "High"
+    return order[Math.min(order.indexOf(base), order.indexOf(cap))]
+  }, [interest.flags.confidence, pairCheck.consistency])
+  const timing = useMemo(() => ifinTiming(state.interestTimes), [state.interestTimes])
+
   const runAi = async () => {
     setAiBusy(true); setAiErr(null)
     try {
@@ -107,11 +182,18 @@ export function GuestReport({ token, dark, onToggle, only }: { token: string; da
   return (
     <>
       <style>{`
+        .gt-printonly { display: none; }
         @media print {
           .gt-noprint { display: none !important; }
+          .gt-printonly { display: block !important; }
           .gt-report-root { background: #fff !important; color: #111 !important; }
           .gt-report-root * { --gbg: #fff; --gfg: #111; --gmut: #555; --gline: #ddd; --gcard: #fff; }
           .gt-section { break-inside: avoid; }
+          .gt-break { break-after: page; }
+          .gt-row, .gt-glossentry, .gt-block { break-inside: avoid; }
+          .gt-glossary { column-count: 2; column-gap: 8mm; }
+          /* overflow clips in print — let labels wrap instead of truncating */
+          .gt-report-root .truncate { overflow: visible; white-space: normal; text-overflow: clip; }
           @page { margin: 14mm; }
         }
       `}</style>
@@ -234,95 +316,229 @@ export function GuestReport({ token, dark, onToggle, only }: { token: string; da
           </section>
           )}
 
-          {/* ── interests: the manual's two graphs ── */}
-          {show("interest") && (
-          <section className="gt-section mt-10">
-            <h2 className="font-display text-[20px] font-light tracking-tight">Interest landscape</h2>
-            <p className="mt-1 text-[12.5px]" style={mut}>
-              Two reads per the SMC Career Interest model. Confidence: {interest.flags.confidence}.
-            </p>
-
-            {/* Graph 1 — Activity-Level Interest (attraction only) */}
-            <p className="mt-4 text-[13px] font-semibold">What naturally attracts me?</p>
-            <p className="text-[11.5px]" style={mut}>Attraction only — this graph shows what pulls you, not career suitability.</p>
-            <div className="mt-2 overflow-hidden rounded-2xl border" style={line}>
-              {interest.byAttraction.map((c, i) => (
-                <BarRow key={c.label} i={i + 1} label={c.label} value={c.attraction ?? 0} right={c.attractionBand ?? ""} mutStyle={mut} />
-              ))}
-            </div>
-
-            {/* Graph 2 — Career-Level Interest (50% engagement + 25% WE + 25% JC) */}
-            <p className="mt-6 text-[13px] font-semibold">What could sustain me as a career?</p>
-            <p className="text-[11.5px]" style={mut}>
-              Willingness to do the real work repeatedly (50%) + your preferred working conditions (25%) + preferred
-              ways of working (25%). Sustained preference, not ability or guaranteed success.
-            </p>
-            <div className="mt-2 overflow-hidden rounded-2xl border" style={line}>
-              {interest.byCareer.map((c, i) => (
-                <BarRow key={c.label} i={i + 1} label={c.label} value={c.career ?? 0} right={c.category ?? ""} mutStyle={mut} />
-              ))}
-            </div>
-
-            {/* hobby ↔ career gaps */}
-            {hobbyGaps.length > 0 && (
-              <div className="mt-4 rounded-2xl border p-4" style={card}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mut}>Where the two reads differ</p>
-                <div className="mt-2 flex flex-col gap-1.5">
-                  {hobbyGaps.slice(0, 5).map((c) => (
-                    <p key={c.label} className="text-[12.5px] leading-relaxed">
-                      <span className="font-medium">{c.label}</span>{" "}
-                      <span style={mut}>
-                        {c.hcg > 0
-                          ? `— attracts you (${c.attraction}) more than its day-to-day work suits you (${c.career}). May fit better as a hobby or side pursuit.`
-                          : `— its real work conditions suit you (${c.career}) more than your current attraction (${c.attraction}). Real-world exposure may reveal hidden potential.`}
-                      </span>
-                    </p>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border p-4" style={card}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mut}>Work environment — top 5</p>
-                <div className="mt-2.5 flex flex-col gap-2">
-                  {[...interest.we].filter((f) => f.score != null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 5).map((f) => (
-                    <div key={f.key} className="flex items-center gap-2.5">
-                      <p className="w-[46%] min-w-0 truncate text-[12.5px]">{f.label}</p>
-                      <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full" style={{ background: "var(--gline)" }}>
-                        <div className="h-full rounded-full" style={{ width: `${f.score}%`, background: "var(--gfg)" }} />
-                      </div>
-                      <span className="w-8 shrink-0 text-right text-[12px] tabular-nums">{f.score}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-2xl border p-4" style={card}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mut}>Job characteristics — top 5</p>
-                <div className="mt-2.5 flex flex-col gap-2">
-                  {[...interest.jc].filter((f) => f.score != null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 5).map((f) => (
-                    <div key={f.key} className="flex items-center gap-2.5">
-                      <p className="w-[46%] min-w-0 truncate text-[12.5px]">{f.label}</p>
-                      <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full" style={{ background: "var(--gline)" }}>
-                        <div className="h-full rounded-full" style={{ width: `${f.score}%`, background: "var(--gfg)" }} />
-                      </div>
-                      <span className="w-8 shrink-0 text-right text-[12px] tabular-nums">{f.score}</span>
-                    </div>
-                  ))}
-                </div>
+          {/* ── interests: the full Career Interest Assessment Report ── */}
+          {show("interest") && (() => {
+            const firstName = d.name.split(" ")[0]
+            const topA = interest.byAttraction.slice(0, 3)
+            const topC = interest.byCareer.slice(0, 3)
+            const weSorted = [...interest.we].filter((f) => f.score != null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+            const jcSorted = [...interest.jc].filter((f) => f.score != null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+            const interestDate = new Date(state.interestDoneAt ?? Date.now())
+              .toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+            const styleLine = interest.flags.highEndorsement
+              ? "High agreement across most items — elevated scores may partly reflect response style rather than interest."
+              : interest.flags.lowEndorsement
+                ? "Low agreement across most items — depressed scores may partly reflect response style rather than interest."
+                : "Balanced use of the rating scale — no strong response-style pattern."
+            const glossClusters = interest.clusters
+              .filter((c) => c.attraction != null || c.career != null)
+              .sort((a, b) => (b.career ?? -1) - (a.career ?? -1))
+            return (
+          <section className="mt-10">
+            {/* report cover */}
+            <div className="gt-break gt-block rounded-2xl border p-6 sm:p-8" style={card}>
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em]" style={mut}>SetMyCareer</p>
+              <h2 className="mt-2 font-display text-[clamp(22px,3.6vw,30px)] font-light tracking-tight">{IREPORT.title}</h2>
+              <p className="mt-1 text-[13px]" style={mut}>{IREPORT.coverSubtitle}</p>
+              <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
+                {[
+                  ["Candidate", d.name],
+                  ["Client ID", token],
+                  [isExec ? "Profession" : "Class", d.grade],
+                  ["Assessment date", interestDate],
+                ].map(([k, v]) => (
+                  <div key={k}>
+                    <p className="text-[10.5px] font-medium uppercase tracking-[0.12em]" style={mut}>{k}</p>
+                    <p className="mt-0.5 text-[13px] font-medium" style={{ overflowWrap: "anywhere" }}>{v}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {interest.flags.notes.length > 0 && (
-              <div className="mt-3 rounded-xl border p-3.5" style={card}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.12em]" style={mut}>Response-quality notes</p>
-                <ul className="mt-1.5 flex flex-col gap-1">
-                  {interest.flags.notes.map((n, i) => <li key={i} className="text-[12px] leading-relaxed" style={mut}>• {n}</li>)}
-                </ul>
+            {/* executive summary */}
+            <div className="gt-break gt-block mt-6">
+              <h3 className="font-display text-[18px] font-light tracking-tight">Executive summary</h3>
+              <p className="mt-2 max-w-[68ch] text-[13px] leading-relaxed">
+                This report compares two reads of the same 34 interest areas. The first asks what naturally
+                attracts {firstName} — enjoyment alone. The second asks what could sustain a career: willingness
+                to do the real work repeatedly, weighed with preferred working conditions and preferred ways of
+                working.{" "}
+                {topC.length > 0
+                  ? `${topC.map((c) => c.label).join(", ")} lead the career-level read`
+                  : "Too few items were answered to rank the career-level read"}
+                {topA.length > 0 ? `, and ${topA[0].label} sits highest on pure attraction.` : "."}{" "}
+                {weSorted.length > 0 && jcSorted.length > 0 &&
+                  `Among the preference factors, a ${weSorted[0].label.toLowerCase()} environment and ${jcSorted[0].label.toLowerCase()} work rank first.`}{" "}
+                Response quality for this attempt is rated {interest.flags.confidence.toLowerCase()} — the
+                reliability section at the end shows how that was checked.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {topA.map((c, i) => <SumChip key={c.label} label={`Attraction ${i + 1}`} value={c.label} mutStyle={mut} />)}
+                {topC.map((c, i) => <SumChip key={c.label} label={`Career ${i + 1}`} value={c.label} mutStyle={mut} />)}
+                {weSorted[0] && <SumChip label="Environment" value={weSorted[0].label} mutStyle={mut} />}
+                {jcSorted[0] && <SumChip label="Way of working" value={jcSorted[0].label} mutStyle={mut} />}
+                <SumChip label="Confidence" value={effectiveConfidence} mutStyle={mut} />
               </div>
-            )}
+            </div>
+
+            {/* graph 1 — activity-level */}
+            <div className="gt-break mt-8">
+              <p className="text-[10.5px] font-medium uppercase tracking-[0.16em]" style={mut}>Graph 1 · {IREPORT.graph1Title}</p>
+              <h3 className="mt-1 font-display text-[18px] font-light tracking-tight">{IREPORT.graph1Question}</h3>
+              <p className="mt-1 max-w-[64ch] text-[12px]" style={mut}>
+                Attraction alone — what pulls {firstName}, before the day-to-day work behind it is weighed.
+                All 34 areas, highest first. <span className="gt-noprint">Select any row to read what it measures.</span>
+              </p>
+              <HowToRead mutStyle={mut}>
+                Each area gets a 0 to 100 attraction score from ratings of statements about enjoying and being
+                curious about it. Bands: 80 and above very strong · 65 to 79 strong · 50 to 64 moderate · 35 to 49
+                low · below 35 very low. A high attraction score does not by itself mean the day-to-day work would
+                suit you — compare it with Graph 2.
+              </HowToRead>
+              <div className="mt-3 overflow-hidden rounded-2xl border" style={line}>
+                {interest.byAttraction.map((c, i) => (
+                  <DefBarRow key={c.label} i={i} label={c.label} value={c.attraction ?? 0}
+                    right={c.attractionBand ?? ""} def={clusterDef(c.label)} mutStyle={mut} />
+                ))}
+              </div>
+            </div>
+
+            {/* graph 2 — career-level */}
+            <div className="gt-break mt-8">
+              <p className="text-[10.5px] font-medium uppercase tracking-[0.16em]" style={mut}>Graph 2 · {IREPORT.graph2Title}</p>
+              <h3 className="mt-1 font-display text-[18px] font-light tracking-tight">{IREPORT.graph2Question}</h3>
+              <p className="mt-1 max-w-[64ch] text-[12px]" style={mut}>
+                Willingness to do the real work repeatedly (50%), plus fit with preferred working conditions (25%)
+                and preferred ways of working (25%). This read compares preferences only — it does not measure
+                ability or guarantee success. <span className="gt-noprint">Select any row to read what it measures.</span>
+              </p>
+              <HowToRead mutStyle={mut}>
+                The career-level score asks whether an interest could survive real working life, not just whether
+                it is enjoyable to think about. The label on each row is the recommendation category from the
+                scoring model — from Strongly Supported down to Not Currently Supported, with Hobby / Side Pursuit
+                marking areas whose attraction runs well ahead of the appetite for their actual work.
+              </HowToRead>
+              <div className="mt-3 overflow-hidden rounded-2xl border" style={line}>
+                {interest.byCareer.map((c, i) => (
+                  <DefBarRow key={c.label} i={i} label={c.label} value={c.career ?? 0}
+                    right={c.category
+                      ? <span className="min-w-0 max-w-full truncate rounded-full border px-2 py-0.5 text-[10px]" style={{ borderColor: "var(--gline)" }}>{c.category}</span>
+                      : null}
+                    def={clusterDef(c.label)} mutStyle={mut} />
+                ))}
+              </div>
+
+              {/* where the two reads differ */}
+              {hobbyGaps.length > 0 && (
+                <div className="gt-block mt-4 rounded-2xl border p-4" style={card}>
+                  <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mut}>Where the two reads differ</p>
+                  <div className="mt-2 flex flex-col gap-1.5">
+                    {hobbyGaps.slice(0, 5).map((c) => (
+                      <p key={c.label} className="text-[12.5px] leading-relaxed">
+                        <span className="font-medium">{c.label}</span>{" "}
+                        <span style={mut}>
+                          {c.hcg > 0
+                            ? `— attracts you (${c.attraction}) more than its day-to-day work suits you (${c.career}). May fit better as a hobby or side pursuit.`
+                            : `— its real work conditions suit you (${c.career}) more than your current attraction (${c.attraction}). Real-world exposure may reveal hidden potential.`}
+                        </span>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <PrintGlossary title="Interest areas — your scores, explained" mutStyle={mut}
+                entries={glossClusters.map((c) => ({
+                  name: c.label,
+                  chip: `Attraction ${c.attraction ?? "—"} · Career ${c.career ?? "—"}`,
+                  band: c.careerBand ?? c.attractionBand ?? "",
+                  def: clusterDef(c.label),
+                }))} />
+            </div>
+
+            {/* preferred work environment + job characteristics */}
+            <div className="gt-break mt-8">
+              <h3 className="font-display text-[18px] font-light tracking-tight">{IREPORT.weTitle}</h3>
+              <p className="mt-1 max-w-[64ch] text-[12px]" style={mut}>
+                Ten factors describing the settings {firstName} would prefer to work in, 0 to 100, highest
+                first. <span className="gt-noprint">Select any row for its definition.</span>
+              </p>
+              <div className="mt-3 overflow-hidden rounded-2xl border" style={line}>
+                {weSorted.map((f, i) => (
+                  <DefBarRow key={f.key} i={i} label={f.label} value={f.score ?? 0}
+                    right={f.score != null ? ifinBand(f.score) : ""} def={weDef(f.key)} mutStyle={mut} />
+                ))}
+              </div>
+              <PrintGlossary title="Work environment factors — your scores, explained" mutStyle={mut}
+                entries={weSorted.map((f) => ({
+                  name: f.label, chip: String(f.score), band: f.score != null ? ifinBand(f.score) : "", def: weDef(f.key),
+                }))} />
+
+              <h3 className="mt-8 font-display text-[18px] font-light tracking-tight">{IREPORT.jcTitle}</h3>
+              <p className="mt-1 max-w-[64ch] text-[12px]" style={mut}>
+                Ten factors describing the kind of work {firstName} would prefer to do, 0 to 100, highest
+                first. <span className="gt-noprint">Select any row for its definition.</span>
+              </p>
+              <div className="mt-3 overflow-hidden rounded-2xl border" style={line}>
+                {jcSorted.map((f, i) => (
+                  <DefBarRow key={f.key} i={i} label={f.label} value={f.score ?? 0}
+                    right={f.score != null ? ifinBand(f.score) : ""} def={jcDef(f.key)} mutStyle={mut} />
+                ))}
+              </div>
+              <PrintGlossary title="Job characteristic factors — your scores, explained" mutStyle={mut}
+                entries={jcSorted.map((f) => ({
+                  name: f.label, chip: String(f.score), band: f.score != null ? ifinBand(f.score) : "", def: jcDef(f.key),
+                }))} />
+            </div>
+
+            {/* reliability + confidence */}
+            <div className="gt-block mt-8">
+              <h3 className="font-display text-[18px] font-light tracking-tight">Reliability index</h3>
+              <p className="mt-1 max-w-[64ch] text-[12px]" style={mut}>
+                Five checks on how this attempt was answered — they describe response quality, not the person.
+              </p>
+              <div className="mt-3 overflow-hidden rounded-2xl border" style={line}>
+                {[
+                  ["Response consistency", pairCheck.consistency != null
+                    ? `${pairCheck.consistency}% — each construct is asked through paired statements; ${pairCheck.divergentPairs} of ${pairCheck.totalPairs} pairs were answered two or more scale points apart.`
+                    : "Not enough fully answered pairs to compute."],
+                  ["Straight-lining", interest.flags.straightLining
+                    ? "Flagged — most items received the same rating, so differences between areas may be understated."
+                    : "Not detected."],
+                  ["Missing responses", `${interest.flags.missingPct}% of the 176 items were left unanswered.`],
+                  ["Response style", styleLine],
+                  ["Item response time", timing.recorded
+                    ? `Median ${timing.medianSec} seconds per item${timing.fastPct != null ? ` · ${timing.fastPct}% of items answered in under 1.2 seconds` : ""}.`
+                    : "Not recorded for this attempt."],
+                ].map(([name, value], i) => (
+                  <div key={name as string} className="gt-row flex flex-col gap-0.5 px-4 py-2.5 sm:flex-row sm:items-baseline sm:gap-3"
+                    style={{ borderTop: i ? "1px solid var(--gline)" : undefined }}>
+                    <p className="w-[170px] shrink-0 text-[12.5px] font-medium">{name}</p>
+                    <p className="min-w-0 flex-1 text-[12px] leading-relaxed" style={mut}>{value}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="gt-block mt-3 rounded-2xl border p-4" style={card}>
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={mut}>Confidence index</p>
+                <p className="mt-1.5 text-[13px]">
+                  <span className="font-semibold">{effectiveConfidence}</span>{" "}
+                  <span style={mut}>
+                    — combines the quality checks above with pair consistency: it is capped at
+                    moderate when fewer than three in four paired statements agree, and at low
+                    when fewer than half do. Hidden inconsistencies: {pairCheck.divergentPairs} of{" "}
+                    {pairCheck.totalPairs} paired statements diverged by two or more scale points.
+                  </span>
+                </p>
+                {interest.flags.notes.length > 0 && (
+                  <ul className="mt-2 flex flex-col gap-1">
+                    {interest.flags.notes.map((n, i) => <li key={i} className="text-[12px] leading-relaxed" style={mut}>• {n}</li>)}
+                  </ul>
+                )}
+              </div>
+            </div>
           </section>
-          )}
+            )
+          })()}
 
           {/* ── personality ── */}
           {show("personality") && (

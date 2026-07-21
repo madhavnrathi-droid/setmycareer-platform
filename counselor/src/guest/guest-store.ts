@@ -48,6 +48,9 @@ export interface GuestState {
   personality?: (number | null)[]
   personalityDoneAt?: string
   interest?: (number | null)[]
+  /** per-item first-answer response times, ms, STORAGE order (reliability
+   *  index only — never scored). Absent on attempts made before capture. */
+  interestTimes?: (number | null)[]
   interestDoneAt?: string
   /** third test — STUDENT track: the timed ability battery */
   ability?: AbilityProgress

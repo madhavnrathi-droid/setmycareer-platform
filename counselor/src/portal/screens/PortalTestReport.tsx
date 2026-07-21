@@ -19,7 +19,8 @@ import { readoutFor } from "../tests/interpretations"
 import { uploadTestReport } from "../tests/test-report-upload"
 import { usePortalAccount, accountTrack } from "../portal-store"
 import { scorePfin } from "@/guest/personality-final"
-import { scoreIfin } from "@/guest/interest-final"
+import { scoreIfin, ifinPairConsistency, ifinTiming } from "@/guest/interest-final"
+import { clusterDef } from "@/guest/interest-defs"
 import { cn } from "@/lib/utils"
 
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString([], { day: "numeric", month: "long", year: "numeric" })
@@ -32,6 +33,20 @@ const bandTone = (b: string | null | undefined) =>
 const barTone = (v: number) => (v >= 65 ? "bg-well-500" : v <= 35 ? "bg-ink-300" : "bg-brand-500")
 const catTone = (c: string | null | undefined) =>
   /Strongly Supported|Supported/.test(c ?? "") ? "bg-well-500" : /Not Currently/.test(c ?? "") ? "bg-ink-300" : "bg-brand-500"
+
+/* a Bar that toggles the factor's verbatim definition inline — same visual kit,
+   just wrapped in a button (the founder's dropdown requirement) */
+function DefBar({ label, value, sub, tone, def }: { label: string; value: number; sub?: string; tone?: string; def: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div>
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="block w-full text-left">
+        <Bar label={label} value={value} sub={sub} tone={tone} />
+      </button>
+      {open && <p className="mt-1.5 max-w-[64ch] text-[12px] leading-snug text-muted-foreground">{def}</p>}
+    </div>
+  )
+}
 
 function Bar({ label, value, sub, tone = "bg-brand-500" }: { label: string; value: number; sub?: string; tone?: string }) {
   return (
@@ -135,30 +150,44 @@ export function PortalTestReport() {
     )
   } else if (def.id === "sigma_interest" && result.answers.length) {
     const r = scoreIfin(result.answers)
-    const byCareer = [...r.clusters].filter((c) => c.career != null).sort((a, b) => (b.career ?? 0) - (a.career ?? 0))
-    const byAttraction = [...r.clusters].filter((c) => c.attraction != null).sort((a, b) => (b.attraction ?? 0) - (a.attraction ?? 0))
     const hobbies = r.clusters.filter((c) => c.hcg != null && (c.hcg ?? 0) > 20).sort((a, b) => (b.hcg ?? 0) - (a.hcg ?? 0)).slice(0, 3)
+    const pair = ifinPairConsistency(result.answers)
+    // displayed confidence is capped by pair consistency (never raised) so the
+    // reader never sees "High" beside a low agreement figure
+    const confOrder = ["Low", "Moderate", "High"]
+    const confCap = pair.consistency == null ? "High" : pair.consistency < 50 ? "Low" : pair.consistency < 75 ? "Moderate" : "High"
+    const effConfidence = confOrder[Math.min(confOrder.indexOf(r.flags.confidence), confOrder.indexOf(confCap))]
+    const timing = ifinTiming((result.payload as { interestTimes?: (number | null)[] } | undefined)?.interestTimes)
+    const styleLine = r.flags.highEndorsement
+      ? "high agreement across most items — elevated scores may partly reflect response style"
+      : r.flags.lowEndorsement
+        ? "low agreement across most items — depressed scores may partly reflect response style"
+        : "balanced use of the rating scale"
     body = (
       <>
         <div data-reveal>
-          <div className="mb-4 flex items-center gap-2"><Briefcase className="size-4 text-brand-600" /><h2 className="text-[15px] font-semibold text-foreground">Where interest could sustain a career</h2></div>
+          <div className="mb-1 flex items-center gap-2"><Sparkles className="size-4 text-mind-600" /><h2 className="text-[15px] font-semibold text-foreground">Activity-level interest pattern — what naturally attracts you?</h2></div>
           <p className="mb-4 max-w-[68ch] text-[13px] text-muted-foreground">
-            Career-level score = 50% willingness to do the real work repeatedly + 25% work-environment fit +
-            25% job-characteristic fit. Sustained preference, not ability or guaranteed success.
+            Attraction alone — what pulls you, before the work behind it is weighed. All 34 areas, highest
+            first. Select any row to read what that area measures.
           </p>
-          <div className="space-y-3">
-            {byCareer.slice(0, 10).map((c) => (
-              <Bar key={c.label} label={c.label} value={c.career ?? 0} sub={`${c.career} · ${c.category ?? "—"}`} tone={catTone(c.category)} />
+          <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+            {r.byAttraction.map((c) => (
+              <DefBar key={c.label} label={c.label} value={c.attraction ?? 0} sub={`${c.attraction} · ${c.attractionBand ?? "—"}`} tone={barTone(c.attraction ?? 0)} def={clusterDef(c.label)} />
             ))}
           </div>
         </div>
         <div className="my-10 h-px bg-border" />
         <div data-reveal>
-          <div className="mb-4 flex items-center gap-2"><Sparkles className="size-4 text-mind-600" /><h2 className="text-[15px] font-semibold text-foreground">What naturally attracts you</h2></div>
-          <p className="mb-4 max-w-[68ch] text-[13px] text-muted-foreground">Attraction alone — what pulls you, before the work behind it is weighed.</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {byAttraction.slice(0, 10).map((c) => (
-              <Bar key={c.label} label={c.label} value={c.attraction ?? 0} sub={`${c.attraction} · ${c.attractionBand ?? "—"}`} tone={barTone(c.attraction ?? 0)} />
+          <div className="mb-1 flex items-center gap-2"><Briefcase className="size-4 text-brand-600" /><h2 className="text-[15px] font-semibold text-foreground">Career-level interest pattern — what could sustain you as a career?</h2></div>
+          <p className="mb-4 max-w-[68ch] text-[13px] text-muted-foreground">
+            Career-level score = 50% willingness to do the real work repeatedly + 25% work-environment fit +
+            25% job-characteristic fit. Sustained preference, not ability or guaranteed success. All 34 areas,
+            highest first, each with its recommendation category.
+          </p>
+          <div className="space-y-3">
+            {r.byCareer.map((c) => (
+              <DefBar key={c.label} label={c.label} value={c.career ?? 0} sub={`${c.career} · ${c.category ?? "—"}`} tone={catTone(c.category)} def={clusterDef(c.label)} />
             ))}
           </div>
         </div>
@@ -181,6 +210,30 @@ export function PortalTestReport() {
             </div>
           </>
         )}
+        <div className="my-10 h-px bg-border" />
+        <div data-reveal>
+          <h2 className="mb-2 text-[15px] font-semibold text-foreground">How reliable was this attempt?</h2>
+          <ul className="max-w-[68ch] space-y-1.5 text-[13px] leading-relaxed text-muted-foreground">
+            <li>
+              <span className="font-medium text-foreground">Response consistency</span> — {pair.consistency != null
+                ? `${pair.consistency}%; ${pair.divergentPairs} of ${pair.totalPairs} paired statements were answered two or more scale points apart.`
+                : "not enough fully answered pairs to compute."}
+            </li>
+            <li><span className="font-medium text-foreground">Straight-lining</span> — {r.flags.straightLining ? "flagged: most items received the same rating." : "not detected."}</li>
+            <li><span className="font-medium text-foreground">Missing responses</span> — {r.flags.missingPct}% of the 176 items left unanswered.</li>
+            <li><span className="font-medium text-foreground">Response style</span> — {styleLine}.</li>
+            <li>
+              <span className="font-medium text-foreground">Item response time</span> — {timing.recorded
+                ? `median ${timing.medianSec} seconds per item${timing.fastPct != null ? `; ${timing.fastPct}% answered in under 1.2 seconds` : ""}.`
+                : "Not recorded for this attempt."}
+            </li>
+          </ul>
+          <p className="mt-3 max-w-[68ch] text-[13px] text-muted-foreground">
+            Confidence: <span className="font-medium text-foreground">{effConfidence}</span> — combines the
+            quality checks with pair consistency; capped at moderate when fewer than three in four
+            paired statements agree, and at low when fewer than half do.
+          </p>
+        </div>
       </>
     )
   } else if (result.variant === "dbda" || (result.payload as DbdaPayload | undefined)?.kind === "dbda") {

@@ -6,36 +6,14 @@
 // were rejected. Rules: vocabulary, scope, situations and neutral examples ONLY;
 // max ~3 short lines; equally neutral for positively- and negatively-keyed items.
 // Aptitude items never get generated clarifications (hint risk).
+//
+// 2026-07-21: pruned 13 entries that were keyed to the RETIRED legacy inventory
+// (interest-items.ts) and so never matched a live item; re-keyed the one entry
+// whose hard term ('investments') survives in the reworded final inventory.
+// The 12-16 rewording pass removed most hard vocabulary at the source, which is
+// why the interest side needs almost no clarifications now.
 
 export const CLARIFICATIONS: Record<string, string> = {
-  "I feel satisfied when I complete clerical tasks quickly and correctly.":
-    "Clerical tasks are routine office paperwork: entering data, filing records, filling forms, updating registers. Any such task counts — done at school, home or work.",
-  "I am curious about learning physics, chemistry, or pure mathematics in depth.":
-    "Pure mathematics means maths studied for its own sake — proofs, algebra, number theory — rather than applied to engineering or finance. Rate your curiosity about the subjects themselves.",
-  "I am curious about how pharmacists, therapists, or lab technicians support care.":
-    "Therapists here covers physiotherapists, occupational and speech therapists — helping recovery through guided exercises. Lab technicians run medical tests on samples, such as blood tests.",
-  "I like careful, precise work in labs or treatment settings.":
-    "Treatment settings are places where patients receive care — clinics, hospital wards, dental or physiotherapy rooms. For labs, school or college practical work counts too.",
-  "I am curious about water, plants, animals, and sustainable living.":
-    "Sustainable living means using resources so they are not used up — saving water and power, reducing waste, reusing materials. Everyday examples: rainwater harvesting, composting.",
-  "I am curious about city planning, maps, and public spaces.":
-    "City planning is deciding how a town's roads, housing, transport and parks are laid out. Public spaces include parks, markets, footpaths and metro stations.",
-  "I like reading or hearing about real-life cases, justice, and fairness.":
-    "Cases here means legal matters — court disputes, judgments, investigations — in news, books or documentaries. Following them casually counts; formal study of law is not assumed.",
-  "I am curious about how defence, police, or safety forces work.":
-    "Safety forces include fire services, disaster-response teams, paramilitary and security services. Curiosity from news, books or films counts — you need not know anyone serving.",
-  "I am comfortable with some risk if it helps me build something new.":
-    "Risk here means uncertainty — time, money or effort spent on something that may not work out. It does not mean physical danger.",
-  "I like building relationships and meeting new people for opportunities.":
-    "Opportunities means any kind — study, work, business, collaborations. Meeting people at events, through friends or online all count.",
-  "I am comfortable with the responsibility needed to care for others’ health.":
-    "No medical training is needed to answer. Think of looking after an unwell family member, giving first aid — or imagine carrying that responsibility daily.",
-  "I enjoy solving problems when deliveries or resources are delayed.":
-    "Counts any delayed plan, not only work logistics: event supplies stuck, project materials late, a held-up online order. Rate how much you like sorting such hold-ups out.",
-  "I like planning resources so tasks happen on schedule.":
-    "Resources means whatever a task needs — people's time, money, materials, equipment. Example: working out who brings what, and when, for an event or project.",
-  "I am interested in knowing how banks, savings, and investments work.":
-    "Investments means putting money into things like shares, mutual funds, gold or property in the hope it grows. You do not need to have invested to answer.",
   "I keep to myself unless someone approaches me first.":
     "'Keep to myself' means not starting conversations or joining in on your own. Count any setting — class, work, family gatherings, online groups.",
   "I am comfortable taking the lead when a group needs direction.":
@@ -74,6 +52,8 @@ export const CLARIFICATIONS: Record<string, string> = {
     "'Systematic' means following a set order or method — step by step, using a routine or process — rather than handling each problem differently as it comes.",
   "People rely on me for jobs that require patience.":
     "'Jobs' here means tasks of any kind — not paid employment. Think of slow, repetitive or fiddly tasks that others hand to you at home, school or work.",
+  "I enjoy learning how money, savings, banks, and investments work.":
+    "Investments means putting money into things like shares, mutual funds, gold or property in the hope it grows. You do not need to have invested to answer.",
 }
 
 export const clarifyFor = (text: string): string | undefined => CLARIFICATIONS[text]

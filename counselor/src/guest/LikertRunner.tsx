@@ -20,13 +20,19 @@ export interface LikertRunnerProps {
   answers: (number | null)[]
   onSave: (answers: (number | null)[]) => void
   onDone: (answers: (number | null)[]) => void
+  /** Per-item response times, ms, in ITEM prop order (the caller maps back to
+   *  storage order exactly like answers). Called alongside onSave whenever a
+   *  new first-answer time lands. Only the FIRST commit of an item records a
+   *  time — first-exposure reading time is the honest metric; revisits and
+   *  answer changes never overwrite it. */
+  onTimes?: (times: (number | null)[]) => void
   dark: boolean
   onToggle: () => void
   /** show the "new chapter" interstitials; off when items are randomised (mixed chapters) */
   chaptered?: boolean
 }
 
-export function LikertRunner({ title, hues, items, scale, answers: initial, onSave, onDone, dark, onToggle, chaptered = true }: LikertRunnerProps) {
+export function LikertRunner({ title, hues, items, scale, answers: initial, onSave, onDone, onTimes, dark, onToggle, chaptered = true }: LikertRunnerProps) {
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     initial.length === items.length ? initial : Array(items.length).fill(null))
   const firstOpen = useMemo(() => { const i = answers.findIndex((a) => a == null); return i < 0 ? items.length - 1 : i }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -36,6 +42,13 @@ export function LikertRunner({ title, hues, items, scale, answers: initial, onSa
   const advTimer = useRef<number | null>(null)
   const answersRef = useRef(answers); answersRef.current = answers
   const iRef = useRef(i); iRef.current = i
+  // Response-time capture (no UI): ms from an item becoming the active question
+  // to its FIRST answer commit, in ITEM prop order. A ref, not state — nothing
+  // renders from it. The clock restarts whenever the active item changes or a
+  // chapter interstitial closes (the question isn't readable underneath it).
+  const timesRef = useRef<(number | null)[]>(Array(items.length).fill(null))
+  const shownAtRef = useRef<number>(performance.now())
+  useEffect(() => { shownAtRef.current = performance.now() }, [i, chapterCard])
 
   const item = items[i]
   const answered = answers.filter((a) => a != null).length
@@ -53,6 +66,12 @@ export function LikertRunner({ title, hues, items, scale, answers: initial, onSa
   }
 
   const select = (v: number, confirm: boolean) => {
+    // record the first-exposure time only when this is the item's FIRST answer
+    // (a resumed sitting re-answering an old item must not fake a fresh read)
+    if (answersRef.current[iRef.current] == null && timesRef.current[iRef.current] == null) {
+      timesRef.current[iRef.current] = Math.max(0, Math.round(performance.now() - shownAtRef.current))
+      onTimes?.(timesRef.current.slice())
+    }
     const next = [...answersRef.current]
     next[iRef.current] = v
     setAnswers(next)

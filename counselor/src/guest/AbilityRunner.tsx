@@ -12,6 +12,7 @@ import {
   ABILITY_SECTIONS, SPATIAL_SHAPES, SPATIAL_TRIALS, CLERICAL_PAIRS,
   sectionItemCount, type AbilitySection,
 } from "./ability-bank"
+import { AbilityFigure, SpatialFigure } from "./ability-assets"
 import { useGuest, updateGuest, getGuest, type AbilityProgress } from "./guest-store"
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`
@@ -178,8 +179,8 @@ function SectionRun({ token, dark, onToggle, section, initialAnswers, initialSec
         else if (e.key === "ArrowUp") { e.preventDefault(); record(Math.max(0, (cur ?? 1) - 1), false) }
         else if (e.key === "Enter") { e.preventDefault(); if (cur != null) advance() }
       } else if (section.kind === "spatial") {
-        if (k === "r" || e.key === "1") { e.preventDefault(); record("R", true) }
-        if (k === "s" || e.key === "2") { e.preventDefault(); record("S", true) }
+        if (k === "s" || e.key === "1") { e.preventDefault(); record("S", true) }
+        if (k === "r" || e.key === "2") { e.preventDefault(); record("R", true) }
       } else {
         if (k === "s" || e.key === "1") { e.preventDefault(); record("S", true) }
         if (k === "d" || e.key === "2") { e.preventDefault(); record("D", true) }
@@ -269,8 +270,8 @@ function SectionRun({ token, dark, onToggle, section, initialAnswers, initialSec
               </>
             ) : section.kind === "spatial" ? (
               <>
-                <span className="flex items-center gap-1.5"><Kbd>R</Kbd> Rotated</span>
-                <span className="flex items-center gap-1.5"><Kbd>S</Kbd> Mirrored</span>
+                <span className="flex items-center gap-1.5"><Kbd>S</Kbd> Same</span>
+                <span className="flex items-center gap-1.5"><Kbd>R</Kbd> Reversed</span>
                 <span className="flex items-center gap-1.5"><Kbd>←→</Kbd> Move</span>
               </>
             ) : (
@@ -293,7 +294,7 @@ function SectionRun({ token, dark, onToggle, section, initialAnswers, initialSec
 // ── item views ────────────────────────────────────────────────────────────────
 function McqView({ section, i, value, onPick }: { section: AbilitySection; i: number; value: number | null; onPick: (v: number) => void }) {
   const item = section.items![i]
-  return (
+  const question = (
     <>
       {item.passage && (
         <p className="mt-5 max-w-3xl rounded-[10px] border px-4 py-3 text-[14px] italic leading-relaxed"
@@ -334,15 +335,18 @@ function McqView({ section, i, value, onPick }: { section: AbilitySection; i: nu
       </div>
     </>
   )
-}
-
-function ShapeSvg({ shape, rot = 0, mirrored = false, size = 148 }: { shape: number; rot?: number; mirrored?: boolean; size?: number }) {
+  if (!item.figure) return question
+  // Items with a booklet figure: question + options on the left, the figure
+  // panel on the right ~40% on large screens (the paper layout); stacked on
+  // small screens with the figure between the stem and the options.
   return (
-    <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden className="shrink-0">
-      <g transform={`rotate(${rot} 50 50) ${mirrored ? "translate(100 0) scale(-1 1)" : ""}`}>
-        <polygon points={SPATIAL_SHAPES[shape]} fill="currentColor" opacity={0.92} />
-      </g>
-    </svg>
+    <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+      <div className="min-w-0 lg:flex-[3]">{question}</div>
+      <div className="w-full lg:mt-6 lg:w-[40%] lg:max-w-[460px] lg:flex-[2]">
+        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color: "var(--gmut)" }}>Figure</p>
+        <AbilityFigure id={item.figure} placeholder={item.requiresAsset} />
+      </div>
+    </div>
   )
 }
 
@@ -362,24 +366,36 @@ function ChoiceRow({ k, label, active, onPick }: { k: string; label: string; act
 }
 
 function SpatialView({ i, value, onPick }: { i: number; value: string | null; onPick: (v: string) => void }) {
+  // Booklet model: each ROW of six test figures shares one Sample Figure. The
+  // sample card sits on the left (labelled), the current test figure on the
+  // right — S = same, merely turned around; R = reversed (turned over).
   const t = SPATIAL_TRIALS[i]
+  const def = SPATIAL_SHAPES[t.shape]
+  const row = t.shape + 1
+  const posInRow = (i % 6) + 1
   return (
     <>
       <h2 className="mt-6 max-w-3xl text-[clamp(1.35rem,2.6vw,2rem)] font-semibold leading-[1.2] tracking-[-0.02em]">
-        Is the right-hand figure the same shape rotated — or its mirror image?
+        Is the Test Figure the Sample Figure turned around — or reversed?
       </h2>
-      <div className="mt-6 flex max-w-3xl items-stretch gap-3">
-        {[{ rot: 0, m: false, cap: "Original" }, { rot: t.rot, m: t.mirrored, cap: "Compare" }].map((f, k) => (
-          <div key={k} className="grid flex-1 place-items-center rounded-[10px] border px-4 py-5"
-            style={{ borderColor: "var(--gline)", background: "var(--gcard)" }}>
-            <ShapeSvg shape={t.shape} rot={f.rot} mirrored={f.m} />
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--gmut)" }}>{f.cap}</p>
-          </div>
-        ))}
+      <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.16em]" style={{ color: "var(--gmut)" }}>
+        Row {row} · figure {posInRow} of 6 with this sample
+      </p>
+      <div className="mt-5 flex max-w-3xl items-stretch gap-3">
+        <div className="grid flex-1 place-items-center rounded-[10px] border px-4 py-5"
+          style={{ borderColor: "var(--gline)", background: "var(--gcard)" }}>
+          <SpatialFigure def={def} />
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--gmut)" }}>Sample figure</p>
+        </div>
+        <div className="grid flex-1 place-items-center rounded-[10px] border px-4 py-5"
+          style={{ borderColor: "var(--gline)", background: "var(--gcard)" }}>
+          <SpatialFigure def={def} rot={t.rot} mirrored={t.mirrored} />
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--gmut)" }}>Test figure</p>
+        </div>
       </div>
       <div className="mt-4 flex max-w-3xl flex-col gap-2.5">
-        <ChoiceRow k="R" label="Rotated — the same figure, turned" active={value === "R"} onPick={() => onPick("R")} />
-        <ChoiceRow k="S" label="Mirrored — a flipped version" active={value === "S"} onPick={() => onPick("S")} />
+        <ChoiceRow k="S" label="Same — only turned around" active={value === "S"} onPick={() => onPick("S")} />
+        <ChoiceRow k="R" label="Reversed — turned over (mirror), maybe also turned" active={value === "R"} onPick={() => onPick("R")} />
       </div>
     </>
   )

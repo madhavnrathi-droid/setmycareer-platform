@@ -46,7 +46,7 @@ type BandTable = Record<AbilityKey, Bounds>
 const B_13: BandTable = {
   VA: [1, 2, 3, 4, 5, 6, 7, 8, 9],
   SA: [11, 17, 23, 29, 35, 40, 46, 52, 58],
-  RA: [1, 1, 2, 3, 3, 4, 5, 5, 6], // I and F skipped in source
+  RA: [1, 1, 2, 3, 3, 4, 5, 5, 6], // I, F and C skipped in source
   NA: [1, 2, 3, 4, 4, 5, 6, 7, 8], // F skipped
   MA: [3, 4, 6, 7, 9, 10, 12, 13, 15],
   CL: [8, 13, 17, 21, 26, 30, 34, 38, 43],

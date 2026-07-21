@@ -82,7 +82,7 @@ export function GuestReview({ token, dark, onToggle, only }: { token: string; da
         } else if (s.kind === "spatial") {
           SPATIAL_TRIALS.forEach((_, i) => {
             const v = ans[i] as string | null | undefined
-            rows.push({ q: `Figure pair ${i + 1}`, a: v === "R" ? "Rotated (same)" : v === "S" ? "Mirrored" : "— not answered", answered: v != null })
+            rows.push({ q: `Figure pair ${i + 1}`, a: v === "S" ? "Same (turned around)" : v === "R" ? "Reversed (mirror)" : "— not answered", answered: v != null })
           })
         } else {
           CLERICAL_PAIRS.forEach((p, i) => {
