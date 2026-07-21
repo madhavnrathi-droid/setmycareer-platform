@@ -93,7 +93,7 @@ function Frame({ children, aura, vars }: { children: React.ReactNode; aura?: str
 // and even a browser crash — the draft lives in localStorage (per client +
 // instrument) until the result is turned in. Losing 72 honest answers to a
 // stray swipe or a dead battery would be unforgivable on a one-take test.
-interface Draft { i: number; answers: number[]; stage: Stage; refl?: Record<string, string | number> }
+interface Draft { i: number; answers: number[]; stage: Stage; refl?: Record<string, string | number>; times?: (number | null)[] }
 const draftKey = (clientId: string, testId: string) => `smc.testdraft.${clientId}.${testId}`
 function loadDraft(clientId: string, testId: string): Draft | null {
   try {
@@ -508,6 +508,11 @@ export function TestRunner() {
   const [i, setI] = useState(draft?.i ?? 0)
   const [answers, setAnswers] = useState<number[]>(draft?.answers ?? [])
   const [refl, setRefl] = useState<Record<string, string | number>>(draft?.refl ?? {})
+  // per-item first-exposure response times (interest instrument only — its
+  // reliability read uses them; portal parity with the guest runner). Stored at
+  // the ORIGINAL item index, survives a resumed sitting via the draft.
+  const [times, setTimes] = useState<(number | null)[]>(draft?.times ?? [])
+  const shownAtRef = useRef(0)
   const [fromReview, setFromReview] = useState(false)
   const [highlight, setHighlight] = useState<number | null>(null) // keyboard/wheel focus, not yet the answer
   const [clarifyOpen, setClarifyOpen] = useState(false)
@@ -549,6 +554,7 @@ export function TestRunner() {
     setI(d?.i ?? 0)
     setAnswers(d?.answers ?? [])
     setRefl(d?.refl ?? {})
+    setTimes(d?.times ?? [])
     setFromReview(false)
     setExitOpen(false)
     interactedRef.current = false
@@ -568,14 +574,14 @@ export function TestRunner() {
     if (!account || !def || existing || isBattery || stage === "brief" || stage === "complete") return
     let ok = true
     try {
-      localStorage.setItem(draftKey(account.clientId, def.id), JSON.stringify({ i, answers, stage, refl } satisfies Draft))
+      localStorage.setItem(draftKey(account.clientId, def.id), JSON.stringify({ i, answers, stage, refl, times } satisfies Draft))
     } catch { ok = false /* storage full/blocked — the sitting still works, it just won't survive an interruption */ }
     if (!interactedRef.current) return // mount/reset identity churn is not a save event
     setSaveState("saving")
     window.clearTimeout(saveTimerRef.current)
     saveTimerRef.current = window.setTimeout(() => setSaveState(ok ? "saved" : "failed"), 450)
     return () => window.clearTimeout(saveTimerRef.current)
-  }, [i, answers, stage, refl, account, def, existing])
+  }, [i, answers, stage, refl, times, account, def, existing])
 
   useEffect(() => () => { window.clearTimeout(advanceRef.current); window.clearTimeout(saveTimerRef.current) }, [])
 
@@ -584,7 +590,10 @@ export function TestRunner() {
   // screen readers hear each new question announced (SPA route-focus pattern)
   useEffect(() => {
     document.querySelector(".testroom")?.scrollTo({ top: 0 })
-    if (stage === "questions") headRef.current?.focus({ preventScroll: true })
+    if (stage === "questions") {
+      headRef.current?.focus({ preventScroll: true })
+      shownAtRef.current = performance.now() // start this item's exposure clock
+    }
   }, [i, stage])
 
   // animate each question in — 150ms fade + 20px upward slide, ease-out cubic
@@ -623,6 +632,12 @@ export function TestRunner() {
     const next = [...answers]
     next[oi(i)] = value
     setAnswers(next)
+    // interest reliability: keep the FIRST-exposure response time per item
+    if (def.id === "sigma_interest" && shownAtRef.current && times[oi(i)] == null) {
+      const t = [...times]
+      t[oi(i)] = Math.round(performance.now() - shownAtRef.current)
+      setTimes(t)
+    }
     setHighlight(valueToIdx(value))
   }
 
@@ -851,7 +866,7 @@ export function TestRunner() {
     // one-take, re-checked at the moment of writing — never overwrite a result
     // that appeared while this sitting was open (another tab, a synced device)
     const already = getTestResult(account.clientId, def.id)
-    if (!already) saveTestResult(account.clientId, def.id, answers, refl)
+    if (!already) saveTestResult(account.clientId, def.id, answers, refl, def.id === "sigma_interest" ? { interestTimes: times } : undefined)
     try {
       localStorage.removeItem(draftKey(account.clientId, def.id))
       sessionStorage.removeItem(draftKey(account.clientId, def.id))

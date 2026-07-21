@@ -78,6 +78,9 @@ export function saveTestResult(
   testId: string,
   answers: number[],
   reflections?: Record<string, string | number>,
+  /** optional rich payload the report reads (e.g. the interest instrument's
+   *  per-item response times for its reliability read) */
+  payload?: unknown,
 ): StoredTestResult | null {
   const def = getTest(testId)
   if (!def) return null
@@ -90,6 +93,7 @@ export function saveTestResult(
     scores: scored.scores,
     overall: scored.overall,
     ...(reflections && Object.keys(reflections).length ? { reflections } : {}),
+    ...(payload !== undefined ? { payload } : {}),
   }
   const rest = resultsStore.get().filter((r) => !(r.clientId === clientId && r.testId === testId))
   const next = [...rest, result]
