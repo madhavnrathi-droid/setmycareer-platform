@@ -56,12 +56,21 @@ export default function ReadinessFlow() {
   const dark = state.theme !== "light"
 
   const rawTrack = search.get("track")
-  const paramTrack: ReadinessTrack | null = rawTrack === "student" || rawTrack === "executive" ? rawTrack : null
-  // persist the link's track on first visit; a stored doc's track always wins
+  const rawOnly = search.get("only")
+  const paramOnly: "cdra" | "eccri" | null = rawOnly === "cdra" || rawOnly === "eccri" ? rawOnly : null
+  // an ?only= link implies the executive track (CDRA and ECCRI are executive)
+  const paramTrack: ReadinessTrack | null =
+    rawTrack === "student" || rawTrack === "executive" ? rawTrack : paramOnly ? "executive" : null
+  // persist the link's track + scope on first visit; a stored doc always wins
   useEffect(() => {
-    if (token && !state.track && paramTrack) updateReadiness(token, { track: paramTrack })
-  }, [token, state.track, paramTrack])
+    if (!token || state.track) return
+    const patch: { track?: ReadinessTrack; only?: "cdra" | "eccri" } = {}
+    if (paramTrack) patch.track = paramTrack
+    if (paramOnly) patch.only = paramOnly
+    if (patch.track || patch.only) updateReadiness(token, patch)
+  }, [token, state.track, paramTrack, paramOnly])
   const track: ReadinessTrack | null = state.track ?? paramTrack
+  const only = state.only ?? paramOnly
 
   useEffect(() => { document.title = "SetMyCareer · Readiness check" }, [])
 
@@ -85,14 +94,14 @@ export default function ReadinessFlow() {
         className="testroom relative flex min-h-svh flex-col antialiased"
         style={{ ...guestVars(dark), background: "var(--gbg)", color: "var(--gfg)" }}
       >
-        {stage === "welcome" && <Welcome token={token} dark={dark} onToggle={toggle} track={track} />}
+        {stage === "welcome" && <Welcome token={token} dark={dark} onToggle={toggle} track={track} only={only} />}
         {stage === "details" && <Details token={token} dark={dark} onToggle={toggle} track={track ?? "student"} />}
         {stage === "ccri" && <CcriStage token={token} state={state} dark={dark} onToggle={toggle} />}
-        {stage === "cdra" && <CdraStage token={token} state={state} dark={dark} onToggle={toggle} />}
+        {stage === "cdra" && <CdraStage token={token} state={state} dark={dark} onToggle={toggle} only={only} />}
         {stage === "handoff" && <Handoff token={token} dark={dark} onToggle={toggle} />}
-        {stage === "eccri" && <EccriStage token={token} state={state} dark={dark} onToggle={toggle} />}
+        {stage === "eccri" && <EccriStage token={token} state={state} dark={dark} onToggle={toggle} only={only} />}
         {stage === "report" && (track === "executive"
-          ? <ExecReport token={token} state={state} dark={dark} onToggle={toggle} />
+          ? <ExecReport token={token} state={state} dark={dark} onToggle={toggle} only={only} />
           : <StudentReport token={token} state={state} dark={dark} onToggle={toggle} />)}
         <RestartChip token={token} state={state} />
       </div>
@@ -124,15 +133,18 @@ function RestartChip({ token, state }: { token: string; state: ReadinessState })
 }
 
 // ── stage: welcome ────────────────────────────────────────────────────────────
-function Welcome({ token, dark, onToggle, track }: { token: string; dark: boolean; onToggle: () => void; track: ReadinessTrack | null }) {
-  // when the link carries no ?track= and nothing is stored, let the taker pick
+function Welcome({ token, dark, onToggle, track, only }: { token: string; dark: boolean; onToggle: () => void; track: ReadinessTrack | null; only?: "cdra" | "eccri" | null }) {
+  // when the link carries no ?track= and nothing is stored, let the taker pick.
+  // A single-instrument link (?only=) forces the executive track and skips the chooser.
   const [pick, setPick] = useState<ReadinessTrack | null>(null)
-  const eff = track ?? pick
+  const eff = only ? "executive" : (track ?? pick)
   const isExec = eff === "executive"
+  const single = only === "cdra" ? CDRA : only === "eccri" ? ECCRI : null
 
   const ccriMin = minutesFor(CCRI.items.length)
   const execItems = CDRA.items.length + ECCRI.items.length
   const execMin = minutesFor(CDRA.items.length) + minutesFor(ECCRI.items.length)
+  const singleMin = single ? minutesFor(single.items.length) : 0
 
   const begin = () => {
     if (!eff) return
@@ -142,23 +154,38 @@ function Welcome({ token, dark, onToggle, track }: { token: string; dark: boolea
   return (
     <>
       <TopBar dark={dark} onToggle={onToggle} />
-      <GlowField hues={isExec ? HUE_CDRA : HUE_CCRI} strong />
+      <GlowField hues={only === "eccri" ? HUE_ECCRI : isExec ? HUE_CDRA : HUE_CCRI} strong />
       <main className="relative z-10 mx-auto flex w-full max-w-[640px] flex-1 flex-col justify-center px-6 pb-24">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em]" style={MUT}>
           SetMyCareer · Readiness check
         </p>
         <h1 className="mt-3 font-display text-[clamp(28px,4.8vw,42px)] font-light leading-[1.1] tracking-tight">
-          {eff == null ? <>Two readiness checks.<br />Which one is yours?</>
+          {single ? <>{single.title}.</>
+            : eff == null ? <>Two readiness checks.<br />Which one is yours?</>
             : isExec ? <>Career Decision &amp; Circumstantial Readiness.</>
             : <>{CCRI.title}.</>}
         </h1>
         {eff != null && (
           <p className="mt-3 max-w-[54ch] text-[15px] italic leading-relaxed" style={MUT}>
-            {isExec ? "How ready are you — and how ready is your life — for your next career move?" : CCRI.tagline}
+            {only === "cdra" ? "How ready are you to make evidence-based career decisions?"
+              : only === "eccri" ? "Is your life ready for the career you deserve?"
+              : isExec ? "How ready are you — and how ready is your life — for your next career move?" : CCRI.tagline}
           </p>
         )}
         <p className="mt-4 max-w-[54ch] text-[14.5px] leading-relaxed" style={MUT}>
-          {eff == null ? (
+          {single ? (
+            only === "cdra" ? (
+              <>This instrument measures how ready you are to make evidence-based career decisions —
+                how well you know your professional self, how you weigh options, and how confidently
+                you can act. You will rate {single.items.length} statements on a five-point scale. There
+                are no right answers — answer from how things actually are for you.</>
+            ) : (
+              <>This instrument measures whether your current life circumstances support the career you
+                want — your finances, family, location, health, and the realities of the job market. You
+                will rate {single.items.length} statements on a five-point scale. It measures your
+                situation, not your capability.</>
+            )
+          ) : eff == null ? (
             <>One link, two instruments. Parents answer the {CCRI.title} about their child; working
               professionals take the combined decision-and-circumstances readiness check. Pick the one
               that matches you to continue.</>
@@ -174,7 +201,7 @@ function Welcome({ token, dark, onToggle, track }: { token: string; dark: boolea
           )}
         </p>
 
-        {eff == null && (
+        {!single && eff == null && (
           <div className="mt-7 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {([["student", "I'm a parent", `About my child · ${CCRI.items.length} statements · ~${ccriMin} min`],
                ["executive", "I'm a working professional", `About my career · ${execItems} statements · ~${execMin} min`]] as const).map(([t, title, sub]) => (
@@ -190,7 +217,12 @@ function Welcome({ token, dark, onToggle, track }: { token: string; dark: boolea
 
         {eff != null && (
           <ul className="mt-7 flex flex-col gap-3 text-[13.5px]" style={MUT}>
-            {isExec ? (
+            {single ? (
+              <>
+                <li className="flex items-center gap-2.5"><ListChecks className="size-4 shrink-0" /> {single.items.length} statements, rated on a five-point scale</li>
+                <li className="flex items-center gap-2.5"><Clock className="size-4 shrink-0" /> About {singleMin} minutes, in one calm sitting</li>
+              </>
+            ) : isExec ? (
               <>
                 <li className="flex items-center gap-2.5"><ListChecks className="size-4 shrink-0" /> {CDRA.items.length} + {ECCRI.items.length} statements, rated on a five-point scale</li>
                 <li className="flex items-center gap-2.5"><Clock className="size-4 shrink-0" /> About {execMin} minutes — you can pause between the two parts</li>
@@ -353,14 +385,17 @@ function CcriStage({ token, state, dark, onToggle }: { token: string; state: Rea
   )
 }
 
-function CdraStage({ token, state, dark, onToggle }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void }) {
+function CdraStage({ token, state, dark, onToggle, only }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void; only?: "cdra" | "eccri" | null }) {
   const items = useMemo(
     () => runnerItems(CDRA.items, CDRA.factors, "Answer as things actually stand today — not as you would like them to be."),
     [],
   )
+  // standalone CDRA link → finishing goes straight to the report; in the full
+  // executive sitting it only closes Part 1 (the hand-off + ECCRI follow)
+  const stamp = only === "cdra" ? { doneAt: new Date().toISOString() } : { cdraDoneAt: new Date().toISOString() }
   return (
     <LikertRunner
-      title="Part 1 · Career decisions"
+      title={only === "cdra" ? "Career decision readiness" : "Part 1 · Career decisions"}
       hues={HUE_CDRA}
       items={items}
       scale={READINESS_SCALE}
@@ -368,19 +403,19 @@ function CdraStage({ token, state, dark, onToggle }: { token: string; state: Rea
       chaptered
       dark={dark} onToggle={onToggle}
       onSave={(a) => patchReadinessAnswers(token, "cdra", a)}
-      onDone={(a) => patchReadinessAnswers(token, "cdra", a, { cdraDoneAt: new Date().toISOString() })}
+      onDone={(a) => patchReadinessAnswers(token, "cdra", a, stamp)}
     />
   )
 }
 
-function EccriStage({ token, state, dark, onToggle }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void }) {
+function EccriStage({ token, state, dark, onToggle, only }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void; only?: "cdra" | "eccri" | null }) {
   const items = useMemo(
     () => runnerItems(ECCRI.items, ECCRI.dims, "Describe your current life circumstances honestly — this part measures your situation, not your ability."),
     [],
   )
   return (
     <LikertRunner
-      title="Part 2 · Your circumstances"
+      title={only === "eccri" ? "Circumstantial readiness" : "Part 2 · Your circumstances"}
       hues={HUE_ECCRI}
       items={items}
       scale={READINESS_SCALE}
@@ -607,10 +642,17 @@ const QUAD_CELLS: [string, string][] = [
 ]
 const qnorm = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "")
 
-function ExecReport({ token, state, dark, onToggle }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void }) {
+function ExecReport({ token, state, dark, onToggle, only }: { token: string; state: ReadinessState; dark: boolean; onToggle: () => void; only?: "cdra" | "eccri" | null }) {
   const d = state.details ?? {}
   const cdra: CdraResult = useMemo(() => scoreCdra(state.answers.cdra ?? []), [state.answers.cdra])
   const eccri: EccriResult = useMemo(() => scoreEccri(state.answers.eccri ?? []), [state.answers.eccri])
+
+  // single-instrument links show only their own half; the quadrant needs both
+  const showCdra = only !== "eccri"
+  const showEccri = only !== "cdra"
+  const showQuad = only == null
+  const reportTitle = only === "cdra" ? CDRA.title : only === "eccri" ? ECCRI.title : "Career Decision & Circumstantial Readiness"
+  const reportSub = only === "cdra" ? CDRA.title : only === "eccri" ? ECCRI.title : `${CDRA.title} · ${ECCRI.title}`
 
   // quadrant: circumstantial = ECCRI overall; self-awareness = CDRA Factor 1
   const selfAware = cdra.factors[0]?.score ?? null
@@ -633,18 +675,19 @@ function ExecReport({ token, state, dark, onToggle }: { token: string; state: Re
   const g = cdra.gap
 
   return (
-    <ReportShell dark={dark} onToggle={onToggle} hue={HUE_CDRA}>
+    <ReportShell dark={dark} onToggle={onToggle} hue={only === "eccri" ? HUE_ECCRI : HUE_CDRA}>
       {/* cover */}
       <header className="rd-section">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em]" style={MUT}>SetMyCareer · Readiness report</p>
-        <h1 className="mt-2 font-display text-[clamp(28px,4.6vw,40px)] font-light tracking-tight">Career Decision &amp; Circumstantial Readiness</h1>
-        <p className="mt-2 max-w-[56ch] text-[13px] leading-relaxed" style={MUT}>{CDRA.title} · {ECCRI.title}</p>
+        <h1 className="mt-2 font-display text-[clamp(28px,4.6vw,40px)] font-light tracking-tight">{reportTitle}</h1>
+        <p className="mt-2 max-w-[56ch] text-[13px] leading-relaxed" style={MUT}>{reportSub}</p>
         <p className="mt-3 text-[13px]" style={MUT}>
           {d.name} · Age {d.age} · {d.role}{d.city ? ` · ${d.city}` : ""} · {reportDate()} · Ref {token}
         </p>
       </header>
 
       {/* CDRS */}
+      {showCdra && <>
       <section className="rd-section mt-10">
         <h2 className="font-display text-[20px] font-light tracking-tight">{CDRA.title}</h2>
         <div className="mt-4 rounded-2xl border p-5" style={CARD}>
@@ -691,9 +734,11 @@ function ExecReport({ token, state, dark, onToggle }: { token: string; state: Re
           <p className="mt-2 max-w-[62ch] text-[12.5px] leading-relaxed" style={MUT}>{g.read}</p>
         </div>
       </section>
+      </>}
 
       {/* ECCRI */}
-      <section className="rd-section mt-12">
+      {showEccri && <>
+      <section className={`rd-section ${showCdra ? "mt-12" : "mt-10"}`}>
         <h2 className="font-display text-[20px] font-light tracking-tight">{ECCRI.title}</h2>
         <p className="mt-1 max-w-[62ch] text-[12.5px]" style={MUT}>
           This part measures your circumstances, not your capability — the financial, family, location
@@ -755,8 +800,10 @@ function ExecReport({ token, state, dark, onToggle }: { token: string; state: Re
           </div>
         </section>
       )}
+      </>}
 
-      {/* readiness quadrant */}
+      {/* readiness quadrant — needs both instruments, so full sitting only */}
+      {showQuad && (
       <section className="rd-section mt-8">
         <h3 className="font-display text-[17px] font-light tracking-tight">Your readiness quadrant</h3>
         <p className="mt-1 max-w-[62ch] text-[12.5px]" style={MUT}>
@@ -796,12 +843,19 @@ function ExecReport({ token, state, dark, onToggle }: { token: string; state: Re
           <p className="mt-3 text-[12.5px]" style={MUT}>Not enough answers to place you on the quadrant.</p>
         )}
       </section>
+      )}
 
       {/* closing */}
       <section className="rd-section mt-10">
         <div className="rounded-2xl border p-5" style={CARD}>
           <p className="text-[11px] font-medium uppercase tracking-[0.14em]" style={MUT}>Closing note</p>
-          <p className="mt-2 text-[13px] leading-relaxed">{READINESS_CLOSING.executive}</p>
+          <p className="mt-2 text-[13px] leading-relaxed">
+            {only === "cdra"
+              ? "This measures how ready you are to make evidence-based career decisions — one of the two forces behind any career move. It does not measure whether your life circumstances currently support that move; that is the companion Circumstantial Readiness check."
+              : only === "eccri"
+              ? READINESS_CLOSING.executive
+              : READINESS_CLOSING.executive}
+          </p>
         </div>
       </section>
     </ReportShell>

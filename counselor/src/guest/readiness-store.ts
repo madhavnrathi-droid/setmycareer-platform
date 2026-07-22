@@ -34,6 +34,9 @@ export interface ReadinessAnswers {
 export interface ReadinessState {
   token: string
   track?: ReadinessTrack
+  /** single-instrument link scope (executive track only): run just CDRA or
+   *  just ECCRI instead of both. Unset = the full executive sitting. */
+  only?: "cdra" | "eccri"
   startedAt?: string
   details?: ReadinessDetails
   answers: ReadinessAnswers
@@ -103,6 +106,9 @@ export function readinessStage(s: ReadinessState, track: ReadinessTrack): Readin
   if (!s.details) return s.startedAt ? "details" : "welcome"
   if (s.doneAt) return "report"
   if (track === "executive") {
+    // single-instrument executive links skip the other part + the hand-off
+    if (s.only === "eccri") return "eccri"
+    if (s.only === "cdra") return "cdra"
     if (!s.cdraDoneAt) return "cdra"
     if (!s.part2AckAt) return "handoff"
     return "eccri"
