@@ -72,7 +72,7 @@ export function Contact() {
           <Link data-reveal to="/cri" className="group border-t border-line py-6">
             <p className="kicker text-ink-40">Rather start alone?</p>
             <h3 className="ul mt-3 inline-block text-[17px] font-medium tracking-tight">The free clarity index</h3>
-            <p className="mt-2 text-[13.5px] text-ink-60">Four minutes, no sign-up. A read on where you stand.</p>
+            <p className="mt-2 text-[13.5px] text-ink-60">Ten minutes, no sign-up. A read on where you stand.</p>
           </Link>
           <Link data-reveal to="/book" className="group border-t border-line py-6">
             <p className="kicker text-ink-40">Ready to sit down?</p>

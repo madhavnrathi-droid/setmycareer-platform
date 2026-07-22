@@ -226,10 +226,10 @@ function CtaRow(c: Extract<CompassCardData, { type: "ctaRow" }>) {
 function CriCard(c: Extract<CompassCardData, { type: "criCard" }>) {
   return (
     <div className="rounded-[11px] border border-ink/15 bg-ink/[0.03] p-4">
-      <Kick Icon={Meter}>Free · ~4 minutes</Kick>
-      <h4 className="ed-title text-[16px] text-ink">{c.headline ?? "Start with the Career Readiness Index"}</h4>
+      <Kick Icon={Meter}>Free · 10–20 minutes</Kick>
+      <h4 className="ed-title text-[16px] text-ink">{c.headline ?? "Start with the free readiness check"}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-ink-60">
-        {c.note ?? "A short, validated readiness check — see where you stand and what to work on, no sign-up needed."}
+        {c.note ?? "A structured readiness check — see where you stand and what to work on, no account needed."}
       </p>
       <div className="mt-3.5">
         <CardLink to="/cri" solid>Take the free test</CardLink>

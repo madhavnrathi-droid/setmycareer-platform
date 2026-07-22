@@ -39,12 +39,12 @@ const f = (label: string, value: string) => ({ label, value })
 export const PRODUCTS: Product[] = [
   {
     id: "career_clarity", name: "Career Clarity Index", category: "assessment",
-    tagline: "A free 3-minute check on how clear your direction is.", priceFrom: 0,
-    duration: "3 min", mode: "Online",
-    forWhom: "Anyone who wants a quick, free read on where they stand.",
-    whatYouGet: "A short scientific self-check and an instant clarity score.",
+    tagline: "A free structured check on how clear the direction really is.", priceFrom: 0,
+    duration: "10–20 min", mode: "Online",
+    forWhom: "Parents of students aged 10–18, and working professionals.",
+    whatYouGet: "A structured self-check and instant readiness scores.",
     benefits: "A no-cost starting point before you go deeper.",
-    features: ["3-minute assessment", "Instant clarity score", "No card needed"], cta: "Start free",
+    features: ["Structured self-report", "Instant readiness scores", "No card needed"], cta: "Start free",
   },
   {
     id: "stream_selector", name: "Stream Selector", category: "assessment",

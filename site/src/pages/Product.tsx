@@ -312,7 +312,7 @@ export function Product() {
               {STUDENT_CHAPTERS.map((c) => <ChapterRow key={c.chapter} {...c} />)}
               <div data-reveal className="mt-8">
                 <Magnetic href="/cri" solid>Start with the free read</Magnetic>
-                <p className="mono mt-4 text-[10px] uppercase tracking-[0.12em] text-ink-40">₹0 · ~4 minutes · the record starts here</p>
+                <p className="mono mt-4 text-[10px] uppercase tracking-[0.12em] text-ink-40">₹0 · ~10 minutes · the record starts here</p>
               </div>
             </div>
             <div className="lg:col-span-7">

@@ -44,7 +44,7 @@ export const KB: KbEntry[] = [
   {
     keywords: ["free", "test", "index", "cri", "clarity", "readiness", "check", "quiz", "assessment", "start"],
     title: "The free Career Clarity Index",
-    answer: "Twenty statements, about four minutes, five factor indices — self-awareness, clarity, decision readiness, future preparedness and influence resistance — with an honest report on screen. There's a student version (CRI™) and one for working professionals (ECRI™). It tells you how urgently you need guidance, including when you don't.",
+    answer: "A structured readiness check, free and scored on screen. Parents of students aged 10–18 answer one instrument (about ten minutes); working professionals run a two-part decision-readiness diagnostic (about twenty). It tells you how urgently you need guidance, including when you don't.",
     links: [{ label: "Take it now", to: "/cri" }],
   },
   {
@@ -62,8 +62,8 @@ export const KB: KbEntry[] = [
   {
     keywords: ["switch", "change", "career", "thirty", "30", "professional", "transition", "quit", "stuck", "stagnation"],
     title: "Changing careers as a working professional",
-    answer: "Test the switch with evidence before you jump: re-measure aptitude and interest (they drift), map adjacent roles rather than romantic leaps, and price the runway honestly — EMIs included. The ECRI (free, 4 minutes) tells you which of those pieces is actually missing.",
-    links: [{ label: "The guide", to: "/blog/changing-careers-at-thirty-in-india" }, { label: "Take the ECRI", to: "/cri" }],
+    answer: "Test the switch with evidence before you jump: re-measure aptitude and interest (they drift), map adjacent roles rather than romantic leaps, and price the runway honestly — EMIs included. The free executive readiness diagnostic (about twenty minutes) tells you which of those pieces is actually missing.",
+    links: [{ label: "The guide", to: "/blog/changing-careers-at-thirty-in-india" }, { label: "Take the free check", to: "/cri" }],
   },
   {
     keywords: ["counsellor", "counselor", "expert", "who", "people", "network", "roster", "join", "become"],

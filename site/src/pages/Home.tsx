@@ -28,7 +28,7 @@ const PRODUCT_MORE = [
 ]
 
 const STARTERS = [
-  { name: "Career Clarity Index", price: "Free", note: "A four-minute readiness check, scored on the spot.", more: "20 statements · 5 factor indices · report on screen", href: "/cri" },
+  { name: "Career Clarity Index", price: "Free", note: "A structured readiness check, scored on the spot.", more: "Parent & executive versions · 10–20 min · report on screen", href: "/cri" },
   { name: "Stream Selector", price: "₹1,990", note: "Seven streams, one right fit.", more: "Science · Commerce · Arts and four more, scored to you" },
   { name: "Job Domain Selector", price: "₹2,490", note: "Twenty-two domains analysed.", more: "Domains ranked · strengths mapped · clear next steps" },
   { name: "Full Career Counselling", price: "Talk to us", note: "Assessment with an expert, end to end.", more: "Assessments + live sessions + a full written report" },

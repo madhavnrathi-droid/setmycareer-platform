@@ -213,7 +213,7 @@ export function Pricing() {
       <section className="hair-t">
         <div className="wrap py-20 text-center md:py-24">
           <SplitReveal className="h-lg mx-auto max-w-[22ch]">
-            Four minutes tells you where you stand — <span className="b">free</span>.
+            Ten minutes tells you where you stand — <span className="b">free</span>.
           </SplitReveal>
           <div data-reveal className="mt-9 flex flex-col items-center gap-5">
             <Link to="/cri" className="btn"><span>Take the free index</span> <ArrowUpRight size={15} className="btn-arrow" /></Link>

@@ -22,6 +22,7 @@ import { Offerings } from "@/screens/Offerings"
 import { PortalApp } from "@/portal/PortalApp"
 import { AdminApp } from "@/admin/AdminApp"
 import GuestFlow from "@/guest/GuestFlow"
+import ReadinessFlow from "@/guest/ReadinessFlow"
 
 export default function App() {
   return (
@@ -35,6 +36,8 @@ export default function App() {
       <Route path="/call/:clientId" element={<CallRoom />} />
       {/* Shareable no-account assessment links (unique token per person). */}
       <Route path="/t/:token" element={<GuestFlow />} />
+      {/* Shareable readiness links — parent CCRI / executive CDRA+ECCRI. */}
+      <Route path="/r/:token" element={<ReadinessFlow />} />
       <Route element={<AppShell />}>
         <Route path="/" element={<Overview />} />
         <Route path="/clients" element={<Clients />} />

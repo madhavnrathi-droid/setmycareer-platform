@@ -12,7 +12,7 @@ export function Cri() {
   const ref = useReveals()
   useSeo({
     title: "Career Clarity Index — free readiness check | SetMyCareer",
-    description: "Twenty statements, five factor indices, an honest report — the documented Career Readiness Index for students and the ECRI for working professionals. Free, ~4 minutes, results on screen.",
+    description: "A free structured readiness check, scored on screen: one instrument for parents of students aged 10–18 (about 10 minutes) and a two-part decision-readiness diagnostic for working executives (about 20 minutes).",
     path: "/cri",
   })
   return (
@@ -20,7 +20,7 @@ export function Cri() {
       <section className="wrap pb-10 pt-12 md:pt-20">
         <Kicker>Career Clarity Index · Free</Kicker>
         <SplitReveal as="h1" className="display mt-5 max-w-[14ch]">Do you actually need <span className="b">guidance</span>?</SplitReveal>
-        <p data-reveal className="lead mt-7 max-w-xl text-ink-60">Most people can't answer that honestly from the inside. Twenty statements and five factor indices can — the same screening instrument our counsellors use, free and on the spot.</p>
+        <p data-reveal className="lead mt-7 max-w-xl text-ink-60">Most people can't answer that honestly from the inside. A structured self-report can — one instrument for parents of students aged 10 to 18, and a two-part diagnostic for working executives. The same screening our counsellors use, free and scored on the spot.</p>
         <div data-reveal className="mt-10 max-w-3xl"><CriPath className="w-full" /></div>
       </section>
 

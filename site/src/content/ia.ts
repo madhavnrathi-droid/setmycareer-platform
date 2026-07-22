@@ -69,7 +69,7 @@ export const IA_CONTENT = {
           "A readable report: matched streams, strengths, and the reasoning behind each",
           "A certified counsellor who interprets the data and answers your questions on video"
         ],
-        "start": "Start with the free Career Clarity Index — four minutes — then take the Stream Selector at ₹1,990 when the question turns serious."
+        "start": "Start with the free Career Clarity Index — about ten minutes — then take the Stream Selector at ₹1,990 when the question turns serious."
       },
       {
         "id": "parents",
@@ -447,7 +447,7 @@ export const IA_CONTENT = {
           "A plain reading of what the score means",
           "A pointer to the next step, if you need one"
         ],
-        "time": "About 4 minutes."
+        "time": "About 10 minutes (20 for the two-part professional version)."
       },
       {
         "name": "Stream Selector",
@@ -495,7 +495,7 @@ export const IA_CONTENT = {
       },
       {
         "q": "What if I am not sure which package I need?",
-        "a": "Take the free Career Clarity Index first — four minutes. Choosing a stream after class 10 points to the Stream Selector. Choosing a field of study or work after that points to the Job Domain Selector. If the whole decision feels heavy, ask us to quote Full Career Counselling."
+        "a": "Take the free Career Clarity Index first — about ten minutes. Choosing a stream after class 10 points to the Stream Selector. Choosing a field of study or work after that points to the Job Domain Selector. If the whole decision feels heavy, ask us to quote Full Career Counselling."
       },
       {
         "q": "How do counselling sessions work?",
@@ -521,7 +521,7 @@ export const IA_CONTENT = {
     "reassurance": "The first conversation is just that — a conversation; you decide afterwards whether to go further."
   },
   "product": {
-    "assessments": "The instruments are real psychometrics, not quizzes: Big Five personality, the RIASEC interest inventory, and aptitude batteries, scored live online — over 71,537 tests since 2010. Start free with the Career Clarity Index in about four minutes, then step up to Career Navigator for all three, scored, at ₹2,990.",
+    "assessments": "The instruments are real psychometrics, not quizzes: Big Five personality, the RIASEC interest inventory, and aptitude batteries, scored live online — over 71,537 tests since 2010. Start free with the Career Clarity Index in about ten minutes, then step up to Career Navigator for all three, scored, at ₹2,990.",
     "coach": "Compass speaks only from your own results — your interests, personality and aptitude — in chat or voice, whenever you need to think something through. It keeps the record live between sessions and hands the recommendation back to your certified counsellor.",
     "dashboards": [
       {
@@ -553,7 +553,7 @@ export const IA_CONTENT = {
     "tour": [
       {
         "stop": "Sign up",
-        "body": "Create an account and take the free Career Clarity Index — a first reading in about four minutes."
+        "body": "Create an account and take the free Career Clarity Index — a first reading in about ten minutes."
       },
       {
         "stop": "Assess",

@@ -46,7 +46,7 @@ export const STUDENT_JOURNEY: Offering[] = [
   {
     id: "free_cri", track: "student", order: 0,
     name: "Career Clarity Index", price: { inr: 0 }, cta: "Take the free test",
-    tagline: "Do you really need career counselling? Find out free, in about four minutes.",
+    tagline: "Do you really need career counselling? Find out free — about ten minutes for parents of students, twenty for working professionals.",
     bestFor: "Anyone who wants a first, honest read before spending a rupee.",
     solves: ["Where do I stand?", "Am I ready to decide?"],
     includes: [

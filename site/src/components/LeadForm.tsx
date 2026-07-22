@@ -46,7 +46,7 @@ export function LeadForm({ source }: { source: string }) {
       <div data-reveal className="flex h-full flex-col justify-center rounded-[14px] border border-line bg-paper-pure p-8 md:p-10">
         <p className="ed-title-xl text-[clamp(1.5rem,2.4vw,2rem)]">Thanks, {first}.</p>
         <p className="mt-3 max-w-md text-[14.5px] leading-relaxed text-ink-60">That's with our desk. A counsellor will reach out within a working day — no pitch, just a straight conversation about what's next.</p>
-        <p className="mt-5 text-[13.5px] text-ink-60">While you wait, the free <Link to="/cri" className="ul font-medium text-ink">Career Clarity Index</Link> takes about four minutes and gives them a head start.</p>
+        <p className="mt-5 text-[13.5px] text-ink-60">While you wait, the free <Link to="/cri" className="ul font-medium text-ink">Career Clarity Index</Link> takes about ten minutes and gives them a head start.</p>
       </div>
     )
   }

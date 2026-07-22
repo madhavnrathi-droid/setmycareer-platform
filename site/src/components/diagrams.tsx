@@ -215,12 +215,12 @@ export function DecisionFan({ className = "" }: { className?: string }) {
 export function CriPath({ className = "" }: { className?: string }) {
   const { ref, drawn } = useDrawn()
   const stops = [
-    { x: 110, t: "20 honest answers", s: "~4 MINUTES" },
-    { x: 350, t: "Five factor indices", s: "THE DOCUMENTED SCORING KEY" },
+    { x: 110, t: "Honest answers", s: "10–20 MINUTES" },
+    { x: 350, t: "Scored factor by factor", s: "THE DOCUMENTED SCORING KEY" },
     { x: 590, t: "A named next step", s: "MATCHED TO YOUR GAP" },
   ]
   return (
-    <svg ref={ref} viewBox="0 0 700 110" className={className} role="img" aria-label="How the index works: twenty answers become five factor indices and a named next step">
+    <svg ref={ref} viewBox="0 0 700 110" className={className} role="img" aria-label="How the index works: your answers are scored factor by factor and end in a named next step">
       {stops.slice(0, -1).map((s, i) => (
         <g key={i}>
           <line x1={s.x + 18} y1={45} x2={stops[i + 1].x - 24} y2={45} stroke="var(--color-ink-20)" strokeWidth="1.2" style={line(drawn, 220, 0.15 + i * 0.2)} />
