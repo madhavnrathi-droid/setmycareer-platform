@@ -16,6 +16,7 @@
 import http from "node:http"
 import fs from "node:fs/promises"
 import path from "node:path"
+import zlib from "node:zlib"
 import { createReadStream } from "node:fs"
 
 const DIST = path.join(process.cwd(), "dist")
@@ -63,11 +64,23 @@ http.createServer(async (req, res) => {
     file = path.join(DIST, "app.html")
     if (!(await stat(file))?.isFile()) { res.writeHead(404).end("not found"); return }
   }
+  // Vercel serves text assets Brotli/gzip-compressed. Serving them raw here would
+  // make prerendered HTML (160KB vs an 11KB shell) look far more expensive than it
+  // is in production and produce a fake LCP regression in Lighthouse.
+  const type = TYPES[path.extname(file)] || "application/octet-stream"
+  const compressible = /^(text\/|application\/(json|xml|javascript))/.test(type)
+  const accepts = String(req.headers["accept-encoding"] || "")
+  const enc = compressible && accepts.includes("br") ? "br" : compressible && accepts.includes("gzip") ? "gzip" : null
+
   res.writeHead(status, {
-    "content-type": TYPES[path.extname(file)] || "application/octet-stream",
+    "content-type": type,
     "cache-control": "no-store",
+    ...(enc ? { "content-encoding": enc, vary: "accept-encoding" } : {}),
   })
-  createReadStream(file).pipe(res)
+  const stream = createReadStream(file)
+  if (enc === "br") stream.pipe(zlib.createBrotliCompress()).pipe(res)
+  else if (enc === "gzip") stream.pipe(zlib.createGzip()).pipe(res)
+  else stream.pipe(res)
 }).listen(PORT, "127.0.0.1", () => {
   console.log(`serving dist/ (Vercel-style: filesystem first, /app.html fallback) on http://127.0.0.1:${PORT}`)
 })

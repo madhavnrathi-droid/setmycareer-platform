@@ -17,10 +17,13 @@ import { ALL_ROWS } from "./content/careers-all"
 import { ARTICLES } from "./content/site"
 import { ALL_LEGAL } from "./lib/legal"
 import { LONGTERM } from "./content/offerings"
+import { CAREER_TEST_PAGES } from "./content/career-test"
 
-import { ssrHead, type SeoInput } from "./lib/seo"
+import { ssrHead, siteGraph, type SeoInput } from "./lib/seo"
 
 export { SITE_URL, SITE_INDEXABLE } from "./lib/seo"
+export { seoFor } from "./content/seo-meta"
+export { siteGraph }
 
 export interface RenderResult {
   html: string
@@ -55,6 +58,7 @@ export function routes(): string[] {
   ]
   return [
     ...staticPaths,
+    ...CAREER_TEST_PAGES.map((p) => p.slug),
     ...ARTICLES.map((a) => `/blog/${a.slug}`),
     ...ALL_LEGAL.map((d) => `/legal/${d.slug}`),
     ...LONGTERM.map((p) => `/programs/${p.slug}`),

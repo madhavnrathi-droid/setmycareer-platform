@@ -17,6 +17,7 @@ import { Book } from "@/pages/Book"
 import { Contact } from "@/pages/Contact"
 import { Cri } from "@/pages/Cri"
 import { Fit } from "@/pages/Fit"
+import { CareerTestHub, CareerTestAudience } from "@/pages/CareerTest"
 import { CareerBar } from "@/components/CareerBar"
 import { CookieConsent } from "@/components/CookieConsent"
 import { Counsellors } from "@/pages/Counsellors"
@@ -55,6 +56,9 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/cri" element={<Cri />} />
         <Route path="/fit" element={<Fit />} />
+        {/* the assessment-intent cluster: hub + four audience landing pages */}
+        <Route path="/career-test" element={<CareerTestHub />} />
+        <Route path="/career-test/:audience" element={<CareerTestAudience />} />
         <Route path="/counsellors" element={<Counsellors />} />
         <Route path="/experts" element={<Experts />} />
         <Route path="/experts/apply" element={<ExpertApply />} />

@@ -31,7 +31,7 @@ const SSR_ENTRY = path.join(ROOT, "dist-ssr", "entry-server.js")
 
 const t0 = Date.now()
 const mod = await import(pathToFileURL(SSR_ENTRY).href)
-const { render, routes, SITE_URL, SITE_INDEXABLE } = mod
+const { render, routes, SITE_URL, SITE_INDEXABLE, siteGraph } = mod
 // seoFor is wired in once src/content/seo-meta.ts exists; until then each route
 // keeps the template's default head rather than silently emitting a wrong one.
 const seoFor = mod.seoFor ?? (() => undefined)
@@ -116,7 +116,10 @@ for (const route of all) {
   html = setCanonical(html, canonical)
   html = setMeta(html, "og:url", canonical, "property")
   html = setMeta(html, "robots", noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large")
-  html = appendJsonLd(html, seo.jsonLd ? (Array.isArray(seo.jsonLd) ? seo.jsonLd : [seo.jsonLd]) : [])
+  const routeLd = seo.jsonLd ? (Array.isArray(seo.jsonLd) ? seo.jsonLd : [seo.jsonLd]) : []
+  // sitewide identity (Organization + WebSite) on every page, route-specific graph
+  // on top. Both come from src/lib/schema.ts so the @ids stay consistent.
+  html = appendJsonLd(html, [...siteGraph(), ...routeLd])
   html = html.replace("<!--app-html-->", appHtml)
 
   const out = outPathFor(route)
@@ -133,9 +136,11 @@ for (const route of all) {
 // The SPA fallback document: the untouched shell, no prerendered body. Vercel's
 // rewrite points here so an unprerendered URL renders itself rather than briefly
 // painting the homepage.
+// It still carries the sitewide identity graph, because the routes it serves are
+// real pages (/experts/:id) — they just render client-side.
 await fs.writeFile(
   path.join(DIST, "app.html"),
-  stripHomeOnlySchema(template).replace("<!--app-html-->", ""),
+  appendJsonLd(stripHomeOnlySchema(template), siteGraph()).replace("<!--app-html-->", ""),
   "utf8",
 )
 

@@ -34,60 +34,12 @@
     <!-- Editorial serif for the publication surfaces (Field Notes / Resources / Videos / Pricing):
          Source Serif 4 — a clean, professional text+display serif (no Didone drama, no calligraphy) -->
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet" />
-
-    <!-- Structured data: organisation, site, service + offers -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://setmycareer.com/#organization",
-          "name": "SetMyCareer",
-          "alternateName": "Set My Career",
-          "url": "https://setmycareer.com",
-          "logo": "https://test.setmycareer.com/og.svg",
-          "foundingDate": "2010",
-          "founder": {
-            "@type": "Person",
-            "name": "Dr. Nandkishore Rathi",
-            "jobTitle": "Founder",
-            "alumniOf": "Indian Institute of Technology Bombay"
-          },
-          "description": "SetMyCareer is a science-backed career counselling and assessment platform for students and professionals in India. It pairs validated psychometric assessments — aptitude, interest and personality — with trained human counsellors and AI tools to turn career decisions from guesswork into evidence.",
-          "areaServed": { "@type": "Country", "name": "India" },
-          "knowsAbout": ["Career counselling", "Psychometric assessment", "Aptitude testing", "RIASEC interest inventory", "Big Five personality", "Stream selection after Class 10", "Career guidance for students", "Career change"],
-          "sameAs": ["https://setmycareer.com"]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://test.setmycareer.com/#website",
-          "url": "https://test.setmycareer.com/",
-          "name": "SetMyCareer",
-          "inLanguage": "en-IN",
-          "publisher": { "@id": "https://setmycareer.com/#organization" }
-        },
-        {
-          "@type": "Service",
-          "serviceType": "Career counselling and psychometric assessment",
-          "provider": { "@id": "https://setmycareer.com/#organization" },
-          "areaServed": { "@type": "Country", "name": "India" },
-          "audience": { "@type": "EducationalAudience", "audienceType": "Students and professionals" },
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Career services",
-            "itemListElement": [
-              { "@type": "Offer", "name": "Career Clarity Index", "price": "0", "priceCurrency": "INR", "description": "A three-minute readiness check." },
-              { "@type": "Offer", "name": "Stream Selector", "price": "1990", "priceCurrency": "INR", "description": "Seven streams, one right fit." },
-              { "@type": "Offer", "name": "Job Domain Selector", "price": "2490", "priceCurrency": "INR", "description": "Twenty-two domains analysed against your profile." },
-              { "@type": "Offer", "name": "Full Career Counselling", "priceCurrency": "INR", "description": "Assessment with a trained expert, end to end, with a written report." }
-            ]
-          }
-        }
-      ]
-    }
-    </script>
-
+    <!-- Organization + WebSite + Service JSON-LD are NOT hardcoded here. They are
+         generated from src/lib/schema.ts and injected per route by scripts/prerender.mjs,
+         so their @ids track VITE_SITE_URL instead of drifting: the block that used to sit
+         here declared @id https://setmycareer.com/#organization while the WebSite node next
+         to it used the deployment URL, and its offer catalogue had gone stale against the
+         real catalogue in src/content/packages.ts. One generated source, one set of ids. -->
     <!-- Structured data: FAQ (mirrors the on-page answers).
          HOME ONLY — scripts/prerender.mjs strips this from every other route. It used
          to ride along on all 20 pages, so /pricing and /blog each claimed to be an
