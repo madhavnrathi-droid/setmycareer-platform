@@ -623,21 +623,6 @@ export const ROUTE_SEO: RouteSeo[] = [
     breadcrumb: CRUMB_HOME,
   },
   {
-    path: "/career-test/aptitude",
-    title: "Career Aptitude Test Online, India | SetMyCareer",
-    description:
-      "A career aptitude test measuring verbal, numerical, abstract and spatial reasoning — scored on screen and read against the fields each ability serves.",
-    h1: "A career aptitude test across four reasoning abilities",
-    primary: "career aptitude test",
-    secondary: [
-      "aptitude test for career selection",
-      "online aptitude test India",
-      "verbal numerical abstract and spatial aptitude test",
-    ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
     path: "/career-test/class-8-10",
     title: "Career Test for Class 10 Students | SetMyCareer",
     description:
@@ -668,7 +653,7 @@ export const ROUTE_SEO: RouteSeo[] = [
     breadcrumb: CRUMB_TEST,
   },
   {
-    path: "/career-test/college-students",
+    path: "/career-test/college",
     title: "Career Test for College Students | SetMyCareer",
     description:
       "A career test for college students and fresh graduates — what your measured aptitudes and interests actually fit, set against the roles each profile serves.",
@@ -694,81 +679,6 @@ export const ROUTE_SEO: RouteSeo[] = [
       "mid-career assessment test",
       "should I change my career test",
     ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
-    // the quiz half of the "guide + quiz" pair; the guide is the essay at
-    // /blog/choosing-a-stream-after-class-10 and the two must interlink
-    path: "/career-test/stream-selector",
-    title: "Stream Selector Test — After Class 10 | SetMyCareer",
-    description:
-      "A stream selector test for after Class 10 — science, commerce, arts and the vocational routes, ranked against your own measured aptitude and interests.",
-    h1: "A stream selector test, ranked against what you actually measure",
-    primary: "stream selector test",
-    secondary: [
-      "aptitude test for stream selection after 10th",
-      "stream selection test after 10th",
-      "science commerce or arts test",
-    ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
-    path: "/career-test/engineering-branch-selector",
-    title: "Engineering Branch Selector Test | SetMyCareer",
-    description:
-      "An engineering branch selector test — computer science, mechanical, electrical, civil and the rest, ranked against your measured aptitude and interests.",
-    h1: "An engineering branch selector test, before the counselling round",
-    primary: "engineering branch selector test",
-    secondary: [
-      "which engineering branch is best for me",
-      "engineering branch selection test",
-      "CSE or mechanical which suits me",
-    ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
-    path: "/career-test/subject-selector",
-    title: "Subject Selection Test for Class 11 | SetMyCareer",
-    description:
-      "A subject selection test for Class 11 — PCM, PCB, the commerce combinations and the optional fifth subject, weighed against how you actually reason.",
-    h1: "A subject selection test for Class 11, combination by combination",
-    primary: "subject selection test for class 11",
-    secondary: [
-      "how to choose subjects in class 11",
-      "PCM or PCB which is better for me",
-      "optional subject selection test",
-    ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
-    path: "/career-test/which-career-is-right-for-me",
-    title: "Which Career Is Best for Me? Take the Quiz | SMC",
-    description:
-      "Which career is best for me? A quiz answered with measured aptitude and interest rather than a personality label, showing the reasoning behind each match.",
-    h1: "Which career is best for me? Answer it with evidence",
-    primary: "which career is best for me quiz",
-    secondary: [
-      "which career should I choose quiz",
-      "what career suits my personality",
-      "career finder quiz India",
-    ],
-    robots: "index",
-    breadcrumb: CRUMB_TEST,
-  },
-  {
-    // a test landing page only. It does not and cannot cover the Hinglish decision
-    // pillars ("12th ke baad kya kare") — those need their own /hi/ cluster.
-    path: "/career-test/hindi",
-    title: "Psychometric Test for Students in Hindi | SetMyCareer",
-    description:
-      "A psychometric test for students in Hindi — aptitude, interest and personality measured in the language you think in, and scored on screen in minutes.",
-    h1: "A psychometric test for students, in Hindi",
-    primary: "psychometric test for students in Hindi",
-    secondary: ["career test in Hindi", "career kaise chune test", "aptitude test Hindi mein"],
     robots: "index",
     breadcrumb: CRUMB_TEST,
   },

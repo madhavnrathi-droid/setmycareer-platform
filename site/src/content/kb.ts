@@ -38,7 +38,7 @@ export const KB: KbEntry[] = [
   {
     keywords: ["price", "cost", "pricing", "fees", "much", "pay", "package", "packages", "money", "rupees"],
     title: "What it costs",
-    answer: `${IA_CONTENT.pricing.positioning} Career Clarity Index — free. Stream Selector — ₹1,990. Job Domain Selector — ₹2,490. Full Career Counselling — quoted to the engagement. Every tier is itemised on the pricing page; the free index is the honest place to start.`,
+    answer: `${IA_CONTENT.pricing.positioning} Career Clarity Index — free. Stream Selector — ₹1,990. Job Domain Selector — ₹2,499. Full Career Counselling — quoted to the engagement. Every tier is itemised on the pricing page; the free index is the honest place to start.`,
     links: [{ label: "Pricing, itemised", to: "/pricing" }, { label: "Take the free index", to: "/cri" }],
   },
   {

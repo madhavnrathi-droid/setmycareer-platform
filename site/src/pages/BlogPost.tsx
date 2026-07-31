@@ -171,7 +171,9 @@ function OriginalPost({ slug }: { slug: string }) {
 /* ── mode 2: the live library, read here ───────────────────────────────────── */
 
 type LiveBlock = { t: "h2" | "h3" | "p" | "li" | "img"; text: string }
-type LiveDoc = { title: string; description: string; heroImg: string; blocks: LiveBlock[]; error?: string }
+// `source` is the ORIGINAL setmycareer.com URL this post was re-rendered from
+// (api/post.ts:57). It is what the canonical must point at — see the note in useSeo below.
+type LiveDoc = { title: string; description: string; heroImg: string; blocks: LiveBlock[]; source?: string; error?: string }
 type LinkState = { art?: Art; category?: string; author?: string; ts?: number; readMin?: number; dek?: string } | null
 
 function LivePost({ slug }: { slug: string }) {
@@ -195,18 +197,29 @@ function LivePost({ slug }: { slug: string }) {
   const title = doc?.title ? editorialTitle(doc.title) : ""
   const art = state?.art || artFor(slug, category, title || slug)
 
+  // These ~236 posts are not ours to claim. /api/post re-renders them here from their
+  // originals on setmycareer.com, so the same article exists at two URLs. Pointing the
+  // canonical at the original keeps the live site's rankings intact instead of having
+  // this copy compete with it — and mainEntityOfPage must name the SAME url, or the
+  // structured data contradicts the canonical tag.
+  //
+  // The original arrives as `doc.source`; until it loads there is no canonical to
+  // declare, so the page stays noindex rather than briefly self-canonicalising a duplicate.
+  const originalUrl = doc?.source
   useSeo({
     title: title ? `${title} — SetMyCareer` : "Field Notes — SetMyCareer",
     description: doc?.description || state?.dek || "A field note from the SetMyCareer library.",
     path: `/blog/${slug}`,
-    jsonLd: title ? {
+    canonicalUrl: originalUrl,
+    noindex: !originalUrl,
+    jsonLd: title && originalUrl ? {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: title,
       description: doc?.description || "",
       author: { "@type": "Organization", name: state?.author || "SetMyCareer" },
-      publisher: { "@type": "Organization", name: "SetMyCareer", "@id": "https://setmycareer.com/#organization" },
-      mainEntityOfPage: `${SITE_URL}/blog/${slug}`,
+      publisher: { "@type": "Organization", name: "SetMyCareer", "@id": `${SITE_URL}/#organization` },
+      mainEntityOfPage: originalUrl,
       inLanguage: "en-IN",
       articleSection: catLabel(category),
     } : null,

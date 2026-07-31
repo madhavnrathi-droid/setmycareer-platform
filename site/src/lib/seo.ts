@@ -76,19 +76,31 @@ export function useSeo(input: SeoInput) {
  *  Doing this here rather than editing 25 pages means the table is authoritative for
  *  BOTH the prerendered head and the client-side head, with one declaration. */
 function resolveSeo(input: SeoInput): SeoInput {
-  const t = seoFor(input.path)
-  const crumbs = t?.breadcrumb?.length ? breadcrumbSchema([...t.breadcrumb, { name: t.h1 || t.title, path: input.path }]) : null
+  const match = seoFor(input.path)
+  // seoFor() falls back to ":param" matching. That is right for breadcrumbs but FATAL
+  // for titles: /blog/:slug and /library/:id would hand the same title and description
+  // to ~236 mirrored posts and ~200 career pages, and the prerenderer (which prefers
+  // the page's own declaration) would disagree with the client. Only an EXACT, concrete
+  // entry may override a page's own title.
+  const exact = match && !match.path.includes(":") ? match : undefined
+
+  const crumbLabel = match?.h1 || match?.title || input.title
+  const crumbs = match?.breadcrumb?.length
+    ? breadcrumbSchema([...match.breadcrumb, { name: crumbLabel, path: input.path }])
+    : null
+
   const pageLd = input.jsonLd ? (Array.isArray(input.jsonLd) ? input.jsonLd : [input.jsonLd]) : []
-  // Service + its offer catalogue belongs only where the page actually presents the
-  // offering. It used to sit in index.html and therefore rode along on all 20 routes,
-  // including /blog posts that sell nothing.
-  const service = input.path === "/" || input.path === "/pricing" ? serviceSchema() : null
+  // Service + its offer catalogue only where the page actually presents that catalogue.
+  // CORE_OFFERS is the legacy four (Career Clarity Index / Stream Selector / Job Domain
+  // Selector / Full Counselling) and only Home renders them; /pricing renders
+  // offerings.ts, so emitting these there would advertise Offers the page never shows.
+  const service = input.path === "/" ? serviceSchema() : null
   const ld: JsonLd[] = [...pageLd, service, crumbs].filter(Boolean) as JsonLd[]
   return {
     ...input,
-    title: t?.title || input.title,
-    description: t?.description || input.description,
-    noindex: input.noindex ?? t?.robots === "noindex",
+    title: exact?.title || input.title,
+    description: exact?.description || input.description,
+    noindex: input.noindex ?? match?.robots === "noindex",
     jsonLd: ld.length ? ld : null,
   }
 }
