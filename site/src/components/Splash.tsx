@@ -17,7 +17,18 @@ const APHORISMS = [
   "Aim is the better half of effort.",
 ]
 
+// The overture is a browser-only flourish. Rendering it into the prerendered HTML
+// would put a full-screen overlay and a meaningless "000 100" counter at the top of
+// every document — the first thing a crawler reads. Gate it on the browser so the
+// build-time markup opens on the actual page. Constant per environment, so the
+// hooks below always run in the browser: no conditional-hook hazard.
+const IS_BROWSER = typeof window !== "undefined"
+
 export function Splash() {
+  return IS_BROWSER ? <SplashOverture /> : null
+}
+
+function SplashOverture() {
   const [hidden, setHidden] = useState(false)
   const root = useRef<HTMLDivElement>(null)
   const bar = useRef<HTMLDivElement>(null)

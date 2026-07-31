@@ -389,8 +389,13 @@ input:focus::placeholder, textarea:focus::placeholder { color: var(--color-ink-4
 }
 
 /* ── reveal (GSAP toggles via .is-in) ────────────────────────────────── */
-[data-reveal] { opacity: 0; transform: translateY(22px); }
-[data-reveal].is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+/* Gated on html.js — set synchronously by an inline <head> script, so it is true
+   before first paint and the reveal behaviour is byte-identical for real visitors.
+   Without JS (crawlers, answer engines, JS-disabled) the rule never applies, so the
+   prerendered markup renders fully visible instead of a page of opacity:0 blocks.
+   This is what stops build-time SSG from looking like a blank page to GPTBot. */
+html.js [data-reveal] { opacity: 0; transform: translateY(22px); }
+html.js [data-reveal].is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
 
 /* split-text lines — bottom padding keeps descenders (g/y/p) inside the mask
    while the line animates; the negative margin cancels the layout cost */

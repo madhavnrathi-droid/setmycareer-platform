@@ -3,25 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Marks the document as script-capable BEFORE first paint, so the scroll-reveal
+         rules (html.js [data-reveal] { opacity: 0 }) only ever apply to real visitors.
+         Without it, the build-time prerendered HTML would arrive fully invisible to any
+         client that does not run JS — which is most answer engines. -->
+    <script>document.documentElement.classList.add("js")</script>
     <title>SetMyCareer — Science-Backed Career Counselling & Assessment, India</title>
     <meta name="description" content="Career decisions, decided with evidence. Validated aptitude, interest and personality assessments, an AI career counsellor, and trained experts — for students and professionals across India. Founded 2010 by Dr. Nandkishore Rathi." />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="author" content="SetMyCareer" />
     <meta name="theme-color" content="#0b0b0b" />
-    <link rel="canonical" href="https://site-madhavs-projects-56d7586e.vercel.app/" />
+    <link rel="canonical" href="https://test.setmycareer.com/" />
 
     <!-- Open Graph / social -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="SetMyCareer" />
     <meta property="og:title" content="SetMyCareer — Decisions, Not Guesses" />
     <meta property="og:description" content="A scientific approach to career choice, refined over fifteen years. Assessments, an AI career counsellor, and a network of trained experts — for students and professionals across India." />
-    <meta property="og:url" content="https://site-madhavs-projects-56d7586e.vercel.app/" />
-    <meta property="og:image" content="https://site-madhavs-projects-56d7586e.vercel.app/og.svg" />
+    <meta property="og:url" content="https://test.setmycareer.com/" />
+    <meta property="og:image" content="https://test.setmycareer.com/og.svg" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="SetMyCareer — Decisions, Not Guesses" />
     <meta name="twitter:description" content="Career choice, decided with evidence. Assessments, an AI counsellor, and trained experts for students and professionals across India." />
-    <meta name="twitter:image" content="https://site-madhavs-projects-56d7586e.vercel.app/og.svg" />
+    <meta name="twitter:image" content="https://test.setmycareer.com/og.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +46,7 @@
           "name": "SetMyCareer",
           "alternateName": "Set My Career",
           "url": "https://setmycareer.com",
-          "logo": "https://site-madhavs-projects-56d7586e.vercel.app/og.svg",
+          "logo": "https://test.setmycareer.com/og.svg",
           "foundingDate": "2010",
           "founder": {
             "@type": "Person",
@@ -56,8 +61,8 @@
         },
         {
           "@type": "WebSite",
-          "@id": "https://site-madhavs-projects-56d7586e.vercel.app/#website",
-          "url": "https://site-madhavs-projects-56d7586e.vercel.app/",
+          "@id": "https://test.setmycareer.com/#website",
+          "url": "https://test.setmycareer.com/",
           "name": "SetMyCareer",
           "inLanguage": "en-IN",
           "publisher": { "@id": "https://setmycareer.com/#organization" }
@@ -83,8 +88,11 @@
     }
     </script>
 
-    <!-- Structured data: FAQ (mirrors the on-page answers) -->
-    <script type="application/ld+json">
+    <!-- Structured data: FAQ (mirrors the on-page answers).
+         HOME ONLY — scripts/prerender.mjs strips this from every other route. It used
+         to ride along on all 20 pages, so /pricing and /blog each claimed to be an
+         FAQ page answering questions they never showed. -->
+    <script type="application/ld+json" data-home-only="true">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -102,7 +110,10 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- scripts/prerender.mjs replaces the marker below with real, route-specific
+         markup at build time. In `vite dev` it stays a comment and React renders
+         client-side exactly as before. -->
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
