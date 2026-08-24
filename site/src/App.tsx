@@ -18,6 +18,7 @@ import { Contact } from "@/pages/Contact"
 import { Cri } from "@/pages/Cri"
 import { Fit } from "@/pages/Fit"
 import { CareerTestHub, CareerTestAudience } from "@/pages/CareerTest"
+import { CareerCounselling } from "@/pages/CareerCounselling"
 import { CareerBar } from "@/components/CareerBar"
 import { CookieConsent } from "@/components/CookieConsent"
 import { Counsellors } from "@/pages/Counsellors"
@@ -59,6 +60,10 @@ export default function App() {
         {/* the assessment-intent cluster: hub + four audience landing pages */}
         <Route path="/career-test" element={<CareerTestHub />} />
         <Route path="/career-test/:audience" element={<CareerTestAudience />} />
+        {/* the twelve keyword-mapped pages — one component, routes driven by kw-map.ts */}
+        <Route path="/career-counselling" element={<CareerCounselling />} />
+        <Route path="/career-counselling/:stage" element={<CareerCounselling />} />
+        <Route path="/vclp/:audience" element={<CareerCounselling />} />
         <Route path="/counsellors" element={<Counsellors />} />
         <Route path="/experts" element={<Experts />} />
         <Route path="/experts/apply" element={<ExpertApply />} />

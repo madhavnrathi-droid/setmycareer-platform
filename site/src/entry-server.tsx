@@ -18,6 +18,7 @@ import { ARTICLES } from "./content/site"
 import { ALL_LEGAL } from "./lib/legal"
 import { LONGTERM } from "./content/offerings"
 import { CAREER_TEST_PAGES } from "./content/career-test"
+import { KW_ROUTES } from "./content/kw-map"
 
 import { ssrHead, siteGraph, type SeoInput } from "./lib/seo"
 
@@ -59,6 +60,7 @@ export function routes(): string[] {
   return [
     ...staticPaths,
     ...CAREER_TEST_PAGES.map((p) => p.slug),
+    ...KW_ROUTES,
     ...ARTICLES.map((a) => `/blog/${a.slug}`),
     ...ALL_LEGAL.map((d) => `/legal/${d.slug}`),
     ...LONGTERM.map((p) => `/programs/${p.slug}`),
