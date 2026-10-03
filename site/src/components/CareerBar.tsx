@@ -246,10 +246,12 @@ export function CareerBar() {
         messages: [{ id: `m-${Date.now()}`, role: "user", parts: [{ type: "text", text: query }] }],
       }),
     })
-      .then((r) => r.json())
-      .then((d: { text?: string; cards?: CompassCardData[] }) => {
+      .then((r) => r.json().then((d) => ({ ok: r.ok, d })))
+      .then(({ ok, d }: { ok: boolean; d: { text?: string; cards?: CompassCardData[]; provider?: string } }) => {
         if (ac.signal.aborted) return
-        const hasContent = !!(d?.text?.trim() || d?.cards?.length)
+        // provider "none" (HTTP 503) means no model could answer. Its text is an apology,
+        // not an answer — show the bar's own recovery path (guide answers + booking).
+        const hasContent = ok && d?.provider !== "none" && !!(d?.text?.trim() || d?.cards?.length)
         setAi(hasContent ? { status: "done", text: d.text ?? "", cards: d.cards } : { status: "error", text: "" })
       })
       .catch(() => { if (timedOut || !ac.signal.aborted) setAi({ status: "error", text: "" }) })
@@ -379,13 +381,23 @@ export function CareerBar() {
                     <Suspense fallback={null}><CompassCards cards={ai.cards} /></Suspense>
                   </>
                 )}
-                {asked && ai.status === "error" && results.length === 0 && (
-                  <div>
-                    <p className="text-[14px] leading-relaxed text-ink-80">That one deserves a person, not a search box. Two good moves:</p>
-                    <div className="mt-3 flex flex-wrap gap-4">
-                      <Link to="/book" className="ul text-[13px] font-medium">Book a session</Link>
-                      <Link to="/pricing" className="ul text-[13px] text-ink-60">See all services</Link>
-                    </div>
+                {/* The model could not answer. This used to say "That one deserves a person,
+                    not a search box" — blaming the question for our outage — and said nothing
+                    at all when guide answers were available. Now: what happened, then what
+                    the visitor can still do. */}
+                {asked && ai.status === "error" && (
+                  <div role="status">
+                    <p className="text-[14px] leading-relaxed text-ink-80">
+                      {results.length
+                        ? "I can't reach my answer engine right now. Here is what our own guides say:"
+                        : "I can't reach my answer engine right now. A counsellor can take this one."}
+                    </p>
+                    {!results.length && (
+                      <div className="mt-3 flex flex-wrap gap-4">
+                        <Link to="/book" className="ul text-[13px] font-medium">Book a session</Link>
+                        <button type="button" onClick={() => ask(q)} className="ul text-[13px] text-ink-60">Try again</button>
+                      </div>
+                    )}
                   </div>
                 )}
                 {/* Local KB "From the site" — a grounded supplement, shown only when

@@ -5,9 +5,9 @@
 // execute(), so the model's tool calls surface to the client, which renders a
 // branded React card from the tool input.
 
-import { streamText, convertToModelMessages, tool, stepCountIs, type UIMessage } from "ai"
+import { streamText, convertToModelMessages, tool, stepCountIs, createUIMessageStream, createUIMessageStreamResponse, type UIMessage } from "ai"
 import { z } from "zod"
-import { streamingChain } from "./ai-providers"
+import { streamingChain, failKind, markDown, PROVIDER_OPTIONS, type FailKind } from "./ai-providers"
 import { SMC_KNOWLEDGE } from "./career-knowledge"
 import { CATALOG_2026_BRIEF, OFFERINGS_2026 } from "./offerings-2026"
 import { CAREER_INTELLIGENCE_KNOWLEDGE } from "../intelligence/context"
@@ -623,9 +623,13 @@ export async function runAssistant(opts: {
 
   // Build the identical streamText call for whichever model we're trying — so the
   // system prompt, tools, and limits are the same no matter which provider serves.
-  const build = (model: (typeof chain)[number]["model"]) =>
+  const build = (model: (typeof chain)[number]["model"], onError?: (e: unknown) => void) =>
     streamText({
       model,
+      // the provider's real error only arrives here — awaiting r.text afterwards just
+      // throws a generic "No output generated" wrapper
+      ...(onError ? { onError: ({ error }: { error: unknown }) => onError(error) } : {}),
+      providerOptions: PROVIDER_OPTIONS,
       system: isAdmin ? adminSystem(opts.context) : isClient ? clientSystem(opts.context) : isVisitor ? visitorSystem(opts.context) : system(opts.context),
       messages: modelMessages,
       // Every surface gets the Career Intelligence tool (so the chatbot answers
@@ -652,15 +656,30 @@ export async function runAssistant(opts: {
       maxRetries: 0,
     })
 
+  // What to tell a person when no provider could answer. Accurate, not reassuring: the
+  // old copy said "I'm momentarily at the rate limit" for EVERY failure (see failKind).
+  const unavailable = (kinds: FailKind[]) =>
+    kinds.length && kinds.every((k) => k === "rate_limit")
+      ? "I'm getting a lot of questions right now. Give me a few seconds and ask again."
+      : "I can't reach my answer engine right now. Please try again shortly, or book a session and a counsellor will take it from here."
+
   // plain mode (the marketing site's visitor guide): drain the answer server-side
   // and hand back one JSON payload. Try each provider in turn so the public bot
   // never dies when the primary is down — return the first that yields text, and
   // tell the caller which provider served (telemetry, and to prove the switch).
   if (opts.plain) {
-    let lastErr: unknown
+    const t0 = Date.now()
+    // One short, non-sensitive line per failed provider ("gemini:quota@540ms"), returned
+    // in a header. Every provider's error used to be swallowed into one friendly line.
+    const attempts: string[] = []
+    const kinds: FailKind[] = []
     for (const { name, model } of chain) {
+      const ta = Date.now()
+      let streamErr: unknown = null
       try {
-        const r = build(model)
+        // the provider's real error arrives via onError; awaiting r.text afterwards only
+        // throws the SDK's generic "No output generated" wrapper
+        const r = build(model, (e) => { streamErr = e })
         // Collect generative-UI tool calls across ALL steps — with echo-execute
         // tools the model calls a card in one step then narrates in the next, so
         // `result.toolCalls` (final step only) misses them. careerIntelligence is
@@ -676,38 +695,67 @@ export async function runAssistant(opts: {
         const cards = dedupeCards(structured.length ? structured : harvested.cards)
         const text = harvested.text
         if ((text && text.trim()) || cards.length) {
-          return Response.json({ text, cards, provider: name }, { headers: { "x-ai-provider": name } })
+          // which concrete model answered (the configured id may be a moving alias), how
+          // many model round trips it took, and the time — all for observability
+          const modelId = (await Promise.resolve(r.response).catch(() => null))?.modelId ?? ""
+          const ms = Date.now() - t0
+          return Response.json(
+            { text, cards, provider: name, model: modelId, steps: steps?.length ?? 0, ms },
+            { headers: { "x-ai-provider": name, "x-ai-model": modelId, "x-ai-attempts": attempts.join(","), "server-timing": `ai;dur=${ms}` } },
+          )
         }
+        attempts.push(`${name}:empty@${Date.now() - ta}ms`)
       } catch (err) {
-        lastErr = err // fall through to the next provider
+        const k = failKind(streamErr ?? err)
+        kinds.push(k)
+        markDown(name, k) // the next request in this instance skips it while it cools down
+        attempts.push(`${name}:${k}@${Date.now() - ta}ms`)
       }
     }
-    const msg = lastErr instanceof Error ? lastErr.message : String(lastErr)
-    const friendly = /rate|429|quota|capacity|overload|limit|too many/i.test(msg)
-      ? "I'm momentarily at the model's rate limit — give me a few seconds and ask again."
-      : "I hit a brief hiccup reaching the model. Please try that again in a moment."
-    return Response.json({ text: friendly, provider: "none" })
+    // provider "none" lets the site show its own recovery path instead of an "answer"
+    return Response.json({ text: unavailable(kinds), provider: "none" }, { status: 503, headers: { "x-ai-attempts": attempts.join(",") } })
   }
 
-  // Streaming mode (the in-app copilots): stream from the primary provider. A token
-  // stream can't be re-pointed mid-flight, so cross-provider failover here happens
-  // at the SDK-retry level (maxRetries) plus the client's own one-shot retry; the
-  // x-ai-provider header lets us observe which brain answered.
-  const primary = chain[0]
-  if (!primary) return Response.json({ error: "No AI provider configured" }, { status: 500 })
-  const streamed = build(primary.model).toUIMessageStreamResponse({
-    // Never show the counsellor a raw "An error occurred." Most failures are a
-    // momentary provider rate-limit; say so plainly and recoverably (the client
-    // also auto-retries once before this is ever seen).
-    onError: (error) => {
-      const msg = error instanceof Error ? error.message : String(error)
-      if (/rate|429|quota|capacity|overload|limit|too many/i.test(msg)) {
-        return "I'm momentarily at the model's rate limit — give me a few seconds and send that again. Nothing you typed was lost."
+  // Streaming mode (the in-app copilots: client portal, counsellor console, admin).
+  // This used to stream from chain[0] only, so when Gemini's quota ran out all three
+  // dashboards' assistants simply failed — the failover chain never applied to them.
+  //
+  // A token stream cannot be re-pointed once it has started, but it CAN be re-pointed
+  // before anything has reached the user. So each provider's UI stream is held until its
+  // first content part: an error before that moves silently to the next provider; once
+  // content appears, everything buffered is flushed and the rest streams straight through.
+  const stream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      const kinds: FailKind[] = []
+      for (const { name, model } of chain) {
+        let streamErr: unknown = null
+        const held: Parameters<typeof writer.write>[0][] = []
+        let live = false
+        let failed = false
+        const ui = build(model, (e) => { streamErr = e }).toUIMessageStream({ onError: () => "provider-error" })
+        for await (const part of ui) {
+          if (live) { writer.write(part); continue }
+          if (part.type === "error") { failed = true; break }
+          held.push(part)
+          if (part.type === "text-delta" || part.type.startsWith("tool-")) {
+            live = true
+            for (const h of held) writer.write(h)
+          }
+        }
+        if (live) return
+        // ended with no content and no error part: treat as a failure too
+        const k = failKind(streamErr ?? (failed ? "provider-error" : "empty response"))
+        kinds.push(k)
+        markDown(name, k)
       }
-      return "I hit a brief hiccup reaching the model. Please try that again in a moment."
+      // every provider failed before producing anything: say so plainly
+      writer.write({ type: "error", errorText: unavailable(kinds) })
     },
+    onError: () => unavailable([]),
   })
-  return withProviderHeader(streamed, primary.name)
+  // Headers are sent before the stream runs, so which provider will serve is not known
+  // yet: report the order that will be tried rather than guess.
+  return withProviderHeader(createUIMessageStreamResponse({ stream }), "failover:" + chain.map((c) => c.name).join(">"))
 }
 
 /** Tag a streamed Response with which provider served it (observability). */
