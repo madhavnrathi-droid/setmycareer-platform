@@ -415,7 +415,7 @@ export function Checkout() {
             <div className="mt-10 border-t border-line pt-8">
               <p className="kicker">The workspace this opens</p>
               <ProductShot
-                src="/product/portal-dashboard.png"
+                src="/product/portal-dashboard.webp"
                 alt={`The SetMyCareer client portal — the dashboard included with ${summary.name}`}
                 chrome="app.setmycareer.com/portal"
                 label="Your dashboard"

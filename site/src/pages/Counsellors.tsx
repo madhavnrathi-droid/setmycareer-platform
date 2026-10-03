@@ -93,11 +93,15 @@ export function Counsellors() {
           <p data-reveal className="lead mt-6 max-w-xl text-paper/60">Your caseload, your morning, your reports — the actual screens, shown here with a sample caseload.</p>
 
           <div className="mt-12">
-            <ProductShot src="/product/console-overview.png" alt="The counsellor console dashboard — active clients, caseload by package, delivery mode and the day's sessions" chrome="app.setmycareer.com/overview" label="Dashboard" />
+            <ProductShot src="/product/console-overview.webp" alt="The counsellor console dashboard — active clients, caseload by package, delivery mode and the day's sessions" chrome="app.setmycareer.com/overview" label="Dashboard" />
           </div>
           <div className="mt-8 grid gap-8 md:grid-cols-2">
-            <ProductShot src="/product/console-clients.png" alt="The counsellor caseload — every client, their packages and last session, searchable" chrome="app.setmycareer.com/clients" label="Caseload" imgClassName="object-top" />
-            <ProductShot src="/product/console-reports.png" alt="The reports workspace — build a Career Intelligence Report from any client's blueprint" chrome="app.setmycareer.com/reports" label="Reports" imgClassName="object-top" />
+            <ProductShot src="/product/console-clients.webp" alt="The counsellor caseload — every client, their packages and last session, searchable" chrome="app.setmycareer.com/clients" label="Caseload" imgClassName="object-top" />
+            {/* Was the counsellor's Reports workspace, captured with the sample caseload before
+                any report existed: "Total reports 0", "Clients with reports 0", an empty list.
+                An empty state is the one screen a pitch should never show. The finished
+                report is what a counsellor's work produces, and what their client receives. */}
+            <ProductShot src="/product/portal-sigma-report.webp" alt="A finished personality report as the client receives it: six factors, percentile bars against a norm group, and a plain-language read" chrome="app.setmycareer.com/portal/reports" label="What your client receives" imgClassName="object-top" />
           </div>
           <p data-reveal className="mono mt-6 text-[10px] uppercase tracking-[0.14em] text-paper/55">Sample caseload · no real client data shown</p>
         </div>

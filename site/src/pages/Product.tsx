@@ -108,7 +108,7 @@ export function Product() {
           {/* the reveal: the home scrolls itself, so it reads as a live surface */}
           <div className="[&_.b]:font-semibold">
             <IMacFrame
-              src="/product/portal-dashboard.png"
+              src="/product/portal-dashboard.webp"
               video="/product/dashboard-scroll.mp4"
               alt="The SetMyCareer client dashboard, scrolling itself — one home for every assessment, session and report"
             >
@@ -136,14 +136,14 @@ export function Product() {
           {/* the growing stack — two real report stills, fanned */}
           <div data-reveal className="relative mx-auto w-full max-w-[440px]">
             <ProductShot
-              src="/product/portal-sigma-report.png"
+              src="/product/portal-sigma-report.webp"
               alt="The Sigma personality profile — norm-referenced percentiles and a factor radar"
               chrome=""
               label="A profile"
               className="rotate-[-3deg]"
             />
             <ProductShot
-              src="/product/portal-report-cover.png"
+              src="/product/portal-report-cover.webp"
               alt="A SetMyCareer Career Intelligence Report — a personal, continuous-scroll deliverable that re-generates as evidence arrives"
               chrome=""
               label="The record, growing"
@@ -270,7 +270,7 @@ export function Product() {
         eyebrow="For parents"
         head={<>Certainty before the <span className="b">₹10–40 lakh bet</span>.</>}
         body="You're not buying reassurance. You're buying evidence — gathered before the fees are paid, kept as your child grows, with a counsellor who sits with you, not only the student. Shared access means you read the same record they do."
-        shot={{ src: "/product/portal-dashboard.png", label: "Shared access", chip: "One record, read by parent and student — and a dedicated parent session inside Big Picture." }}
+        shot={{ src: "/product/portal-dashboard.webp", label: "Shared access", chip: "One record, read by parent and student — and a dedicated parent session inside Big Picture." }}
       />
 
       {/* for students — clarity / relief. */}
@@ -279,7 +279,7 @@ export function Product() {
         eyebrow="For students"
         head={<>Relief from guessing — <span className="b">evidence, not opinions</span>.</>}
         body="Not “follow your passion.” A measured read of where your interests, personality and aptitude actually point — so you spend the next years on purpose instead of by default."
-        shot={{ src: "/product/portal-test.png", video: "/product/test-flow.mp4", label: "One question at a time", chip: "The instruments, taken clean — no pressure, one clear question at a time." }}
+        shot={{ src: "/product/portal-test.webp", video: "/product/test-flow.mp4", label: "One question at a time", chip: "The instruments, taken clean — no pressure, one clear question at a time." }}
         flip
         tone="paper"
       />
@@ -290,7 +290,7 @@ export function Product() {
         eyebrow="For professionals"
         head={<>The switch has a <span className="b">payroll</span>. Move on evidence.</>}
         body="A change at 34 is nothing like one at 17 — a salary to protect, often a family on it, no year to waste. A diagnosis first, then a structured move: the same instruments, normed for professionals, read by a senior counsellor."
-        shot={{ src: "/product/portal-call.png", label: "Senior counsel", chip: "A senior counsellor, in the browser — diagnosis first, then a structured move." }}
+        shot={{ src: "/product/portal-call.webp", label: "Senior counsel", chip: "A senior counsellor, in the browser — diagnosis first, then a structured move." }}
       />
 
       {/* the chapters — all commerce, consolidated. Explore → Master. */}

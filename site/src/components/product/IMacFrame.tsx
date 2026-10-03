@@ -5,6 +5,7 @@
 // screen to zoom. Children (an optional callout chip) float over, un-clipped.
 // Reduced-motion safe.
 import { useRef, useState, type ReactNode } from "react"
+import { useNearViewport } from "@/lib/near-viewport"
 import { Maximize, Pause, Play } from "@carbon/icons-react"
 import { LogoMark } from "@/components/Brand"
 import { Lightbox } from "./Lightbox"
@@ -26,6 +27,9 @@ export function IMacFrame({
 }) {
   const [zoom, setZoom] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  // the recording and its poster only start downloading near the viewport
+  const near = useNearViewport(frameRef)
   const [paused, setPaused] = useState(false)
   const toggle = () => {
     const v = videoRef.current
@@ -34,7 +38,7 @@ export function IMacFrame({
   }
   const brushed = "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, rgba(0,0,0,0.015) 1px 3px)"
   return (
-    <div data-reveal className={`relative mx-auto w-full max-w-[780px] ${className}`}>
+    <div ref={frameRef} data-reveal className={`relative mx-auto w-full max-w-[780px] ${className}`}>
       {/* body: brushed-aluminium unibody holding a black-glass screen; the extra
           bottom padding is the chin. Inset top highlight + a soft cast shadow. */}
       <div
@@ -57,13 +61,15 @@ export function IMacFrame({
               // reduced-motion falls back to the still (poster) — no autoplay
               <video
                 ref={videoRef}
-                src={video}
-                poster={src}
+                src={near ? video : undefined}
+                poster={near ? src : undefined}
+                preload="none"
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="block w-full motion-reduce:hidden"
+                aria-label={alt}
+                className="block aspect-[16/10] w-full bg-black object-cover motion-reduce:hidden"
               />
             ) : null}
             <img

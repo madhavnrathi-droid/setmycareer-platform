@@ -23,31 +23,31 @@ const FEATURES: Feature[] = [
     key: "dashboard", label: "Dashboard",
     title: "One home for the whole journey",
     blurb: "Assessments, the AI guide, sessions and the report — one login, whoever the client is.",
-    video: "/product/dashboard-scroll.mp4", img: "/product/portal-dashboard.png",
+    video: "/product/dashboard-scroll.mp4", img: "/product/portal-dashboard.webp",
   },
   {
     key: "assessments", label: "Assessments",
     title: "Validated instruments, scored live",
     blurb: "The real Sigma personality, interest and aptitude scales — scored the moment they answer.",
-    video: "/product/test-flow.mp4", img: "/product/portal-test.png",
+    video: "/product/test-flow.mp4", img: "/product/portal-test.webp",
   },
   {
     key: "coach", label: "AI coach",
     title: "A counsellor, on call",
     blurb: "Chat or voice, grounded in the client's own results — thinking-partner between sessions.",
-    img: "/product/portal-ai-voice.png",
+    img: "/product/portal-ai-voice.webp",
   },
   {
     key: "report", label: "Report",
     title: "Scores become a story",
     blurb: "A continuous, cited Career Intelligence Report — every figure traced back to an instrument.",
-    video: "/product/report-scroll.mp4", img: "/product/portal-report-cover.png",
+    video: "/product/report-scroll.mp4", img: "/product/portal-report-cover.webp",
   },
   {
     key: "sessions", label: "Sessions",
     title: "Meet, note, transcribe",
     blurb: "Counsellor-led video in the browser, with timestamped notes and a running transcript.",
-    img: "/product/portal-call.png",
+    img: "/product/portal-call.webp",
   },
 ]
 

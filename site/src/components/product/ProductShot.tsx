@@ -7,6 +7,7 @@
 import { useRef, useState, type ReactNode } from "react"
 import { Maximize, Pause, Play } from "@carbon/icons-react"
 import { Lightbox } from "./Lightbox"
+import { useNearViewport } from "@/lib/near-viewport"
 
 export function ProductShot({
   src,
@@ -38,6 +39,9 @@ export function ProductShot({
 }) {
   const [zoom, setZoom] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const figRef = useRef<HTMLElement>(null)
+  // the recording (and its poster) only start downloading near the viewport
+  const near = useNearViewport(figRef)
   const [paused, setPaused] = useState(false)
   const toggle = () => {
     const v = videoRef.current
@@ -50,7 +54,10 @@ export function ProductShot({
   const screen = (
     <>
       {video ? (
-        <video ref={videoRef} src={video} poster={src} autoPlay muted loop playsInline className={`block w-full motion-reduce:hidden ${imgClassName}`} />
+        // aspect-[16/10] reserves the recording's box before it loads (all are 1280x800),
+        // so deferring it causes no layout shift. aria-label: while motion is allowed the
+        // <img> carrying the alt text is display:none, so the video must name itself.
+        <video ref={videoRef} src={near ? video : undefined} poster={near ? src : undefined} preload="none" autoPlay muted loop playsInline aria-label={alt} className={`block aspect-[16/10] w-full bg-ink-10 object-cover motion-reduce:hidden ${imgClassName}`} />
       ) : null}
       <img
         src={src}
@@ -62,6 +69,7 @@ export function ProductShot({
   )
   return (
     <figure
+      ref={figRef}
       {...(reveal ? { "data-reveal": true } : {})}
       className={`group relative rounded-[16px] border border-line bg-paper-pure elev ${className}`}
     >
