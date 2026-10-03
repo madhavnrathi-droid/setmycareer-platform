@@ -3,7 +3,6 @@ import { Routes, Route, matchRoutes } from "react-router-dom"
 import { useSmoothScroll } from "@/lib/motion"
 import { Grain, Nav, Footer, ScrollProgress } from "@/components/Chrome"
 import { CompassCursor } from "@/components/CompassCursor"
-import { Splash } from "@/components/Splash"
 import { CareerBar } from "@/components/CareerBar"
 import { CookieConsent } from "@/components/CookieConsent"
 import { lazyRoute, type RouteComponent } from "@/lib/lazy-route"
@@ -96,7 +95,12 @@ export default function App() {
   useSmoothScroll()
   return (
     <>
-      <Splash />
+      {/* The splash overture is retired. With every page prerendered, the content arrives
+          inside the HTML and paints first, so there is no moment at which an overture can
+          come before reading: on a fast device it covered a hero that was already on screen
+          for ~2.2s, and on a slow one it would have landed seconds into reading. The hero's
+          halftone field and headline carry the brand moment. Restore from git history
+          (components/Splash.tsx) if it is ever wanted on a non-prerendered surface. */}
       <Grain />
       <ScrollProgress />
       <CompassCursor />
