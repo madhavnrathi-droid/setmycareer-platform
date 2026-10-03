@@ -12,7 +12,7 @@
 import { StrictMode } from "react"
 import { renderToString } from "react-dom/server"
 import { StaticRouter } from "react-router"
-import App from "./App"
+import App, { preloadRoute, routeSourceFor } from "./App"
 import { ALL_ROWS } from "./content/careers-all"
 import { ARTICLES } from "./content/site"
 import { ALL_LEGAL } from "./lib/legal"
@@ -24,7 +24,7 @@ import { ssrHead, siteGraph, type SeoInput } from "./lib/seo"
 
 export { SITE_URL, SITE_INDEXABLE } from "./lib/seo"
 export { seoFor } from "./content/seo-meta"
-export { siteGraph }
+export { siteGraph, routeSourceFor }
 
 export interface RenderResult {
   html: string
@@ -33,8 +33,11 @@ export interface RenderResult {
   head: SeoInput | null
 }
 
-/** Render one route to markup. `url` is a path such as "/" or "/blog/foo". */
-export function render(url: string): RenderResult {
+/** Render one route to markup. `url` is a path such as "/" or "/blog/foo".
+ *  Async because pages are code-split: the route's chunk is loaded first so
+ *  renderToString renders the real page, not a Suspense fallback. */
+export async function render(url: string): Promise<RenderResult> {
+  await preloadRoute(url)
   ssrHead.current = null
   const html = renderToString(
     <StrictMode>

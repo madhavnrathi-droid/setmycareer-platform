@@ -31,7 +31,28 @@ const SSR_ENTRY = path.join(ROOT, "dist-ssr", "entry-server.js")
 
 const t0 = Date.now()
 const mod = await import(pathToFileURL(SSR_ENTRY).href)
-const { render, routes, SITE_URL, SITE_INDEXABLE, siteGraph } = mod
+const { render, routes, SITE_URL, SITE_INDEXABLE, siteGraph, routeSourceFor } = mod
+
+// Vite's build manifest: page module -> its chunk + the shared chunks it imports.
+// Used to tell the browser, in the HTML itself, which chunk this route will need.
+let manifest = {}
+try { manifest = JSON.parse(await fs.readFile(path.join(DIST, ".vite", "manifest.json"), "utf8")) } catch { /* no hints */ }
+function preloadLinks(route) {
+  const src = routeSourceFor?.(route)
+  if (!src || !manifest[src]) return ""
+  const files = new Set()
+  const walk = (key) => {
+    const e = manifest[key]
+    if (!e || files.has(e.file)) return
+    files.add(e.file)
+    for (const imp of e.imports || []) walk(imp)
+  }
+  walk(src)
+  // the entry chunk is already requested by its own <script>; skip it
+  const entry = Object.values(manifest).find((e) => e.isEntry)?.file
+  return [...files].filter((f) => f !== entry)
+    .map((f) => `    <link rel="modulepreload" href="/${f}" />`).join("\n")
+}
 // seoFor is wired in once src/content/seo-meta.ts exists; until then each route
 // keeps the template's default head rather than silently emitting a wrong one.
 const seoFor = mod.seoFor ?? (() => undefined)
@@ -85,7 +106,7 @@ const emitted = []
 for (const route of all) {
   let appHtml, declared
   try {
-    const out = render(route)
+    const out = await render(route)
     appHtml = out.html
     declared = out.head // what the page itself declared via useSeo
   } catch (err) {
@@ -120,6 +141,8 @@ for (const route of all) {
   // sitewide identity (Organization + WebSite) on every page, route-specific graph
   // on top. Both come from src/lib/schema.ts so the @ids stay consistent.
   html = appendJsonLd(html, [...siteGraph(), ...routeLd])
+  const hints = preloadLinks(route)
+  if (hints) html = html.replace("</head>", `${hints}\n  </head>`)
   html = html.replace("<!--app-html-->", appHtml)
 
   const out = outPathFor(route)

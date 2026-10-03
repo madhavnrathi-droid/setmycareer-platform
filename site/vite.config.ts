@@ -5,6 +5,9 @@ import { fileURLToPath, URL } from "node:url"
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // the manifest maps each page module to its chunk, so scripts/prerender.mjs can emit
+  // <link rel="modulepreload"> for exactly the chunk a route needs
+  build: { manifest: true },
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },

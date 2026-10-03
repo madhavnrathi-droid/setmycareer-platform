@@ -1,7 +1,8 @@
 import { StrictMode } from "react"
 import { createRoot, hydrateRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
-import App from "./App"
+import App, { preloadRoute } from "./App"
+import { clearChunkReloadFlag } from "./lib/lazy-route"
 import "./index.css"
 
 const root = document.getElementById("root")!
@@ -24,8 +25,13 @@ const app = (
 // re-rendering on the client — the old behaviour, not a broken page. Routes that are not
 // prerendered (/experts/:id via app.html, or `vite dev`) have an empty root and render
 // client-side as before.
+// Pages are code-split per route. The current route's chunk must be loaded BEFORE
+// hydrating, or its first render would suspend and not match the prerendered HTML. The
+// prerenderer emits a modulepreload link for that chunk, so it is usually already here.
+const start = () => preloadRoute(window.location.pathname).then(clearChunkReloadFlag, () => { /* lazy-route handles it */ })
+
 if (root.firstElementChild) {
-  hydrateRoot(root, app, {
+  start().then(() => hydrateRoot(root, app, {
     onRecoverableError: (error, info) => {
       const msg = String((error as Error)?.message ?? error)
       // #419: a Suspense boundary the server finished as its fallback. renderToString does
@@ -35,7 +41,7 @@ if (root.firstElementChild) {
       if (/#419\b|could not finish this Suspense boundary/.test(msg)) return
       console.warn("[hydration] recovered by client render:", msg, info?.componentStack?.split("\n").slice(0, 6).join(" <- ") ?? "")
     },
-  })
+  }))
 } else {
-  createRoot(root).render(app)
+  start().then(() => createRoot(root).render(app))
 }

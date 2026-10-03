@@ -4,7 +4,7 @@
 // Degrades to a plain grayscale image if WebGL is unavailable.
 
 import { useEffect, useRef, useState } from "react"
-import * as THREE from "three"
+import type * as THREE from "three"
 
 const VERT = /* glsl */ `
   varying vec2 vUv;
@@ -92,86 +92,99 @@ export function HalftoneHero({ src }: { src?: string }) {
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
-    const mount = mountRef.current
-    if (!mount) return
-    let renderer: THREE.WebGLRenderer
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" })
-    } catch { setFailed(true); return }
+    // three.js is ~330KB raw — a fifth of the site's JavaScript — and only this component
+    // and the homepage's journey artworks use it. It was a static import, so every page
+    // shipped it and parsed it before anything became tappable. It now loads when this
+    // mounts; the rendering code below is unchanged, it just receives THREE as an argument.
+    let cleanup: void | (() => void)
+    let cancelled = false
+    import("three")
+      .then((mod) => { if (!cancelled) cleanup = setup(mod) })
+      .catch(() => { if (!cancelled) setFailed(true) })
+    return () => { cancelled = true; if (cleanup) cleanup() }
 
-    const dpr = Math.min(window.devicePixelRatio, 2)
-    renderer.setPixelRatio(dpr)
-    renderer.setSize(mount.clientWidth, mount.clientHeight)
-    renderer.domElement.style.display = "block"
-    mount.appendChild(renderer.domElement)
-
-    const scene = new THREE.Scene()
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
-
-    const uniforms = {
-      uTex: { value: null as THREE.Texture | null },
-      uRes: { value: new THREE.Vector2(mount.clientWidth, mount.clientHeight) },
-      uImg: { value: new THREE.Vector2(1600, 1000) },
-      uMouse: { value: new THREE.Vector2(0, 0) },
-      uTime: { value: 0 },
-      uScroll: { value: 0 },
-      uReveal: { value: 0 },
-    }
-    const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms })
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
-    scene.add(mesh)
-
-    if (!src) {
-      const field = instrumentField()
-      const tex = new THREE.CanvasTexture(field)
-      tex.colorSpace = THREE.SRGBColorSpace
-      uniforms.uTex.value = tex
-      uniforms.uImg.value.set(field.width, field.height)
-    } else new THREE.TextureLoader().setCrossOrigin("anonymous").load(
-      src,
-      (tex) => {
+    function setup(THREE: typeof import("three")): void | (() => void) {
+      const mount = mountRef.current
+      if (!mount) return
+      let renderer: THREE.WebGLRenderer
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" })
+      } catch { setFailed(true); return }
+  
+      const dpr = Math.min(window.devicePixelRatio, 2)
+      renderer.setPixelRatio(dpr)
+      renderer.setSize(mount.clientWidth, mount.clientHeight)
+      renderer.domElement.style.display = "block"
+      mount.appendChild(renderer.domElement)
+  
+      const scene = new THREE.Scene()
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+  
+      const uniforms = {
+        uTex: { value: null as THREE.Texture | null },
+        uRes: { value: new THREE.Vector2(mount.clientWidth, mount.clientHeight) },
+        uImg: { value: new THREE.Vector2(1600, 1000) },
+        uMouse: { value: new THREE.Vector2(0, 0) },
+        uTime: { value: 0 },
+        uScroll: { value: 0 },
+        uReveal: { value: 0 },
+      }
+      const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms })
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
+      scene.add(mesh)
+  
+      if (!src) {
+        const field = instrumentField()
+        const tex = new THREE.CanvasTexture(field)
         tex.colorSpace = THREE.SRGBColorSpace
         uniforms.uTex.value = tex
-        uniforms.uImg.value.set(tex.image.width, tex.image.height)
-      },
-      undefined,
-      () => setFailed(true),
-    )
-
-    const target = new THREE.Vector2(0, 0)
-    const onMove = (e: PointerEvent) => {
-      const r = mount.getBoundingClientRect()
-      target.set(((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1))
-    }
-    window.addEventListener("pointermove", onMove)
-
-    const onResize = () => {
-      renderer.setSize(mount.clientWidth, mount.clientHeight)
-      uniforms.uRes.value.set(mount.clientWidth, mount.clientHeight)
-    }
-    window.addEventListener("resize", onResize)
-
-    let raf = 0
-    const clock = new THREE.Clock()
-    const tick = () => {
-      uniforms.uTime.value = clock.getElapsedTime()
-      uniforms.uMouse.value.lerp(target, 0.06)
-      uniforms.uScroll.value = Math.min(1, window.scrollY / (window.innerHeight || 1))
-      if (uniforms.uReveal.value < 1) uniforms.uReveal.value = Math.min(1, uniforms.uReveal.value + 0.012)
-      renderer.render(scene, camera)
-      raf = requestAnimationFrame(tick)
-    }
-    tick()
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener("pointermove", onMove)
-      window.removeEventListener("resize", onResize)
-      uniforms.uTex.value?.dispose()
-      material.dispose()
-      mesh.geometry.dispose()
-      renderer.dispose()
-      if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
+        uniforms.uImg.value.set(field.width, field.height)
+      } else new THREE.TextureLoader().setCrossOrigin("anonymous").load(
+        src,
+        (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace
+          uniforms.uTex.value = tex
+          uniforms.uImg.value.set(tex.image.width, tex.image.height)
+        },
+        undefined,
+        () => setFailed(true),
+      )
+  
+      const target = new THREE.Vector2(0, 0)
+      const onMove = (e: PointerEvent) => {
+        const r = mount.getBoundingClientRect()
+        target.set(((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1))
+      }
+      window.addEventListener("pointermove", onMove)
+  
+      const onResize = () => {
+        renderer.setSize(mount.clientWidth, mount.clientHeight)
+        uniforms.uRes.value.set(mount.clientWidth, mount.clientHeight)
+      }
+      window.addEventListener("resize", onResize)
+  
+      let raf = 0
+      const clock = new THREE.Clock()
+      const tick = () => {
+        uniforms.uTime.value = clock.getElapsedTime()
+        uniforms.uMouse.value.lerp(target, 0.06)
+        uniforms.uScroll.value = Math.min(1, window.scrollY / (window.innerHeight || 1))
+        if (uniforms.uReveal.value < 1) uniforms.uReveal.value = Math.min(1, uniforms.uReveal.value + 0.012)
+        renderer.render(scene, camera)
+        raf = requestAnimationFrame(tick)
+      }
+      tick()
+  
+      return () => {
+        cancelAnimationFrame(raf)
+        window.removeEventListener("pointermove", onMove)
+        window.removeEventListener("resize", onResize)
+        uniforms.uTex.value?.dispose()
+        material.dispose()
+        mesh.geometry.dispose()
+        renderer.dispose()
+        if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
+      }
     }
   }, [src])
 

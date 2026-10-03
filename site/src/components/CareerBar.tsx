@@ -1,11 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { ArrowRight, Close, Search, Calendar, ChevronUp } from "@carbon/icons-react"
 import { LogoMark } from "@/components/Brand"
 import { rolodexFor } from "@/content/rolodex"
 import { searchKb, type KbEntry } from "@/content/kb"
 import { FAQ, type Qa } from "@/content/faq"
-import { CompassCards, type CompassCardData } from "@/components/compass/CompassCards"
+import type { CompassCardData } from "@/components/compass/CompassCards"
+
+// Career and package cards render only after Compass answers a question with cards —
+// but CompassCards imports the whole careers table (~140KB raw) to look careers up by
+// id, and as a static import that table rode in the bundle every page loads. It now
+// loads with the first answer that needs it. Never rendered on the server, so
+// hydration is unaffected.
+const CompassCards = lazy(() => import("@/components/compass/CompassCards").then((m) => ({ default: m.CompassCards })))
 
 // While the answer is in flight, the status word cycles — a small, non-cringe
 // blend of nautical / survey / clinical working verbs, so the wait reads as the
@@ -369,7 +376,7 @@ export function CareerBar() {
                         {ai.text.split(/\*\*([^*]+)\*\*/g).map((part, i) => (i % 2 ? <b key={i}>{part}</b> : <span key={i} className="whitespace-pre-wrap">{part}</span>))}
                       </div>
                     )}
-                    <CompassCards cards={ai.cards} />
+                    <Suspense fallback={null}><CompassCards cards={ai.cards} /></Suspense>
                   </>
                 )}
                 {asked && ai.status === "error" && results.length === 0 && (
