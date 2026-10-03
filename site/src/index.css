@@ -78,6 +78,11 @@ body {
   .ed-label { font-family: var(--font-editorial); font-style: italic; font-weight: 400; letter-spacing: 0.005em; color: var(--color-ink-40); }
   .ed-deck { font-family: var(--font-editorial); font-weight: 300; line-height: 1.5; color: var(--color-ink-60); }
   .ed-eyebrow { font-family: var(--font-editorial); font-style: italic; font-weight: 400; font-size: 14px; letter-spacing: 0.01em; color: var(--color-ink-40); }
+  /* A kicker's default is ink-40, which is right on paper and illegible on a dark
+     plate (3.74:1). On dark grounds the default flips to paper at 60% (6.64:1).
+     Still in this layer, so an explicit text-* utility on the kicker wins. It was
+     catching the footer's legal-entity and copyright lines. */
+  .plate-dark .kicker { color: color-mix(in srgb, var(--color-paper) 60%, transparent); }
 }
 
 
@@ -400,13 +405,14 @@ input:focus::placeholder, textarea:focus::placeholder { color: var(--color-ink-4
 }
 
 /* ── reveal (GSAP toggles via .is-in) ────────────────────────────────── */
-/* Gated on html.js — set synchronously by an inline <head> script, so it is true
-   before first paint and the reveal behaviour is byte-identical for real visitors.
-   Without JS (crawlers, answer engines, JS-disabled) the rule never applies, so the
-   prerendered markup renders fully visible instead of a page of opacity:0 blocks.
-   This is what stops build-time SSG from looking like a blank page to GPTBot. */
-html.js [data-reveal] { opacity: 0; transform: translateY(22px); }
-html.js [data-reveal].is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+/* Visible by default. Only useReveals hides content — and only content not yet seen
+   (below the fold, or new after an in-app navigation). This used to be gated on an
+   html.js class set by an inline head script, which hid EVERY [data-reveal] before
+   the bundle even downloaded; the prerendered LCP text of inner pages then sat
+   invisible for seconds on mobile. Crawlers and no-JS clients get full content
+   either way. */
+[data-reveal].reveal-pending { opacity: 0; transform: translateY(22px); }
+[data-reveal].reveal-pending.is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
 
 /* split-text lines — bottom padding keeps descenders (g/y/p) inside the mask
    while the line animates; the negative margin cancels the layout cost */

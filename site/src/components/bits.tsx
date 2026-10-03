@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -36,9 +36,15 @@ export function NaviPortrait({ src, name, className = "" }: { src?: string; name
    can't run, the text simply shows normally (never blanks). */
 export function SplitReveal({ children, as = "h2", className = "" }: { children: ReactNode; as?: "h1" | "h2"; className?: string }) {
   const ref = useRef<HTMLHeadingElement>(null)
+  const { key } = useLocation()
   useEffect(() => {
     const el = ref.current
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    // On the initial document an in-view heading was painted from the prerender and
+    // is already being read. Splitting it would hide those lines 80ms after mount and
+    // slide them back up — on a slow phone, seconds after the visitor started reading.
+    // Leave it. Headings below the fold, and on in-app navigations, still animate.
+    if (key === "default") { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.9 && r.bottom > 0) return }
     let split: SplitText | undefined, st: ScrollTrigger | undefined
     const id = window.setTimeout(() => {
       try {

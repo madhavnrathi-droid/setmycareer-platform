@@ -1,7 +1,7 @@
 // Motion core — Lenis smooth scroll wired into GSAP ScrollTrigger, plus small
 // reveal/counter hooks. GSAP (incl. ScrollTrigger + SplitText) is fully free.
 
-import { useEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import { useLocation } from "react-router-dom"
 import Lenis from "lenis"
 import { gsap } from "gsap"
@@ -49,33 +49,43 @@ export function scrollToSelector(sel: string) {
   lenis ? lenis.scrollTo(el as HTMLElement, { offset: -20 }) : (el as HTMLElement).scrollIntoView({ behavior: "smooth" })
 }
 
-/** Reveal any [data-reveal] descendants on scroll (adds .is-in, staggered). */
+/** Reveal any [data-reveal] descendants on scroll (adds .is-in, staggered).
+ *
+ *  Progressive enhancement. Content is VISIBLE by default; only this hook hides it,
+ *  and only content that has not been seen yet. The old rule hid every [data-reveal]
+ *  from the moment an inline <head> script ran — before the bundle had downloaded —
+ *  and nothing unhid the in-view ones until React booted. On a phone that held the
+ *  prerendered LCP paragraph of /pricing invisible for 3.2s while the browser already
+ *  had its text. Now:
+ *   • initial document load (location.key === "default"): anything already in view
+ *     was painted from the prerender — it stays put, no hide, no replay;
+ *   • everything below the fold is marked pending and animates in on scroll;
+ *   • after an in-app navigation the page is new, so in-view items animate too.
+ *  Marking happens in a layout effect, before paint, so nothing flashes. */
 export function useReveals(deps: unknown[] = []) {
   const ref = useRef<HTMLElement>(null)
-  useEffect(() => {
+  const { key } = useLocation()
+  const initialDocument = key === "default"
+  useLayoutEffect(() => {
     const root = ref.current
     if (!root) return
+    const vh = window.innerHeight
+    const inView = (el: HTMLElement) => { const r = el.getBoundingClientRect(); return r.top < vh * 0.9 && r.bottom > -40 }
     const els = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"))
+      .filter((el) => !el.classList.contains("is-in"))
+      .filter((el) => !(initialDocument && inView(el)))
+    els.forEach((el) => el.classList.add("reveal-pending"))
+    const reveal = (el: HTMLElement) => gsap.delayedCall(Number(el.dataset.delay ?? 0), () => el.classList.add("is-in"))
     const triggers = els.map((el) =>
-      ScrollTrigger.create({
-        trigger: el,
-        start: "top 88%",
-        once: true,
-        onEnter: () => {
-          const delay = Number(el.dataset.delay ?? 0)
-          gsap.delayedCall(delay, () => el.classList.add("is-in"))
-        },
-      }),
+      ScrollTrigger.create({ trigger: el, start: "top 88%", once: true, onEnter: () => reveal(el) }),
     )
-    // reveal anything already in view synchronously — robust when content mounts
-    // after an async load (the ref'd container swaps in), and independent of the
-    // ScrollTrigger scheduler. The .is-in CSS transition still animates it in.
-    els.forEach((el) => {
-      const r = el.getBoundingClientRect()
-      if (r.top < window.innerHeight * 0.9 && r.bottom > -40) el.classList.add("is-in")
-    })
+    // After an in-app navigation, whatever lands in view animates in. A timeout rather
+    // than rAF + a GSAP tick: both of those pause in throttled/background tabs, and an
+    // in-view element must never be left hidden waiting on a frame that never comes.
+    const timers = els.filter(inView).map((el) =>
+      window.setTimeout(() => el.classList.add("is-in"), 30 + Number(el.dataset.delay ?? 0) * 1000))
     ScrollTrigger.refresh()
-    return () => triggers.forEach((t) => t.kill())
+    return () => { timers.forEach((t) => window.clearTimeout(t)); triggers.forEach((t) => t.kill()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
   return ref
