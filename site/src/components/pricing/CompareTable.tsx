@@ -66,7 +66,7 @@ export function CompareTable() {
                   {c === true ? (
                     <><span aria-hidden="true" className="text-[14px] text-ink">✓</span><span className="sr-only">Included</span></>
                   ) : c === false ? (
-                    <><span aria-hidden="true" className="text-[14px] text-ink-20">—</span><span className="sr-only">Not included</span></>
+                    <><span aria-hidden="true" className="text-[14px] text-ink-40">—</span><span className="sr-only">Not included</span></>
                   ) : (
                     <span className="mono text-[12px] tabular-nums text-ink-80">{c}</span>
                   )}

@@ -64,7 +64,7 @@ function Header({ cluster, trajectory, name, oneLine, nowV, growth, recent }: {
       <Link to="/library" className="inline-flex items-center gap-1.5 text-[12px] text-ink-40 transition-colors hover:text-ink"><ArrowLeft size={14} /> Career terminal</Link>
       <div className="mono mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.1em]">
         <span className="text-ink-40">{cluster}</span>
-        <span className="text-ink-20">·</span>
+        <span aria-hidden className="text-ink-20">·</span>
         <span className="font-medium" style={{ color: hue }}>{TRAJ_GLYPH[trajectory]} {TRAJ_LABEL[trajectory]}</span>
       </div>
       <SplitReveal as="h1" className="mt-3 text-[clamp(2.4rem,5.5vw,4rem)] font-light leading-[1.02] tracking-tight">{name}</SplitReveal>
@@ -178,7 +178,7 @@ function RelatedList({ names }: { names: string[] }) {
       ) : (
         <div key={it.name} className="flex items-center justify-between gap-3 border-t border-line py-3.5">
           <span className="text-[14px] text-ink-60">{it.name}</span>
-          <span className="mono text-[9px] uppercase tracking-[0.1em] text-ink-20">Off-board</span>
+          <span className="mono text-[9px] uppercase tracking-[0.1em] text-ink-40">Off-board</span>
         </div>
       ))}
     </div>

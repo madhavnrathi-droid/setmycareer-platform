@@ -296,7 +296,7 @@ export function CriFlow() {
               <button key={v} onClick={() => pick(v)}
                 className={`group flex items-center justify-between border px-5 py-3.5 text-left text-[14.5px] transition-colors ${current === v ? "border-ink bg-ink text-paper" : "border-line hover:border-ink"}`}>
                 <span>{label}</span>
-                <span className={`mono text-[11px] ${current === v ? "text-paper/60" : "text-ink-20 group-hover:text-ink-40"}`}>{v}</span>
+                <span className={`mono text-[11px] ${current === v ? "text-paper/60" : "text-ink-40 group-hover:text-ink-60"}`}>{v}</span>
               </button>
             )
           })}

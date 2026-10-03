@@ -103,7 +103,10 @@ function SignalCard({ it, day }: { it: NewsItem; day: string }) {
 
 export function NewsFeed() {
   const [news, setNews] = useState<NewsItem[]>([])
-  const [day, setDay] = useState(() => new Date().toISOString().slice(0, 10))
+  // starts empty (identical on server and client) and is filled by the feed's own day,
+  // or by today's date if the feed is unreachable
+  const [day, setDay] = useState("")
+  useEffect(() => { setDay((d) => d || new Date().toISOString().slice(0, 10)) }, [])
   const [live, setLive] = useState(false)
   // WCAG 2.2.2 — the marquee needs a pointer-independent pause; hover-pause
   // alone leaves keyboard/touch users with permanently moving content
@@ -159,7 +162,7 @@ export function NewsFeed() {
         <>
           <div className="mt-6 flex items-baseline justify-between gap-3">
             <h3 className="mono text-[10.5px] uppercase tracking-[0.14em] text-ink-60">Today's signal — jobs, skills &amp; education</h3>
-            <p className="mono text-[9.5px] uppercase tracking-[0.1em] text-ink-60 tabular-nums">Updated {day}</p>
+            <p className="mono text-[9.5px] uppercase tracking-[0.1em] text-ink-60 tabular-nums">{day ? `Updated ${day}` : "Updated daily"}</p>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
             {signal.map((it) => <SignalCard key={it.link || it.title} it={it} day={day} />)}

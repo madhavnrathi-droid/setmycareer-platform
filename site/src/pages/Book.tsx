@@ -34,7 +34,7 @@ export function Book() {
         <div className="wrap grid gap-px py-16 md:grid-cols-3 md:py-24">
           {B.steps.map((s, i) => (
             <div data-reveal key={s.title} className="border-t border-line py-8 md:pr-10">
-              <span className="display !text-[clamp(2.4rem,5vw,4rem)] font-extralight text-ink-20">{String(i + 1).padStart(2, "0")}</span>
+              <span className="display !text-[clamp(2.4rem,5vw,4rem)] font-extralight text-ink-40">{String(i + 1).padStart(2, "0")}</span>
               <h2 className="mt-4 text-[20px] font-medium tracking-tight">{s.title}</h2>
               <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-ink-60">{s.body}</p>
             </div>

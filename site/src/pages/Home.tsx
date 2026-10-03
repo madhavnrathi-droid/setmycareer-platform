@@ -466,7 +466,7 @@ function Start() {
         <div className="md:col-span-6 md:col-start-7">
           {STARTERS.map((s, i) => (
             <StarterRow key={s.name} href={"href" in s ? (s as { href: string }).href : PORTAL_URL} data-reveal className="unlock group grid grid-cols-[auto_1fr_auto] items-baseline gap-5 border-t border-line py-6 transition-colors last:border-b hover:bg-paper-pure">
-              <span className="mono pt-1 text-[11px] tabular-nums text-ink-20 transition-colors group-hover:text-ink-40">{String(i + 1).padStart(2, "0")}</span>
+              <span className="mono pt-1 text-[11px] tabular-nums text-ink-40 transition-colors group-hover:text-ink-60">{String(i + 1).padStart(2, "0")}</span>
               <div>
                 <h3 className="text-[19px] font-medium tracking-tight">{s.name}</h3>
                 <p className="mt-1 text-[13.5px] text-ink-60">{s.note}</p>

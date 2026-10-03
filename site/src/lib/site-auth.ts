@@ -86,7 +86,9 @@ export function useSiteSession(): SiteSession | null {
   return useSyncExternalStore(
     (l) => { listeners.add(l); return () => listeners.delete(l) },
     () => session,
-    () => session,
+    // the prerender never has a session, so hydration must start from none too; the
+    // real session arrives on the very next render
+    () => null,
   )
 }
 

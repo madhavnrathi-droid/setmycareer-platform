@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { LogoMark } from "@/components/Brand"
 
@@ -17,38 +17,37 @@ const APHORISMS = [
   "Aim is the better half of effort.",
 ]
 
-// The overture is a browser-only flourish. Rendering it into the prerendered HTML
-// would put a full-screen overlay and a meaningless "000 100" counter at the top of
-// every document — the first thing a crawler reads. Gate it on the browser so the
-// build-time markup opens on the actual page. Constant per environment, so the
-// hooks below always run in the browser: no conditional-hook hazard.
-const IS_BROWSER = typeof window !== "undefined"
-
-// When the overture plays. It used to run on EVERY full page load — so a visitor
-// arriving from search on /career-counselling/after-12th got the prerendered answer
-// painted, then hidden behind a ~2.2s full-screen overture, then revealed again. On a
-// phone that sat on top of an already-slow first load. It now plays only on the
-// homepage, once per browser session: the people who come to meet the brand still
-// meet it; the people who came for an answer get the answer. (To retire it entirely,
-// return null from Splash.)
+// When the overture plays. Three rules:
+//  • homepage only — a visitor arriving from search on an inner page came for the answer;
+//  • once per browser session;
+//  • only if it would come BEFORE reading. The page is prerendered, so its content paints
+//    as soon as the HTML lands; React may not start for several more seconds on a slow
+//    phone. An overture that wipes in at that point covers text the visitor is already
+//    reading. If startup is later than READ_START_MS the overture is skipped.
 //
-// Decided once per page load at module level rather than in a state initialiser, so
-// StrictMode's double-invoke in dev cannot consume the session flag before render.
-let decided: boolean | null = null
-function shouldPlay(): boolean {
-  if (decided !== null) return decided
-  decided = false
-  if (!IS_BROWSER || window.location.pathname !== "/") return decided
+// Decided in a layout effect, after hydration: the prerender never contains the
+// overture, so the first client render must not either, or React discards the page.
+const READ_START_MS = 1200
+
+function claimSplash(): boolean {
+  if (window.location.pathname !== "/") return false
+  if (performance.now() > READ_START_MS) return false
   try {
-    if (sessionStorage.getItem("smc.splash.v1")) return decided
+    if (sessionStorage.getItem("smc.splash.v1")) return false
     sessionStorage.setItem("smc.splash.v1", "1")
   } catch { /* storage blocked: play once rather than every time */ }
-  decided = true
-  return decided
+  return true
 }
 
+let claimed: boolean | null = null // StrictMode runs effects twice in dev; decide once
+
 export function Splash() {
-  return shouldPlay() ? <SplashOverture /> : null
+  const [play, setPlay] = useState(false)
+  useLayoutEffect(() => {
+    if (claimed === null) claimed = claimSplash()
+    if (claimed) setPlay(true)
+  }, [])
+  return play ? <SplashOverture /> : null
 }
 
 function SplashOverture() {

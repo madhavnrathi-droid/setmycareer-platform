@@ -107,7 +107,7 @@ function StageRow({ s }: { s: Stage }) {
           <span aria-hidden className="shrink-0 font-extralight leading-[0.72] tracking-tight text-ink/25 tabular-nums" style={{ fontSize: "clamp(2.6rem,6vw,5.2rem)" }}>{s.no}</span>
           <div className="min-w-0">
             <div className="mono flex flex-wrap items-center gap-x-2 text-[10px] uppercase tracking-[0.16em] text-ink-40">
-              <span>{s.phase}</span>{s.tag && <span className="text-ink-20">· {s.tag}</span>}
+              <span>{s.phase}</span>{s.tag && <span className="text-ink-40">· {s.tag}</span>}
             </div>
             <h3 className="mt-3 font-light leading-[0.98] tracking-tight" style={{ fontSize: "clamp(1.65rem,4.6vw,3.4rem)" }}>{l1}<br />{l2}</h3>
             <p className="serif mt-5 max-w-[34ch] leading-snug text-ink-80" style={{ fontSize: "clamp(1.02rem,1.5vw,1.28rem)" }}>{s.decision}</p>

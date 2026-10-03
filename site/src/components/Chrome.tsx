@@ -445,7 +445,7 @@ export function Footer() {
 
         <div className="mt-7 flex flex-col justify-between gap-3 text-[11.5px] text-paper/50 md:flex-row md:items-center">
           <span className="kicker">Loratis SetMyCareer.Net India Pvt Ltd · {COPY.footerLine}</span>
-          <span className="kicker">© {new Date().getFullYear()} · BENGALURU</span>
+          <span className="kicker" suppressHydrationWarning>© {new Date().getFullYear()} · BENGALURU</span>
         </div>
       </div>
     </footer>

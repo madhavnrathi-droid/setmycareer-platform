@@ -95,9 +95,9 @@ export function CareerTerminal() {
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 uppercase tracking-[0.1em] text-ink-40">
           <span>
-            <span style={{ color: "var(--color-growth)" }}>▲ {stats.adv}</span> <span className="text-ink-20">grow</span> ·
-            <span style={{ color: "var(--color-decline)" }}> ▼ {stats.dec}</span> <span className="text-ink-20">fall</span> ·
-            <span style={{ color: "var(--color-flat)" }}> ▬ {stats.fla}</span> <span className="text-ink-20">flat</span>
+            <span style={{ color: "var(--color-growth)" }}>▲ {stats.adv}</span> <span className="text-ink-40">grow</span> ·
+            <span style={{ color: "var(--color-decline)" }}> ▼ {stats.dec}</span> <span className="text-ink-40">fall</span> ·
+            <span style={{ color: "var(--color-flat)" }}> ▬ {stats.fla}</span> <span className="text-ink-40">flat</span>
           </span>
           <span className="hidden sm:inline">O*NET · BLS 2024–34</span>
         </div>
@@ -154,7 +154,7 @@ export function CareerTerminal() {
                 <span><Spark data={r.demandTrend} hue={hue} w={108} h={26} area baseline /></span>
                 <span className="mono text-right text-[12px] tabular-nums text-ink-60">{last(r.demandTrend)}</span>
                 <Delta pct={pct} hue={hue} className="text-right text-[11.5px]" />
-                <span className="mono text-right text-[11px] tabular-nums text-ink-60">{r.payLo}<span className="text-ink-20">→</span>{r.payHi}</span>
+                <span className="mono text-right text-[11px] tabular-nums text-ink-60">{r.payLo}<span className="text-ink-40">→</span>{r.payHi}</span>
                 <span className="text-center text-[11px] leading-none" style={{ color: hue }} title={TRAJ_LABEL[r.trajectory]}>{TRAJ_GLYPH[r.trajectory]}</span>
                 <span className="flex justify-end">{r.aiLevel != null ? <ExposureDots level={r.aiLevel} /> : <span className="text-[10px] text-ink-20">·</span>}</span>
                 <ArrowRight size={13} className="justify-self-end text-ink-20 transition-all group-hover:translate-x-0.5 group-hover:text-ink-60" />
@@ -173,7 +173,7 @@ export function CareerTerminal() {
         <span style={{ color: "var(--color-growth)" }}>▲ growth</span>
         <span style={{ color: "var(--color-decline)" }}>▼ decline</span>
         <span style={{ color: "var(--color-flat)" }}>▬ flat</span>
-        <span className="text-ink-20">·</span>
+        <span aria-hidden className="text-ink-20">·</span>
         <span><span className="text-ink">Last</span> demand index</span>
         <span><span className="text-ink">Δ 10Y</span> 2015→2025</span>
         <span><span className="text-ink">AI</span> automation exposure (curated)</span>

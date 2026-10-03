@@ -74,7 +74,10 @@ export function CareerBar() {
   const [q, setQ] = useState("")
   const [results, setResults] = useState<KbEntry[]>([])
   const [asked, setAsked] = useState(false)
-  const [pos, setPos] = useState<Pos | null>(loadPos)
+  // A saved position is restored after mount, not in the initialiser: the prerendered
+  // HTML has no storage, and a different first render breaks hydration.
+  const [pos, setPos] = useState<Pos | null>(null)
+  useEffect(() => { const p = loadPos(); if (p) setPos(p) }, [])
   const [dropUp, setDropUp] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
