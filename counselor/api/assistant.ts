@@ -11,7 +11,7 @@ export const config = { runtime: "edge" }
 // guide — JSON POSTs trigger a preflight, so OPTIONS must answer too.
 const CORS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "content-type",
 }
 const withCors = (res: Response) => {
@@ -22,6 +22,11 @@ const withCors = (res: Response) => {
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS })
+  // The marketing site's Compass bar sends a GET the moment its panel opens, so the
+  // isolate is initialised before the visitor finishes typing. That ping used to get
+  // 405 — it still woke the function, but every warm-up logged as a client error and
+  // read as a failure in monitoring. It is a health check; answer it as one.
+  if (req.method === "GET") return new Response(null, { status: 204, headers: { ...CORS, "cache-control": "no-store" } })
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405, headers: CORS })
   }

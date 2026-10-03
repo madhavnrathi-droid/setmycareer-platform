@@ -207,7 +207,7 @@ export function Product() {
                 <div key={it.label} className="flex items-start gap-3.5 border-t border-line py-3.5">
                   <span className="mono pt-0.5 text-[10px] tabular-nums text-ink-30">{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <h4 className="text-[14px] font-medium tracking-tight">{it.label}</h4>
+                    <h3 className="text-[14px] font-medium tracking-tight">{it.label}</h3>
                     <p className="mt-1 text-[12.5px] leading-relaxed text-ink-55">{it.body}</p>
                   </div>
                 </div>
@@ -224,7 +224,7 @@ export function Product() {
             <div data-reveal>
               <div className="rounded-[14px] border border-line bg-ink p-6 text-paper">
                 <p className="kicker !text-paper/60">Into the living record</p>
-                <h4 className="h-lg mt-3 text-paper">Not a file. A screen you come back to.</h4>
+                <h3 className="h-lg mt-3 text-paper">Not a file. A screen you come back to.</h3>
                 <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-paper/65">The snapshot lands in the dashboard and stays. Read it now, and re-read the sharper version a year from now.</p>
               </div>
               <a href="/product/sample-career-report.pdf" target="_blank" rel="noopener noreferrer" className="ul mt-4 inline-block text-[13px] font-medium text-ink-70">

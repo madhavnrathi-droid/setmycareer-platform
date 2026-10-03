@@ -1,14 +1,13 @@
 import { useMemo } from "react"
 import { Link, useParams } from "react-router-dom"
 import { ArrowLeft, ArrowUpRight, ArrowRight } from "@carbon/icons-react"
-import { Kicker, SplitReveal } from "@/components/bits"
+import { Kicker, SplitReveal, NaviPortrait } from "@/components/bits"
 import { useReveals } from "@/lib/motion"
 import { useSeo, SITE_URL } from "@/lib/seo"
 import {
   useNavigator, naviImage, naviExpertise, naviYears, naviTags, naviServices,
   naviLanguages, naviMode, cleanField as clean, type Navigator,
 } from "@/lib/api"
-import { avatar } from "@/lib/images"
 import { IA_CONTENT } from "@/content/ia"
 import { COPY } from "@/content/site"
 
@@ -49,14 +48,15 @@ function Field({ label, value }: { label: string; value: string }) {
   )
 }
 
+// A counsellor with no photo used to be shown with a random stock portrait from a
+// placeholder-image service — on the profile of a real, named person. NaviPortrait
+// renders their initials instead: honest, and still a clear visual anchor.
 function MiniCard({ n }: { n: Navigator }) {
-  const img = naviImage(n) ?? avatar(String(n.id))
   return (
     <Link to={`/experts/${n.id}`} className="group block">
       <div className="aspect-[3/4] overflow-hidden bg-ink-20">
-        <img src={img} alt={clean(n.name) ?? "Counsellor"} loading="lazy"
-          onError={(e) => { const t = e.currentTarget as HTMLImageElement; if (t.dataset.fb) return; t.dataset.fb = "1"; t.src = avatar(String(n.id)) }}
-          className="size-full object-cover bw transition-transform duration-700 group-hover:scale-[1.04]" />
+        <NaviPortrait src={naviImage(n)} name={clean(n.name) ?? "Counsellor"}
+          className="transition-transform duration-700 group-hover:scale-[1.04]" />
       </div>
       <p className="mt-2.5 text-[13px] font-medium tracking-tight">{clean(n.name)}</p>
       <p className="mono mt-0.5 text-[9.5px] uppercase tracking-[0.1em] text-ink-40">{naviExpertise(n) ?? "Career Counsellor"}</p>
@@ -75,7 +75,7 @@ export function ExpertDetail() {
   // derived, all guarded for missing data
   const name = clean(n?.name) ?? "Counsellor"
   const first = firstNameOf(name)
-  const img = n ? (naviImage(n) ?? avatar(String(n.id))) : ""
+  const img = n ? naviImage(n) : undefined
   const expertise = n ? (naviExpertise(n) ?? "Career Counsellor") : "Career Counsellor"
   const yrs = n ? naviYears(n) : undefined
   const loc = clean(n?.location)
@@ -188,7 +188,7 @@ export function ExpertDetail() {
         <Link to="/experts" className="inline-flex items-center gap-1.5 text-[12px] text-ink-40 transition-colors hover:text-ink"><ArrowLeft size={14} /> The network</Link>
         <div className="mt-6 grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-14">
           <div className="aspect-[4/5] overflow-hidden bg-ink-20">
-            <img src={img} alt={name} onError={(e) => { const t = e.currentTarget as HTMLImageElement; if (t.dataset.fb) return; t.dataset.fb = "1"; t.src = avatar(String(n.id)) }} className="size-full object-cover bw" />
+            <NaviPortrait src={img} name={name} />
           </div>
           <div className="flex flex-col justify-center">
             <Kicker>Career counsellor{loc ? ` · ${loc}` : ""}</Kicker>

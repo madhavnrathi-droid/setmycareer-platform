@@ -104,7 +104,7 @@ export function TalkToExpert({
             <a href="tel:+919108510058" className={`group inline-flex items-center gap-3 ${dark ? "text-paper/85" : "text-ink"}`}>
               <Phone size={16} className={dark ? "text-paper/50" : "text-ink-40"} />
               <span className="ul font-medium">+91 91085 10058</span>
-              <span className={`text-[12px] ${dark ? "text-paper/40" : "text-ink-40"}`}>— call to ask anything</span>
+              <span className={`text-[12px] ${dark ? "text-paper/55" : "text-ink-40"}`}>— call to ask anything</span>
             </a>
             <p className={`inline-flex items-center gap-3 ${dark ? "text-paper/70" : "text-ink-60"}`}>
               <Time size={16} className={dark ? "text-paper/50" : "text-ink-40"} />

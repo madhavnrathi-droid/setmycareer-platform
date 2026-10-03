@@ -21,7 +21,7 @@ function DimProfile({ r }: { r: FitComputed }) {
       {r.dims.map((d, i) => (
         <div key={d.key} className="grid items-center gap-x-6 gap-y-1.5 border-t border-paper/15 py-4 md:grid-cols-[150px_1fr_auto]">
           <div className="flex items-baseline gap-2.5">
-            <span className="mono w-6 text-[10px] uppercase text-paper/40">{d.short}</span>
+            <span className="mono w-6 text-[10px] uppercase text-paper/55">{d.short}</span>
             <span className="text-[14px] font-medium tracking-tight text-paper">{d.label}</span>
           </div>
           <div>
@@ -71,7 +71,7 @@ export function FitResult({ name, stageLabel, r, report, enriching, onRetake }: 
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-paper/70" /> Personalising your report
             </span>
           ) : report.ai ? (
-            <span className="mono text-[10.5px] uppercase tracking-[0.16em] text-paper/45">Personalised for you</span>
+            <span className="mono text-[10.5px] uppercase tracking-[0.16em] text-paper/55">Personalised for you</span>
           ) : null}
           <span className="mono text-[10.5px] uppercase tracking-[0.16em] text-paper/50">{name} · {stageLabel} · {date}</span>
         </div>
@@ -105,7 +105,7 @@ export function FitResult({ name, stageLabel, r, report, enriching, onRetake }: 
           <ul className="mt-8 max-w-2xl">
             {r.primary.why.map((w) => (
               <li key={w} className="flex items-baseline gap-2.5 border-t border-paper/15 py-3 text-[13.5px] leading-relaxed text-paper/85 first:border-t-0">
-                <span className="mono text-[10px] text-paper/40">—</span>
+                <span className="mono text-[10px] text-paper/55">—</span>
                 {w}
               </li>
             ))}
@@ -135,7 +135,7 @@ export function FitResult({ name, stageLabel, r, report, enriching, onRetake }: 
         <ol className="mt-8">
           {report.journey.map((s, i) => (
             <li key={`${s.name}-${i}`} className="grid gap-x-6 gap-y-2 border-t border-paper/15 py-6 md:grid-cols-[auto_1fr_auto] md:items-start">
-              <span className="mono text-[12px] tabular-nums text-paper/40">{String(i + 1).padStart(2, "0")}</span>
+              <span className="mono text-[12px] tabular-nums text-paper/55">{String(i + 1).padStart(2, "0")}</span>
               <div className="max-w-xl">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="text-[16px] font-semibold tracking-tight text-paper">{s.name}</span>
@@ -173,7 +173,7 @@ export function FitResult({ name, stageLabel, r, report, enriching, onRetake }: 
               <li key={`${b.item}-${i}`} className="border-t border-paper/15 py-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <span className="flex items-baseline gap-2.5">
-                    <span className="mono text-[10px] uppercase tracking-[0.1em] text-paper/45">{b.when}</span>
+                    <span className="mono text-[10px] uppercase tracking-[0.1em] text-paper/55">{b.when}</span>
                     <span className="text-[14.5px] font-medium tracking-tight text-paper">{b.item}</span>
                   </span>
                   {b.meta && <span className="mono text-[11px] tabular-nums text-paper/60">{b.meta}</span>}
@@ -233,7 +233,7 @@ export function FitResult({ name, stageLabel, r, report, enriching, onRetake }: 
           <span>Retake the test</span>
         </button>
       </div>
-      <p className="mt-8 max-w-2xl border-t border-paper/15 pt-5 text-[11.5px] leading-relaxed text-paper/45">
+      <p className="mt-8 max-w-2xl border-t border-paper/15 pt-5 text-[11.5px] leading-relaxed text-paper/55">
         Your best-fit percentage is deterministic — the weighted distance between your six dimension scores and each
         programme's design profile, capped at 96% because no short instrument should pretend to certainty. The journey and
         plan are a starting recommendation, not a psychometric verdict; a counsellor can refine it in one conversation.

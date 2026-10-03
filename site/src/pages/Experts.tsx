@@ -218,7 +218,7 @@ export function Experts() {
               <p className="mt-3 max-w-md text-[14.5px] leading-relaxed text-paper/60">Counsellors earn certification through our training program — the method the founder taught a hundred counsellors before you. Once certified, you're onboarded and auto-assigned to students from their results.</p>
               <ul className="mt-5 space-y-1.5">
                 {["A fifteen-year methodology, taught properly", "Students matched to you — no marketing of your own", "Scheduling, video and reports run on the platform"].map((t) => (
-                  <li key={t} className="flex items-baseline gap-2.5 text-[13px] leading-relaxed text-paper/70"><span className="mono text-[10px] text-paper/40">—</span>{t}</li>
+                  <li key={t} className="flex items-baseline gap-2.5 text-[13px] leading-relaxed text-paper/70"><span className="mono text-[10px] text-paper/55">—</span>{t}</li>
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-5">
@@ -233,12 +233,12 @@ export function Experts() {
               <p className="mt-3 max-w-md text-[14.5px] leading-relaxed text-paper/60">A senior practitioner in your field? Apply to offer 45-minute expert sessions. Students and professionals are matched to you by expertise; scheduling, video and payment run on the platform. You bring the experience.</p>
               <ul className="mt-5 space-y-1.5">
                 {["Set your functional expertise and industries", "Booked by clients who need your exact field", "Paid per session — standalone or as an add-on"].map((t) => (
-                  <li key={t} className="flex items-baseline gap-2.5 text-[13px] leading-relaxed text-paper/70"><span className="mono text-[10px] text-paper/40">—</span>{t}</li>
+                  <li key={t} className="flex items-baseline gap-2.5 text-[13px] leading-relaxed text-paper/70"><span className="mono text-[10px] text-paper/55">—</span>{t}</li>
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-5">
                 <Link to="/experts/apply" className="btn btn--dark"><span>Apply as an expert</span> <ArrowUpRight size={15} className="btn-arrow" /></Link>
-                <span className="mono text-[10px] uppercase tracking-[0.12em] text-paper/40">Reviewed by our team · no fee to apply</span>
+                <span className="mono text-[10px] uppercase tracking-[0.12em] text-paper/55">Reviewed by our team · no fee to apply</span>
               </div>
             </div>
           </div>

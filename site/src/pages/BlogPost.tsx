@@ -5,7 +5,6 @@ import { articleBySlug, ARTICLES } from "@/content/site"
 import { artFor, type Art } from "@/lib/art"
 import { editorialTitle } from "@/lib/title"
 import { MarkdownLite, Magnetic } from "@/components/bits"
-import { PORTAL_URL } from "@/lib/api"
 import { useReveals } from "@/lib/motion"
 import { useSeo, SITE_URL } from "@/lib/seo"
 import { useLivePosts, buildFeed, catLabel, type FeedItem } from "@/lib/feed"
@@ -150,7 +149,7 @@ function OriginalPost({ slug }: { slug: string }) {
           <CareersInField category={a.category} seed={slug} />
           <div className="mt-14 flex flex-col items-start gap-5 border-t border-line pt-10">
             <p className="h-lg max-w-[18ch]">Ready to decide with <span className="b">evidence</span>?</p>
-            <Magnetic href={PORTAL_URL}>Begin now</Magnetic>
+            <Magnetic href="/cri">Take the free readiness check</Magnetic>
           </div>
         </div>
       </article>
@@ -291,7 +290,7 @@ function LivePost({ slug }: { slug: string }) {
               <CareersInField category={category} seed={slug} />
               <div className="mt-14 flex flex-col items-start gap-5 border-t border-line pt-10">
                 <p className="h-lg max-w-[18ch]">Ready to decide with <span className="b">evidence</span>?</p>
-                <Magnetic href={PORTAL_URL}>Begin now</Magnetic>
+                <Magnetic href="/cri">Take the free readiness check</Magnetic>
               </div>
             </div>
           </>

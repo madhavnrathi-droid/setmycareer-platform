@@ -71,17 +71,17 @@ export function Contact() {
         <div className="wrap grid gap-8 py-14 md:grid-cols-3 md:py-16">
           <Link data-reveal to="/cri" className="group border-t border-line py-6">
             <p className="kicker text-ink-40">Rather start alone?</p>
-            <h3 className="ul mt-3 inline-block text-[17px] font-medium tracking-tight">The free clarity index</h3>
+            <h2 className="ul mt-3 inline-block text-[17px] font-medium tracking-tight">The free clarity index</h2>
             <p className="mt-2 text-[13.5px] text-ink-60">Ten minutes, no sign-up. A read on where you stand.</p>
           </Link>
           <Link data-reveal to="/book" className="group border-t border-line py-6">
             <p className="kicker text-ink-40">Ready to sit down?</p>
-            <h3 className="ul mt-3 inline-block text-[17px] font-medium tracking-tight">Book a session</h3>
+            <h2 className="ul mt-3 inline-block text-[17px] font-medium tracking-tight">Book a session</h2>
             <p className="mt-2 text-[13.5px] text-ink-60">Straight to a video session with a counsellor.</p>
           </Link>
           <Link data-reveal to="/experts" className="group border-t border-line py-6">
             <p className="kicker text-ink-40">Who you'll meet</p>
-            <h3 className="ul mt-3 inline-flex items-center gap-1 text-[17px] font-medium tracking-tight">The counsellors <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" /></h3>
+            <h2 className="ul mt-3 inline-flex items-center gap-1 text-[17px] font-medium tracking-tight">The counsellors <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" /></h2>
             <p className="mt-2 text-[13.5px] text-ink-60">The live roster — certified, named, real.</p>
           </Link>
         </div>

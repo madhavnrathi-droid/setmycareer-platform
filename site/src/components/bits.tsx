@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom"
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
-import { ArrowUpRight } from "@carbon/icons-react"
+import { ArrowUpRight, ArrowRight } from "@carbon/icons-react"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -62,7 +63,9 @@ export function SplitReveal({ children, as = "h2", className = "" }: { children:
 
 /* mono kicker label */
 export function Kicker({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <span className={`kicker text-ink-40 ${className}`}>{children}</span>
+  // .kicker supplies the ink-40 default; a hardcoded text-ink-40 here raced the
+  // caller's own text-* utility in the same layer and won unpredictably.
+  return <span className={`kicker ${className}`}>{children}</span>
 }
 
 /* magnetic CTA — the .btn system (outline; ink fill sweeps up on hover; solid =
@@ -75,10 +78,17 @@ export function Magnetic({ href, children, dark, solid, onClick }: { href?: stri
   }
   const reset = () => gsap.to(ref.current, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1,0.4)" })
   const cls = `btn ${dark ? "btn--dark" : ""} ${solid ? "btn--solid" : ""}`
-  return (
-    <a ref={ref} href={href} onClick={onClick} onPointerMove={onMove} onPointerLeave={reset} className={cls}>
-      <span>{children}</span> <ArrowUpRight size={16} className="btn-arrow" />
-    </a>
+  // An on-site destination navigates in-app. This used to be a bare <a href> for
+  // everything, so every internal CTA did a full document reload — re-fetching and
+  // re-parsing the whole JS bundle, which costs several seconds on a phone. The arrow
+  // also always pointed up-and-out (the "leaves this site" glyph) even when it didn't.
+  const internal = !!href && href.startsWith("/") && !href.startsWith("//")
+  const Arrow = internal ? ArrowRight : ArrowUpRight
+  const body = <><span>{children}</span> <Arrow size={16} className="btn-arrow" /></>
+  return internal ? (
+    <Link ref={ref} to={href} onClick={onClick} onPointerMove={onMove} onPointerLeave={reset} className={cls}>{body}</Link>
+  ) : (
+    <a ref={ref} href={href} onClick={onClick} onPointerMove={onMove} onPointerLeave={reset} className={cls}>{body}</a>
   )
 }
 

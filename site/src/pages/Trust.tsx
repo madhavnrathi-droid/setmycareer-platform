@@ -5,7 +5,6 @@ import { Faq } from "@/components/Faq"
 import { useReveals, useCounter } from "@/lib/motion"
 import { useSeo } from "@/lib/seo"
 import { IA_CONTENT } from "@/content/ia"
-import { PORTAL_URL } from "@/lib/api"
 
 const T = IA_CONTENT.trust
 
@@ -111,7 +110,7 @@ export function Trust() {
           <ul className="max-w-2xl">
             {T.privacy.map((p, i) => (
               <li data-reveal key={i} className="flex items-baseline gap-5 border-t border-paper/15 py-4.5 py-5">
-                <span className="mono text-[11px] tabular-nums text-paper/35">{String(i + 1).padStart(2, "0")}</span>
+                <span className="mono text-[11px] tabular-nums text-paper/55">{String(i + 1).padStart(2, "0")}</span>
                 <p className="text-[14.5px] leading-relaxed text-paper/75">{p}</p>
               </li>
             ))}
@@ -156,7 +155,7 @@ export function Trust() {
             <Num value={1000} label="Placed yearly into top firms" />
           </div>
           <div data-reveal className="mt-12 flex flex-wrap items-center gap-6 border-t border-paper/15 pt-8">
-            <Magnetic href={PORTAL_URL} dark>Add your line to it</Magnetic>
+            <Magnetic href="/cri" dark>Start with the free index</Magnetic>
             <a href="https://setmycareer.com" className="ul text-[13.5px] text-paper/75">Client stories on setmycareer.com →</a>
           </div>
         </div>

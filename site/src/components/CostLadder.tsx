@@ -37,7 +37,7 @@ export function CostLadder({ standalone = false }: { standalone?: boolean }) {
           </li>
         ))}
       </ul>
-      <p data-reveal className="mono mt-6 max-w-[40ch] text-[11px] uppercase leading-relaxed tracking-[0.13em] text-paper/45">
+      <p data-reveal className="mono mt-6 max-w-[40ch] text-[11px] uppercase leading-relaxed tracking-[0.13em] text-paper/55">
         One of these decides whether the other three were worth it.
       </p>
     </>

@@ -47,7 +47,7 @@ export function AiChat() {
           <div key={i} className={t.role === "user" ? "flex justify-end" : "flex gap-3"}>
             {t.role === "ai" && <LogoMark size={18} className="mt-0.5 shrink-0 text-paper/70" />}
             <div className={t.role === "user" ? "max-w-[80%] text-right" : "max-w-[82%]"}>
-              <span className="mono mb-1 block text-[9.5px] uppercase tracking-[0.16em] text-paper/35">{t.role === "user" ? "Student" : "Counsellor"}</span>
+              <span className="mono mb-1 block text-[9.5px] uppercase tracking-[0.16em] text-paper/55">{t.role === "user" ? "Student" : "Counsellor"}</span>
               <p className={`text-[14px] leading-relaxed ${t.role === "user" ? "text-paper/95" : "text-paper/70"}`}>{t.text}</p>
             </div>
           </div>

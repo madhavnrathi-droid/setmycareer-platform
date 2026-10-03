@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { ArrowRight, Close, Search, Chat, Calendar, ChevronUp } from "@carbon/icons-react"
+import { ArrowRight, Close, Search, Calendar, ChevronUp } from "@carbon/icons-react"
 import { LogoMark } from "@/components/Brand"
 import { rolodexFor } from "@/content/rolodex"
 import { searchKb, type KbEntry } from "@/content/kb"
@@ -30,13 +30,14 @@ function suggestFaq(query: string): Qa[] {
   return (scored.length ? scored.map((s) => s.f) : FAQ).slice(0, 4)
 }
 
-// placeholder quick actions — mirrors the client-dashboard bar's icon row.
-// Trimmed to three so the rotating question has room to breathe; the chevron
-// is the fourth control. Wiring comes later, so for now each opens the panel.
-const QUICK_ICONS = [
-  { Icon: Search, label: "Search careers (coming soon)" },
-  { Icon: Chat, label: "Ask the compass (coming soon)" },
-  { Icon: Calendar, label: "Book a session (coming soon)" },
+// Quick actions. These were three placeholders labelled "(coming soon)" that all
+// silently opened the chat panel — so the calendar icon promised a booking and
+// delivered a text box. Both destinations exist, so the two that name a real job now
+// go there. The third ("Ask the compass") is gone: the prompt and the chevron already
+// open the same panel, and a third door to one room is just one more decision.
+const QUICK_LINKS = [
+  { Icon: Search, label: "Search careers", to: "/library" },
+  { Icon: Calendar, label: "Book a session", to: "/book" },
 ]
 
 // The floating Compass bar — the marketing site's sibling of the portal's
@@ -177,6 +178,15 @@ export function CareerBar() {
 
   // cycle the status word while an answer is in flight (reduced-motion holds it)
   const [loadI, setLoadI] = useState(0)
+  // The first answer after a quiet period was measured at ~16s; warm answers take
+  // 2–7s. A rotating verb for sixteen seconds reads as "stuck", so past 8s the bar
+  // says plainly that this one is slow, rather than leaving the visitor to guess.
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    if (ai.status !== "thinking") { setSlow(false); return }
+    const t = window.setTimeout(() => setSlow(true), 8000)
+    return () => window.clearTimeout(t)
+  }, [ai.status])
   useEffect(() => {
     if (ai.status !== "thinking") return
     setLoadI(0)
@@ -211,6 +221,11 @@ export function CareerBar() {
     const ac = new AbortController()
     askAbort.current = ac
     setAi({ status: "thinking", text: "" })
+    // Hard ceiling. There was no limit, so a stalled model meant "thinking" forever.
+    // A superseding question also aborts, and that case must stay silent — so the
+    // timeout carries its own flag instead of relying on signal.aborted.
+    let timedOut = false
+    const ceiling = window.setTimeout(() => { timedOut = true; ac.abort() }, 30000)
     fetch(ASSISTANT_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -227,7 +242,8 @@ export function CareerBar() {
         const hasContent = !!(d?.text?.trim() || d?.cards?.length)
         setAi(hasContent ? { status: "done", text: d.text ?? "", cards: d.cards } : { status: "error", text: "" })
       })
-      .catch(() => { if (!ac.signal.aborted) setAi({ status: "error", text: "" }) })
+      .catch(() => { if (timedOut || !ac.signal.aborted) setAi({ status: "error", text: "" }) })
+      .finally(() => window.clearTimeout(ceiling))
   }
   const expand = () => {
     if (justDragged.current) { justDragged.current = false; return } // a drag-release isn't a click
@@ -296,7 +312,9 @@ export function CareerBar() {
           }
           return pos
             ? { left: pos.x, top: pos.y, transform: `translateY(${down}vh) scale(${sc})`, ...reveal }
-            : { left: "50%", bottom: "5vh", transform: `translateX(-50%) translateY(${down}vh) scale(${sc})`, ...reveal }
+            // home position sits above the consent bar while it is open, so the two
+            // never stack on top of each other (--consent-h is 0 once a choice is made)
+            : { left: "50%", bottom: "calc(5vh + var(--consent-h, 0px))", transform: `translateX(-50%) translateY(${down}vh) scale(${sc})`, ...reveal }
         })()}
       >
         <div className="relative">
@@ -338,6 +356,7 @@ export function CareerBar() {
                         region announces one stable status, not a word every second */}
                     <span aria-hidden className="tabular-nums">{LOADING_WORDS[loadI]}…</span>
                     <span className="sr-only">Working on your answer…</span>
+                    {slow && <span className="text-ink-60">· The first answer after a quiet spell takes longer.{results.length > 0 ? " Related answers are below while you wait." : ""}</span>}
                   </div>
                 )}
                 {asked && ai.status === "done" && (
@@ -434,21 +453,22 @@ export function CareerBar() {
                   >
                     <span key={roloI} className="rolo-in block truncate text-[14px] tracking-tight text-ink-60 transition-colors group-hover/bar:text-ink">{rolo}</span>
                   </button>
-                  {/* quick-action row — placeholder icons; collapses on phones to
-                      keep the pill compact (just logomark · question · chevron) */}
-                  <span aria-hidden className="hidden items-center gap-1.5 sm:flex">
+                  {/* quick actions — collapse on phones to keep the pill compact.
+                      The container was aria-hidden while holding focusable buttons, so
+                      keyboard focus landed on controls screen readers could not see
+                      (WCAG 4.1.2). Only the divider is decorative now. */}
+                  <span className="hidden items-center gap-1.5 sm:flex">
                     <span aria-hidden className="mx-0.5 h-5 w-px shrink-0 bg-line" />
-                    {QUICK_ICONS.map(({ Icon, label }) => (
-                      <button
+                    {QUICK_LINKS.map(({ Icon, label, to }) => (
+                      <Link
                         key={label}
-                        type="button"
-                        onClick={expand}
+                        to={to}
                         aria-label={label}
                         title={label}
                         className="grid size-8 shrink-0 place-items-center rounded-full text-ink-60 transition-colors hover:bg-ink/[0.05] hover:text-ink"
                       >
                         <Icon size={16} />
-                      </button>
+                      </Link>
                     ))}
                   </span>
                   <button

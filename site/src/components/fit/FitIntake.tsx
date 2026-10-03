@@ -75,7 +75,7 @@ export function FitIntake({ data, onPatch, onStart }: {
                 onChange={(e) => set({ name: e.target.value })}
                 autoComplete="given-name"
                 placeholder="What should the report call you?"
-                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/35"
+                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/55"
               />
             </label>
             <label className="block">
@@ -86,7 +86,7 @@ export function FitIntake({ data, onPatch, onStart }: {
                 type="email"
                 autoComplete="email"
                 placeholder="you@email.com"
-                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/35"
+                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/55"
               />
             </label>
           </div>
@@ -127,7 +127,7 @@ export function FitIntake({ data, onPatch, onStart }: {
                 onChange={(e) => set({ city: e.target.value })}
                 autoComplete="address-level2"
                 placeholder="Helps us route the right counsellor"
-                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/35"
+                className="mt-2.5 w-full border-b border-paper/30 bg-transparent py-2.5 text-[15px] text-paper placeholder:text-paper/55"
               />
             </label>
           </div>
@@ -136,7 +136,7 @@ export function FitIntake({ data, onPatch, onStart }: {
             <button type="button" onClick={begin} className="btn btn--solid-dark">
               <span>Start the test</span> <ArrowUpRight size={15} className="btn-arrow" />
             </button>
-            <p className="mono text-[10.5px] uppercase tracking-[0.13em] text-paper/45">
+            <p className="mono text-[10.5px] uppercase tracking-[0.13em] text-paper/55">
               No account · nothing stored · result on screen
             </p>
           </div>

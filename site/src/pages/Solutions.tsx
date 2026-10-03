@@ -4,7 +4,6 @@ import { Kicker, Magnetic, SplitReveal } from "@/components/bits"
 import { useReveals } from "@/lib/motion"
 import { useSeo } from "@/lib/seo"
 import { IA_CONTENT } from "@/content/ia"
-import { PORTAL_URL } from "@/lib/api"
 
 const SEGMENTS = IA_CONTENT.solutions.segments
 const INSTITUTIONAL = new Set(["schools", "colleges", "organizations"])
@@ -54,7 +53,7 @@ export function Solutions() {
               <div className="mt-6 flex flex-wrap items-center gap-5">
                 {INSTITUTIONAL.has(s.id)
                   ? <Magnetic href="/contact">Talk to us</Magnetic>
-                  : <Magnetic href={PORTAL_URL}>Begin free</Magnetic>}
+                  : <Magnetic href="/cri">Begin free</Magnetic>}
                 <Link to="/pricing" className="ul text-[13px] text-ink-60">See pricing</Link>
               </div>
             </div>
@@ -65,7 +64,7 @@ export function Solutions() {
       <section className="wrap py-20 text-center md:py-24">
         <SplitReveal className="h-xl mx-auto max-w-[16ch]">Not sure which you are? <span className="b">Start free.</span></SplitReveal>
         <div data-reveal className="mt-9 flex items-center justify-center gap-6">
-          <Magnetic href={PORTAL_URL} solid>Career Clarity Index</Magnetic>
+          <Magnetic href="/cri" solid>Take the Career Clarity Index</Magnetic>
           <Link to="/book" className="ul inline-flex items-center gap-2 text-[13.5px] text-ink-60">Or book a session <ArrowUpRight size={15} /></Link>
         </div>
       </section>

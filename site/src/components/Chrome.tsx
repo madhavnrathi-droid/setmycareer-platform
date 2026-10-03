@@ -129,9 +129,17 @@ export function Nav() {
     if (p === pathname) window.setTimeout(() => (h ? scrollToSelector("#" + h) : scrollToTop()), 60)
   }
 
-  // the home hero begins as tagline-only chrome; everything else fades in on scroll
+  // Over the dark home hero the bar is transparent, so its contents switch to the
+  // light palette. They are NOT hidden. This used to start the homepage as
+  // "tagline-only chrome": logo, every nav link, Pricing, Sign in and Book Session
+  // were opacity-0, click-through and tabIndex=-1 until the visitor scrolled. So the
+  // first view never named the company, returning clients could not find Sign in,
+  // and keyboard users tabbed straight past the navigation. Hiding it was a
+  // workaround for the centred tagline colliding with the links; the tagline now
+  // rests in its slot instead, so nothing needs to hide.
   const heroTop = pathname === "/" && !solid && !drawer
-  const fade = `transition-opacity duration-500 ${heroTop ? "pointer-events-none opacity-0" : "opacity-100"}`
+  const fade = "transition-colors duration-300"
+  const tone = heroTop ? "text-paper/80 hover:text-paper" : "text-ink-80 hover:text-ink"
 
   return (
     <header
@@ -140,7 +148,7 @@ export function Nav() {
       onMouseLeave={scheduleClose}
     >
       <div ref={headerRow} className="wrap relative flex h-16 items-center justify-between gap-6">
-        <Link to="/" className={`flex shrink-0 items-center gap-3 ${fade}`} onMouseEnter={scheduleClose} tabIndex={heroTop ? -1 : 0}>
+        <Link to="/" aria-label="SetMyCareer — home" className={`flex shrink-0 items-center gap-3 ${fade} ${heroTop ? "text-paper" : ""}`} onMouseEnter={scheduleClose}>
           <Lockup size={17} />
           {/* invisible slot — reserves the tagline's resting place for the flyer */}
           <span ref={tagSlot} aria-hidden className="kicker hidden opacity-0 xl:inline">{TAGLINE}</span>
@@ -151,8 +159,8 @@ export function Nav() {
         <span
           aria-hidden={!heroTop}
           className={`kicker pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap transition-[transform,color,opacity] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
-            heroTop ? "!text-paper/90" : tagDx != null ? "text-ink-40" : "opacity-0"}`}
-          style={{ transform: heroTop || tagDx == null ? "translate(-50%,-50%) scale(1.3)" : `translate(calc(-50% + ${tagDx}px),-50%) scale(1)` }}
+            tagDx == null ? "opacity-0" : heroTop ? "!text-paper/70" : "text-ink-40"}`}
+          style={{ transform: tagDx == null ? "translate(-50%,-50%) scale(1.3)" : `translate(calc(-50% + ${tagDx}px),-50%) scale(1)` }}
         >
           {TAGLINE}
         </span>
@@ -170,26 +178,26 @@ export function Nav() {
                 onClick={() => { setOpen(null); scrollToTop() }}
                 onMouseEnter={() => enter(i)}
                 onFocus={() => enter(i)}
-                tabIndex={heroTop ? -1 : 0}
-                className={`flex items-center gap-1 whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] transition-[color,transform] duration-150 active:scale-90 ${open === i ? "text-ink" : "text-ink-80 hover:text-ink"}`}
+               
+                className={`flex items-center gap-1 whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] transition-[color,transform] duration-150 active:scale-90 ${open === i ? "text-ink" : tone}`}
               >
                 {g.label}
-                <ChevronDown size={14} className="text-ink-40 transition-transform duration-200" style={{ transform: open === i ? "rotate(180deg)" : "none" }} />
+                <ChevronDown size={14} className={`${heroTop ? "text-paper/55" : "text-ink-40"} transition-transform duration-200`} style={{ transform: open === i ? "rotate(180deg)" : "none" }} />
               </Link>
             ))}
           </div>
           {/* CTA cluster — its own zone; hovering it lets the panel close */}
-          <span aria-hidden className="mx-3 h-4 w-px bg-line" />
+          <span aria-hidden className={`mx-3 h-4 w-px ${heroTop ? "bg-paper/25" : "bg-line"}`} />
           <div className="flex items-center gap-1" onMouseEnter={scheduleClose}>
-            <Link to={PRICING_LINK.to} tabIndex={heroTop ? -1 : 0} className="whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] text-ink-80 transition-colors hover:text-ink">{PRICING_LINK.label}</Link>
+            <Link to={PRICING_LINK.to} className={`whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] transition-colors ${tone}`}>{PRICING_LINK.label}</Link>
             {/* client sign-in — reachable but quiet; counsellors sign in from the footer.
                 Signed in → a quiet account chip with portal + sign-out. */}
             {session ? (
               <AccountChip name={firstName(session)} heroTop={heroTop} />
             ) : (
-              <Link to="/signin" tabIndex={heroTop ? -1 : 0} className="whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] text-ink-60 transition-colors hover:text-ink">Sign in</Link>
+              <Link to="/signin" className={`whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] transition-colors ${heroTop ? "text-paper/70 hover:text-paper" : "text-ink-60 hover:text-ink"}`}>Sign in</Link>
             )}
-            <Link to={BOOK_LINK.to} tabIndex={heroTop ? -1 : 0} className="btn btn--solid ml-2 !min-h-0 whitespace-nowrap !px-4 !py-2 text-[12.5px]"><span>{BOOK_LINK.label}</span></Link>
+            <Link to={BOOK_LINK.to} className={`btn ${heroTop ? "btn--dark" : "btn--solid"} ml-2 !min-h-0 whitespace-nowrap !px-4 !py-2 text-[12.5px]`}><span>{BOOK_LINK.label}</span></Link>
           </div>
 
           {/* the shared panel — a fixed-size white box that GLIDES under the active
@@ -292,11 +300,11 @@ function AccountChip({ name, heroTop }: { name: string; heroTop: boolean }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        tabIndex={heroTop ? -1 : 0}
+       
         className="flex items-center gap-1 whitespace-nowrap px-2.5 py-2.5 text-[13px] tracking-[-0.01em] text-ink-80 transition-colors hover:text-ink"
       >
         {name}
-        <ChevronDown size={14} className="text-ink-40 transition-transform duration-200" style={{ transform: open ? "rotate(180deg)" : "none" }} />
+        <ChevronDown size={14} className={`${heroTop ? "text-paper/55" : "text-ink-40"} transition-transform duration-200`} style={{ transform: open ? "rotate(180deg)" : "none" }} />
       </button>
       {open && (
         <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-48 rounded-xl border border-line bg-white py-1.5 shadow-[0_10px_28px_-10px_rgba(11,11,11,0.16),0_36px_80px_-24px_rgba(11,11,11,0.3)]">
@@ -401,11 +409,11 @@ export function Footer() {
           <FooterCol title="Get started" links={[["Pricing", "/pricing"], ["Book Session", "/book"], ["Talk to an expert", "/contact"], ["Free clarity index", "/cri"]]} />
           <FooterCol title="Counsellors" links={[["The platform", "/counsellors"], ["The network", "/experts"], ["Become an expert", "/experts/apply"], ["Counsellor sign in", COUNSELLOR_URL]]} />
           <div>
-            <p className="kicker mb-5 text-paper/40">Reach us</p>
+            <p className="kicker mb-5 text-paper/55">Reach us</p>
             <ul className="flex flex-col gap-3.5 text-[13.5px]">
               <li>
                 <a href="tel:+919108510058" className="ul text-paper/85">+91 91085 10058</a>
-                <span className="mt-0.5 block text-[11px] text-paper/40">Any question · Mon–Sun, 9am–8pm</span>
+                <span className="mt-0.5 block text-[11px] text-paper/55">Any question · Mon–Sun, 9am–8pm</span>
               </li>
               <li><a href="mailto:info@setmycareer.com" className="ul text-paper/85">info@setmycareer.com</a></li>
               <li className="leading-relaxed text-paper/55">Koramangala 8th Block,<br />Bengaluru 560095, India</li>
@@ -417,7 +425,7 @@ export function Footer() {
         <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-3 xl:grid-cols-6">
           {IA_NAV.map((g) => (
             <div key={g.label}>
-              <LeafLink to={g.to} className="kicker mb-5 block text-paper/40 transition-colors hover:text-paper/70">{g.label}</LeafLink>
+              <LeafLink to={g.to} className="kicker mb-5 block text-paper/55 transition-colors hover:text-paper/70">{g.label}</LeafLink>
               <ul className="flex flex-col gap-2.5">
                 {g.children.map(({ label, to }) => (
                   <li key={label}><LeafLink to={to} className="ul text-[13px] text-paper/75">{label}</LeafLink></li>
@@ -449,16 +457,16 @@ function NewsletterForm() {
   const [done, setDone] = useState(false)
   return (
     <form onSubmit={(e) => { e.preventDefault(); if (v.includes("@")) setDone(true) }} className="w-full max-w-sm">
-      <p className="kicker mb-3 text-paper/40">Field notes to your inbox</p>
+      <p className="kicker mb-3 text-paper/55">Field notes to your inbox</p>
       {done ? (
         <p className="text-[14px] text-paper/70">Noted — we’ll write only when there’s something worth your time.</p>
       ) : (
         <>
           <div className="flex items-center gap-0 border-b border-paper/30">
-            <input value={v} onChange={(e) => setV(e.target.value)} type="email" placeholder="you@email.com" className="w-full bg-transparent py-2 text-[14px] text-paper placeholder:text-paper/35" />
+            <input value={v} onChange={(e) => setV(e.target.value)} type="email" placeholder="you@email.com" className="w-full bg-transparent py-2 text-[14px] text-paper placeholder:text-paper/55" />
             <button type="submit" aria-label="Subscribe" className="shrink-0 p-2 text-paper/70 transition-colors hover:text-paper"><ArrowRight size={18} /></button>
           </div>
-          <p className="mt-2.5 text-[11px] leading-relaxed text-paper/40">By subscribing you agree to our <Link to="/legal/privacy-policy" className="ul">Privacy Policy</Link>. Unsubscribe any time.</p>
+          <p className="mt-2.5 text-[11px] leading-relaxed text-paper/55">By subscribing you agree to our <Link to="/legal/privacy-policy" className="ul">Privacy Policy</Link>. Unsubscribe any time.</p>
         </>
       )}
     </form>
@@ -468,7 +476,7 @@ function NewsletterForm() {
 function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
   return (
     <div>
-      <p className="kicker mb-5 text-paper/40">{title}</p>
+      <p className="kicker mb-5 text-paper/55">{title}</p>
       <ul className="flex flex-col gap-2.5">
         {links.map(([label, href]) => (
           <li key={label}><LeafLink to={href} className="ul text-[13.5px] text-paper/80">{label}</LeafLink></li>

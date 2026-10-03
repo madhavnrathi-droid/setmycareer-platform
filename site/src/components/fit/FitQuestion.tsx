@@ -68,14 +68,14 @@ export function FitQuestionView({ q, index, total, value, textValue, dir, onPick
             }}
             rows={4}
             placeholder={q.placeholder}
-            className="w-full resize-none border border-paper/25 bg-transparent px-4 py-3.5 text-[15px] leading-relaxed text-paper placeholder:text-paper/35 focus:border-paper/70 focus:outline-none"
+            className="w-full resize-none border border-paper/25 bg-transparent px-4 py-3.5 text-[15px] leading-relaxed text-paper placeholder:text-paper/55 focus:border-paper/70 focus:outline-none"
           />
           <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
             <button type="button" onClick={onContinue} className="btn btn--solid-dark">
               <span>{(textValue ?? "").trim() ? "Continue" : q.optional ? "Skip this one" : "Continue"}</span>
               <ArrowUpRight size={15} className="btn-arrow" />
             </button>
-            <p className="mono text-[10px] uppercase tracking-[0.13em] text-paper/40">
+            <p className="mono text-[10px] uppercase tracking-[0.13em] text-paper/55">
               Optional · ⌘/Ctrl + Enter to continue · your words help us tailor the result
             </p>
           </div>
@@ -103,7 +103,7 @@ export function FitQuestionView({ q, index, total, value, textValue, dir, onPick
             ))}
           </div>
 
-          <p className="mono mt-6 text-[10px] uppercase tracking-[0.13em] text-paper/40">
+          <p className="mono mt-6 text-[10px] uppercase tracking-[0.13em] text-paper/55">
             Keys {q.kind === "likert" ? "1–5" : `1–${options.length}`} pick · Enter advances · first instinct is the honest answer
           </p>
         </>

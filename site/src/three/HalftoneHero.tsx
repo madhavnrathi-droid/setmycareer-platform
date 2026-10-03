@@ -61,7 +61,33 @@ const FRAG = /* glsl */ `
   }
 `
 
-export function HalftoneHero({ src }: { src: string }) {
+// The field the halftone shader samples. It used to be a random stock photo pulled
+// from picsum.photos — a placeholder-image service — so the hero's look depended on a
+// third party with no uptime promise, cost ~140KB on every visit, and showed whatever
+// arbitrary photograph a seed happened to return. At the opacity the hero runs at, the
+// SHADER carries the look; the source only supplies luminance. So the source is now
+// drawn here: a lens-like radial falloff with faint concentric rings — a measuring
+// instrument, which is the brand's claim — generated at runtime. Zero bytes, zero
+// network, nothing to misrepresent.
+function instrumentField(w = 1600, h = 1000): HTMLCanvasElement {
+  const c = document.createElement("canvas")
+  c.width = w; c.height = h
+  const g = c.getContext("2d")!
+  g.fillStyle = "#000"; g.fillRect(0, 0, w, h)
+  const cx = w * 0.66, cy = h * 0.46, R = Math.hypot(w, h) * 0.55
+  const fall = g.createRadialGradient(cx, cy, 0, cx, cy, R)
+  fall.addColorStop(0, "rgba(255,255,255,0.92)")
+  fall.addColorStop(0.18, "rgba(255,255,255,0.62)")
+  fall.addColorStop(0.45, "rgba(255,255,255,0.22)")
+  fall.addColorStop(1, "rgba(255,255,255,0)")
+  g.fillStyle = fall; g.fillRect(0, 0, w, h)
+  // concentric graduations, like the rings of a lens or a compass card
+  g.strokeStyle = "rgba(255,255,255,0.10)"
+  for (let r = 60; r < R; r += 58) { g.lineWidth = r % 232 < 58 ? 2.2 : 1; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.stroke() }
+  return c
+}
+
+export function HalftoneHero({ src }: { src?: string }) {
   const mountRef = useRef<HTMLDivElement>(null)
   const [failed, setFailed] = useState(false)
 
@@ -95,7 +121,13 @@ export function HalftoneHero({ src }: { src: string }) {
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
     scene.add(mesh)
 
-    new THREE.TextureLoader().setCrossOrigin("anonymous").load(
+    if (!src) {
+      const field = instrumentField()
+      const tex = new THREE.CanvasTexture(field)
+      tex.colorSpace = THREE.SRGBColorSpace
+      uniforms.uTex.value = tex
+      uniforms.uImg.value.set(field.width, field.height)
+    } else new THREE.TextureLoader().setCrossOrigin("anonymous").load(
       src,
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace
@@ -144,7 +176,10 @@ export function HalftoneHero({ src }: { src: string }) {
   }, [src])
 
   if (failed) {
-    return <img src={src} alt="" className="absolute inset-0 size-full object-cover bw-hi opacity-70" />
+    // no WebGL: the same field, as CSS — a radial falloff, no image request
+    return src
+      ? <img src={src} alt="" className="absolute inset-0 size-full object-cover bw-hi opacity-70" />
+      : <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 66% 46%, rgba(255,255,255,0.18), rgba(255,255,255,0.05) 40%, transparent 70%)" }} />
   }
   return <div ref={mountRef} className="absolute inset-0 size-full" aria-hidden />
 }

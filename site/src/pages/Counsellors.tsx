@@ -99,7 +99,7 @@ export function Counsellors() {
             <ProductShot src="/product/console-clients.png" alt="The counsellor caseload — every client, their packages and last session, searchable" chrome="app.setmycareer.com/clients" label="Caseload" imgClassName="object-top" />
             <ProductShot src="/product/console-reports.png" alt="The reports workspace — build a Career Intelligence Report from any client's blueprint" chrome="app.setmycareer.com/reports" label="Reports" imgClassName="object-top" />
           </div>
-          <p data-reveal className="mono mt-6 text-[10px] uppercase tracking-[0.14em] text-paper/35">Sample caseload · no real client data shown</p>
+          <p data-reveal className="mono mt-6 text-[10px] uppercase tracking-[0.14em] text-paper/55">Sample caseload · no real client data shown</p>
         </div>
       </section>
 
@@ -129,13 +129,13 @@ export function Counsellors() {
           <div className="mt-12 grid gap-px overflow-hidden rounded-[14px] border border-paper/15 bg-paper/15 md:grid-cols-2">
             {PATHS.map((p) => (
               <Link data-reveal key={p.name} to="/experts/apply" className="group bg-[#111110] p-8 transition-colors hover:bg-[#161615]">
-                <p className="mono text-[10.5px] uppercase tracking-[0.14em] text-paper/40">{p.tag}</p>
+                <p className="mono text-[10.5px] uppercase tracking-[0.14em] text-paper/55">{p.tag}</p>
                 <h3 className="mt-3 text-[22px] font-medium tracking-tight text-paper">{p.name}</h3>
                 <p className="mt-2 max-w-md text-[13.5px] leading-relaxed text-paper/55">{p.body}</p>
                 <ul className="mt-5 flex flex-col gap-2">
                   {p.points.map((pt) => (
                     <li key={pt} className="flex items-baseline gap-2.5 text-[12.5px] text-paper/70">
-                      <span className="mono text-[10px] text-paper/35">—</span>{pt}
+                      <span className="mono text-[10px] text-paper/55">—</span>{pt}
                     </li>
                   ))}
                 </ul>
@@ -156,7 +156,7 @@ export function Counsellors() {
           <div className="mt-12 grid gap-px md:grid-cols-4">
             {STEPS.map((s) => (
               <div data-reveal key={s.no} className="border-t border-paper/15 py-6 md:border-t-0 md:border-l md:pl-6 md:first:border-l-0 md:first:pl-0">
-                <span className="mono text-[11px] tabular-nums text-paper/40">{s.no}</span>
+                <span className="mono text-[11px] tabular-nums text-paper/55">{s.no}</span>
                 <h3 className="mt-2 text-[16px] font-medium tracking-tight text-paper">{s.t}</h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-paper/55">{s.d}</p>
               </div>
@@ -173,7 +173,7 @@ export function Counsellors() {
             <Magnetic href="/experts/apply" dark>Apply to join</Magnetic>
             <Link to="/experts" className="ul inline-flex items-center gap-2 text-[13.5px] text-paper/70">Meet the network <ArrowRight size={15} /></Link>
           </div>
-          <p data-reveal className="mono mt-10 text-[10.5px] uppercase tracking-[0.14em] text-paper/40">Questions first? <Link to="/contact" className="ul text-paper/70">Talk to us</Link></p>
+          <p data-reveal className="mono mt-10 text-[10.5px] uppercase tracking-[0.14em] text-paper/55">Questions first? <Link to="/contact" className="ul text-paper/70">Talk to us</Link></p>
         </div>
       </section>
     </main>
@@ -186,7 +186,7 @@ function HeroStat({ value, label }: { value: number; label: string }) {
   return (
     <div>
       <p className="text-[clamp(1.6rem,3vw,2.4rem)] font-extralight tabular-nums tracking-tight text-paper"><span ref={ref}>{value.toLocaleString("en-IN")}</span>+</p>
-      <p className="mono mt-1 text-[10px] uppercase tracking-[0.14em] text-paper/45">{label}</p>
+      <p className="mono mt-1 text-[10px] uppercase tracking-[0.14em] text-paper/55">{label}</p>
     </div>
   )
 }

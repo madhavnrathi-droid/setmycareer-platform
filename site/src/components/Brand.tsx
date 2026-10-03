@@ -20,7 +20,7 @@ export function Lockup({ size = 20, tagline = false, className = "" }: { size?: 
       <LogoMark size={Math.round(size * 1.25)} />
       <span className="flex flex-col leading-none">
         <Wordmark size={size} />
-        {tagline && <span className="mt-1 kicker !text-[8.5px] opacity-60">Find Your True North</span>}
+        {tagline && <span className="mt-1 kicker !text-[10px] text-current opacity-70">Find Your True North</span>}
       </span>
     </span>
   )

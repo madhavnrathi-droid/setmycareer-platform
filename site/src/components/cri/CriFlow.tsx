@@ -51,7 +51,7 @@ function FactorBars({ rows }: { rows: { key: string; name: string; score: number
       {rows.map((f) => (
         <div key={f.key} className="grid gap-2 border-t border-line py-4 md:grid-cols-[230px_1fr_auto] md:items-center md:gap-8">
           <div>
-            <h4 className="text-[15px] font-medium tracking-tight">{f.name}</h4>
+            <h3 className="text-[15px] font-medium tracking-tight">{f.name}</h3>
             <span className="mono text-[10px] uppercase tracking-[0.12em] text-ink-40">{f.weightPct}% of the composite</span>
           </div>
           <div className="h-px w-full bg-line">
@@ -73,7 +73,7 @@ function RecCard({ offeringId, why, cta, to }: { offeringId: string; why: string
       <div className="relative z-[1] p-6 md:p-8">
         <span className="mono text-[10px] uppercase tracking-[0.18em] text-paper/60">Recommended next step</span>
         <div className="mt-3 flex flex-wrap items-baseline justify-between gap-3">
-          <h4 className="text-[clamp(1.3rem,2.4vw,1.8rem)] font-medium tracking-tight text-paper">{o?.name ?? offeringId}</h4>
+          <h3 className="text-[clamp(1.3rem,2.4vw,1.8rem)] font-medium tracking-tight text-paper">{o?.name ?? offeringId}</h3>
           <span className="mono text-[14px] text-paper/85">{price}</span>
         </div>
         <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-paper/75">{why}</p>
@@ -179,7 +179,7 @@ export function CriFlow() {
   if (stage === "intro") return (
     <div className="border border-line bg-paper-pure p-7 md:p-10">
       <span className="kicker text-ink-40">Free · structured self-report · scored on screen</span>
-      <h3 className="mt-3 text-[clamp(1.5rem,2.8vw,2.2rem)] font-light leading-tight tracking-tight">Who is this for?</h3>
+      <h2 className="mt-3 text-[clamp(1.5rem,2.8vw,2.2rem)] font-light leading-tight tracking-tight">Who is this for?</h2>
       <p className="mt-3 max-w-lg text-[14px] leading-relaxed text-ink-60">Two different instruments for two different seats. Pick yours — the questions, the scoring and the report change with it.</p>
       <div className="mt-7 grid gap-px md:grid-cols-2">
         {([
@@ -188,7 +188,7 @@ export function CriFlow() {
         ]).map((o) => (
           <button key={o.t} onClick={() => { setTrack(o.t); setStage("details") }}
             className="group border border-line p-6 text-left transition-colors hover:border-ink">
-            <h4 className="text-[18px] font-medium tracking-tight">{o.h}</h4>
+            <h3 className="text-[18px] font-medium tracking-tight">{o.h}</h3>
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-60">{o.d}</p>
             <span className="ul mt-4 inline-block text-[13px] font-medium">Start here</span>
           </button>
@@ -206,7 +206,7 @@ export function CriFlow() {
     return (
       <div className="border border-line bg-paper-pure p-7 md:p-10">
         <button onClick={() => setStage("intro")} className="mb-5 inline-flex items-center gap-1.5 text-[12px] text-ink-40"><ArrowLeft size={14} /> Back</button>
-        <h3 className="text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{track === "student" ? CCRI.title : "The executive readiness diagnostic"}</h3>
+        <h2 className="text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{track === "student" ? CCRI.title : "The executive readiness diagnostic"}</h2>
         <p className="mt-2 max-w-xl text-[13.5px] leading-relaxed text-ink-60">
           {track === "student"
             ? CCRI.tagline
@@ -245,7 +245,7 @@ export function CriFlow() {
     if (handoff) return (
       <div className="border border-line bg-paper-pure p-7 md:p-10">
         <span className="mono text-[11px] uppercase tracking-[0.14em] text-ink-40">Part 1 complete</span>
-        <h3 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{CDRA.title} — done.</h3>
+        <h2 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{CDRA.title} — done.</h2>
         <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-ink-60">
           Next: <span className="font-medium text-ink">{ECCRI.title}</span> — the circumstances, constraints and drivers around your decision. About 10 more minutes; your report needs both halves.
         </p>
@@ -266,7 +266,7 @@ export function CriFlow() {
           <span className="mono text-[11px] uppercase tracking-[0.14em] text-ink-40">
             {parts.length > 1 ? `${p.label} · ` : ""}Section {chNum} of {p.groups.length}
           </span>
-          <h3 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{g?.name ?? chapter}</h3>
+          <h2 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-light leading-tight tracking-tight">{g?.name ?? chapter}</h2>
           {g?.note && <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-ink-60">{g.note}</p>}
           <div className="mt-6 h-px w-full bg-line"><div className="h-[3px] -translate-y-px bg-ink" style={{ width: `${(globalIdx / totalItems) * 100}%`, transition: "width 0.3s" }} /></div>
           <div className="mt-8 flex flex-wrap items-center gap-5">
@@ -341,7 +341,7 @@ export function CriFlow() {
                 <div key={pl.key} className="border border-line p-5">
                   <span className="mono text-[10px] uppercase tracking-[0.12em] text-ink-40">{pl.question}</span>
                   <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
-                    <h4 className="text-[15px] font-medium tracking-tight">{pl.name}</h4>
+                    <h3 className="text-[15px] font-medium tracking-tight">{pl.name}</h3>
                     <span className="mono text-[14px] tabular-nums text-ink-80">{fmt(pl.score)} <span className="text-[10px] uppercase tracking-[0.1em] text-ink-40">· {pl.band}</span></span>
                   </div>
                   <p className="mt-2 text-[12.5px] leading-relaxed text-ink-60">{pl.read}</p>
@@ -421,7 +421,7 @@ export function CriFlow() {
             <p className="mono mt-2 text-[10px] uppercase tracking-[0.14em] text-ink-40">Career decision readiness (CDRS)</p>
           </div>
           <div>
-            {cd.band && <h3 className="text-[clamp(1.7rem,3.2vw,2.6rem)] font-light leading-tight tracking-tight">{name}, you are in the <span className="font-semibold">{cd.band.name}</span>.</h3>}
+            {cd.band && <h2 className="text-[clamp(1.7rem,3.2vw,2.6rem)] font-light leading-tight tracking-tight">{name}, you are in the <span className="font-semibold">{cd.band.name}</span>.</h2>}
             {cd.band && <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-60">{cd.band.note}</p>}
           </div>
         </div>
@@ -456,7 +456,7 @@ export function CriFlow() {
           <div className="mt-4">
             {ec.finalScores.map((f) => (
               <div key={f.key} className="grid gap-2 border-t border-line py-4 md:grid-cols-[230px_1fr_auto] md:items-center md:gap-8">
-                <h4 className="text-[15px] font-medium tracking-tight">{f.name}</h4>
+                <h3 className="text-[15px] font-medium tracking-tight">{f.name}</h3>
                 <div>
                   <div className="h-px w-full bg-line"><div className="h-[3px] -translate-y-px bg-ink" style={{ width: `${pct(f.score)}%`, transition: "width 1s cubic-bezier(0.16,1,0.3,1)" }} /></div>
                   <p className="mt-2 text-[12.5px] leading-relaxed text-ink-60">{f.question}</p>

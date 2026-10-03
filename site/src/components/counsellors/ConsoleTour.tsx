@@ -65,7 +65,7 @@ export function ConsoleTour() {
               aria-pressed={on}
               className={`group relative border-t py-5 pr-4 text-left transition-colors duration-300 ${on ? "border-paper" : "border-paper/15 hover:border-paper/45"}`}
             >
-              <span className={`mono text-[11px] tabular-nums transition-colors ${on ? "text-paper" : "text-paper/40"}`}>{st.no}</span>
+              <span className={`mono text-[11px] tabular-nums transition-colors ${on ? "text-paper" : "text-paper/55"}`}>{st.no}</span>
               <h3 className={`mt-1.5 text-[15px] font-medium tracking-tight transition-colors ${on ? "text-paper" : "text-paper/55 group-hover:text-paper/85"}`}>{st.name}</h3>
               <span className="absolute inset-x-0 top-0 h-[2px] origin-left bg-paper" style={{ transform: `scaleX(${on ? (reduce.current ? 1 : progress) : 0})` }} />
             </button>
@@ -82,8 +82,8 @@ export function ConsoleTour() {
             <span className="size-2.5 rounded-full bg-paper/15" />
             <span className="size-2.5 rounded-full bg-paper/15" />
           </span>
-          <span key={s.url} className="ml-2 truncate rounded-full border border-paper/15 px-3 py-1 text-[11px] text-paper/45 motion-safe:animate-[fpfade_.4s_ease-out]">{s.url}</span>
-          <span className="mono ml-auto shrink-0 text-[10px] uppercase tracking-[0.14em] text-paper/40">{s.no} · {s.name}</span>
+          <span key={s.url} className="ml-2 truncate rounded-full border border-paper/15 px-3 py-1 text-[11px] text-paper/55 motion-safe:animate-[fpfade_.4s_ease-out]">{s.url}</span>
+          <span className="mono ml-auto shrink-0 text-[10px] uppercase tracking-[0.14em] text-paper/55">{s.no} · {s.name}</span>
         </div>
 
         {/* the screen */}

@@ -6,7 +6,6 @@ import { useSeo } from "@/lib/seo"
 import { IA_CONTENT } from "@/content/ia"
 import { COPY, ARTICLES } from "@/content/site"
 import { ProcessLadder, OverlapVenn, DecisionFan } from "@/components/diagrams"
-import { PORTAL_URL } from "@/lib/api"
 
 const F = IA_CONTENT.framework
 
@@ -78,7 +77,7 @@ export function Framework() {
           <div className="mt-14 grid gap-px md:grid-cols-2 xl:grid-cols-4">
             {F.model.factors.map((f, i) => (
               <div data-reveal key={f.name} className="border-t border-paper/15 py-7 md:pr-8">
-                <span className="mono text-[11px] tabular-nums text-paper/35">{String(i + 1).padStart(2, "0")}</span>
+                <span className="mono text-[11px] tabular-nums text-paper/55">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="mt-2 text-[20px] font-medium tracking-tight">{f.name}</h3>
                 <p className="serif mt-2 text-[15px] italic text-paper/70">{f.question}</p>
                 <p className="mt-3 text-[13.5px] leading-relaxed text-paper/55">{f.instrument}</p>
@@ -128,7 +127,7 @@ export function Framework() {
 
       <section className="wrap py-20 text-center md:py-28">
         <SplitReveal className="h-xl mx-auto max-w-[18ch]">See the framework applied to <span className="b">you</span>.</SplitReveal>
-        <div data-reveal className="mt-9 flex justify-center"><Magnetic href={PORTAL_URL} solid>Start with the free index</Magnetic></div>
+        <div data-reveal className="mt-9 flex justify-center"><Magnetic href="/cri" solid>Start with the free index</Magnetic></div>
       </section>
     </main>
   )

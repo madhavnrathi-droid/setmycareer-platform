@@ -63,8 +63,8 @@ export function StepSignup({ active }: { active: boolean }): JSX.Element {
         </div>
 
         <div className="pane-item flex items-center justify-between gap-3 border-t border-paper/10 pt-3.5">
-          <span className="mono text-[7.5px] uppercase tracking-[0.16em] text-paper/40">Client portal</span>
-          <span className="mono text-[7.5px] uppercase tracking-[0.16em] text-paper/40">Secure OTP</span>
+          <span className="mono text-[7.5px] uppercase tracking-[0.16em] text-paper/55">Client portal</span>
+          <span className="mono text-[7.5px] uppercase tracking-[0.16em] text-paper/55">Secure OTP</span>
         </div>
       </div>
 

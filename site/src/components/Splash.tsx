@@ -24,8 +24,31 @@ const APHORISMS = [
 // hooks below always run in the browser: no conditional-hook hazard.
 const IS_BROWSER = typeof window !== "undefined"
 
+// When the overture plays. It used to run on EVERY full page load — so a visitor
+// arriving from search on /career-counselling/after-12th got the prerendered answer
+// painted, then hidden behind a ~2.2s full-screen overture, then revealed again. On a
+// phone that sat on top of an already-slow first load. It now plays only on the
+// homepage, once per browser session: the people who come to meet the brand still
+// meet it; the people who came for an answer get the answer. (To retire it entirely,
+// return null from Splash.)
+//
+// Decided once per page load at module level rather than in a state initialiser, so
+// StrictMode's double-invoke in dev cannot consume the session flag before render.
+let decided: boolean | null = null
+function shouldPlay(): boolean {
+  if (decided !== null) return decided
+  decided = false
+  if (!IS_BROWSER || window.location.pathname !== "/") return decided
+  try {
+    if (sessionStorage.getItem("smc.splash.v1")) return decided
+    sessionStorage.setItem("smc.splash.v1", "1")
+  } catch { /* storage blocked: play once rather than every time */ }
+  decided = true
+  return decided
+}
+
 export function Splash() {
-  return IS_BROWSER ? <SplashOverture /> : null
+  return shouldPlay() ? <SplashOverture /> : null
 }
 
 function SplashOverture() {
@@ -70,11 +93,11 @@ function SplashOverture() {
         <span className="font-wordmark mt-5 text-[26px] text-paper">Setmycareer</span>
         <span className="kicker mt-3 text-paper/55">{aph.current}</span>
         <div className="mt-9 flex items-center gap-3">
-          <span ref={counter} className="mono text-[11px] tabular-nums text-paper/45">000</span>
+          <span ref={counter} className="mono text-[11px] tabular-nums text-paper/55">000</span>
           <span className="relative block h-px w-[200px] bg-paper/20">
             <span ref={bar} className="absolute inset-y-0 left-0 block w-full origin-left scale-x-0 bg-paper" />
           </span>
-          <span className="mono text-[11px] text-paper/45">100</span>
+          <span className="mono text-[11px] text-paper/55">100</span>
         </div>
       </div>
     </div>

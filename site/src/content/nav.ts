@@ -12,7 +12,7 @@ export const IA_NAV: NavGroup[] = [
     label: "Product", to: "/product", blurb: "The instruments, live on the page.",
     children: [
       { label: "Overview", to: "/product#overview", hint: "What the product is" },
-      { label: "Live Demo", to: "/product#demo", hint: "Take the real index, free" },
+      { label: "Free career test", to: "/career-test", hint: "Start here — no account needed" },
       { label: "Product Tour", to: "/product#tour", hint: "Sign-up to decision, five stops" },
       { label: "Assessments", to: "/product#assessments", hint: "Validated instruments, scored live" },
       { label: "Packages", to: "/product#packages", hint: "The catalogue, priced" },
@@ -33,19 +33,24 @@ export const IA_NAV: NavGroup[] = [
     ],
   },
   {
-    label: "Solutions", to: "/solutions", blurb: "Whoever is deciding, we meet them there.",
+    // Was "Solutions" — B2B vocabulary on a site whose buyers are parents and
+    // students. The individual-audience leaves used to land on anchors of one long
+    // page; they now open the dedicated stage pages built from the keyword map, so
+    // the menu and the search strategy point at the same places.
+    label: "Who it's for", to: "/career-counselling", blurb: "Counselling for every stage of the decision.",
     children: [
-      { label: "Students", to: "/solutions#students", hint: "Streams, exams, degrees" },
+      { label: "Career counselling", to: "/career-counselling", hint: "Every stage, one method" },
+      { label: "Class 8–10", to: "/career-counselling/after-10th", hint: "Choosing a stream" },
+      { label: "Class 11–12", to: "/career-counselling/after-12th", hint: "Degree, field and exams" },
+      { label: "Graduates", to: "/career-counselling/after-graduation", hint: "A degree isn't a direction" },
+      { label: "Working professionals", to: "/career-counselling/working-professionals", hint: "Switches, growth, AI risk" },
       { label: "Parents", to: "/solutions#parents", hint: "In the decision, not the argument" },
-      { label: "Graduates", to: "/solutions#graduates", hint: "A degree isn't a direction" },
-      { label: "Professionals", to: "/solutions#professionals", hint: "Growth, switches, AI risk" },
-      { label: "Schools", to: "/solutions#schools", hint: "Guidance at scale" },
-      { label: "Colleges", to: "/solutions#colleges", hint: "Employability, measured" },
-      { label: "Organizations", to: "/solutions#organizations", hint: "Career clarity for teams" },
+      { label: "Schools & colleges", to: "/solutions#schools", hint: "Guidance at scale" },
+      { label: "Organisations", to: "/solutions#organizations", hint: "Career clarity for teams" },
     ],
   },
   {
-    label: "Terminal", to: "/library", blurb: "The map, wider than two roads.",
+    label: "Careers", to: "/library", blurb: "The map, wider than two roads.",
     children: [
       { label: "Careers", to: "/library#careers", hint: "What the work actually is" },
       { label: "Degrees", to: "/library#degrees", hint: "Where each one leads" },
@@ -66,7 +71,7 @@ export const IA_NAV: NavGroup[] = [
     ],
   },
   {
-    label: "Ontology", to: "/trust", blurb: "What we are, and the receipts behind it.",
+    label: "About", to: "/trust", blurb: "What we are, and the receipts behind it.",
     children: [
       { label: "About us", to: "/trust#about", hint: "What SetMyCareer is, plainly" },
       { label: "What is career counselling", to: "/trust#counselling", hint: "For anyone new to it" },

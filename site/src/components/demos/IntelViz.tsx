@@ -26,7 +26,7 @@ export function IntelViz() {
             })}
           </div>
         </div>
-        <p className="mono absolute inset-x-0 bottom-0 text-center text-[10px] uppercase tracking-[0.16em] text-paper/40">Projected role growth · live sources</p>
+        <p className="mono absolute inset-x-0 bottom-0 text-center text-[10px] uppercase tracking-[0.16em] text-paper/55">Projected role growth · live sources</p>
       </div>
 
       {/* the facts */}
@@ -35,23 +35,23 @@ export function IntelViz() {
           {big.map((m) => (
             <div key={m.label}>
               <div className="display !text-[clamp(2.2rem,5.5vw,3.6rem)] font-extralight leading-none tabular-nums text-paper">
-                {m.value}<span className="ml-1 align-top text-[0.4em] text-paper/45">{m.unit}</span>
+                {m.value}<span className="ml-1 align-top text-[0.4em] text-paper/55">{m.unit}</span>
               </div>
               <p className="mt-2 text-[13px] font-medium text-paper">{m.label}</p>
-              <p className="mt-0.5 text-[11.5px] leading-snug text-paper/45">{m.metric}</p>
-              <p className="mono mt-1 text-[10px] uppercase tracking-[0.12em] text-paper/35">{m.source}</p>
+              <p className="mt-0.5 text-[11.5px] leading-snug text-paper/55">{m.metric}</p>
+              <p className="mono mt-1 text-[10px] uppercase tracking-[0.12em] text-paper/55">{m.source}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-8">
-          <span className="kicker text-paper/40">Fastest-growing fields</span>
+          <span className="kicker text-paper/55">Fastest-growing fields</span>
           <div className="mt-3">
             {pct.map((m) => (
               <div key={m.label} tabIndex={0} className="unlock group grid grid-cols-[1fr_auto] items-baseline gap-4 border-t border-paper/12 py-2.5 outline-none last:border-b">
                 <div>
                   <span className="text-[13.5px] text-paper/90">{m.label}</span>
-                  <div className="more"><span className="mono text-[10px] uppercase tracking-[0.12em] text-paper/45">{m.metric} · {m.source}</span></div>
+                  <div className="more"><span className="mono text-[10px] uppercase tracking-[0.12em] text-paper/55">{m.metric} · {m.source}</span></div>
                 </div>
                 <span className="mono text-[13px] tabular-nums text-paper">+{m.value}%</span>
               </div>

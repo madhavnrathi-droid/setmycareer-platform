@@ -5,7 +5,6 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { HalftoneHero } from "@/three/HalftoneHero"
 import { COPY, ARTICLES } from "@/content/site"
-import { IMG, avatar } from "@/lib/images"
 import { useNavigators, useStats, naviImage, naviExpertise, cleanField, PORTAL_URL } from "@/lib/api"
 import { Kicker, Magnetic, Marquee, NaviPortrait, SplitReveal } from "@/components/bits"
 import { TalkToExpert } from "@/components/LeadForm"
@@ -69,9 +68,12 @@ function Hero() {
   const [l1, l2] = COPY.heroHeadline.split("\n")
   return (
     <section data-cursor="logo" className="plate-dark relative flex h-svh min-h-[640px] flex-col">
-      <HalftoneHero src={IMG.hero} />
+      <HalftoneHero />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/20 via-ink/35 to-ink" />
-      <div className="wrap relative z-10 flex flex-1 flex-col justify-end pb-16 pt-28">
+      {/* Rises by the consent bar's height while it is open, so the primary CTA is never
+          underneath it. A transform, not padding: it moves the content without a layout
+          shift, and it reads as the page making room rather than jumping. */}
+      <div className="wrap relative z-10 flex flex-1 flex-col justify-end pb-16 pt-28 transition-transform duration-300 ease-out [transform:translateY(calc(-1*var(--consent-h,0px)))]">
         <Kicker className="!text-paper/60">{COPY.heroKicker}</Kicker>
         <h1 className="display mt-5 text-paper">
           {l1}<br /><span className="b">{l2}</span>
@@ -79,12 +81,13 @@ function Hero() {
         <div className="mt-8 flex max-w-3xl flex-col gap-7 md:flex-row md:items-end md:justify-between">
           <p className="lead max-w-md text-paper/70">{COPY.heroSub}</p>
           <div className="pointer-events-auto flex shrink-0 items-center gap-3">
-            <Magnetic href={PORTAL_URL} dark>{COPY.ctaPrimary}</Magnetic>
+            <Magnetic href="/cri" dark>{COPY.ctaPrimary}</Magnetic>
             <button onClick={() => scrollToSelector("#method")} className="ul text-[13px] text-paper/80">{COPY.ctaSecondary}</button>
           </div>
         </div>
       </div>
-      <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-paper/50"><ArrowDown size={18} className="animate-bounce" /></div>
+      {/* was animate-bounce: an infinite loop competing with the CTA for attention */}
+      <div aria-hidden className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-paper/50"><ArrowDown size={18} /></div>
     </section>
   )
 }
@@ -93,20 +96,19 @@ function Hero() {
 function Problem() {
   return (
     <section className="wrap py-24 md:py-40">
-      <div className="grid gap-12 md:grid-cols-12">
+      {/* This column used to hold two random stock photos from a placeholder-image
+          service, alt-texted as "a student weighing a career decision" and "a counsellor
+          and student in conversation". They were a laptop on a desk and a couple kissing
+          in the snow. On a site whose buyers are parents of 10–18-year-olds that is a
+          trust failure, and the alt text was false for screen-reader users. Removed, not
+          replaced: the very next section (Stakes) carries the cited evidence, so the
+          argument here is the type alone — statement left, consequence right. */}
+      <div className="grid gap-x-12 gap-y-8 md:grid-cols-12 md:items-end">
         <div className="md:col-span-7">
           <Kicker>{COPY.problemKicker}</Kicker>
           <SplitReveal className="h-xl mt-6 max-w-[16ch]">Most careers are <span className="b">chosen blind</span>.</SplitReveal>
-          <p data-reveal data-delay="0.1" className="lead mt-8 max-w-xl text-ink-60">{COPY.problemBody}</p>
         </div>
-        <div className="relative md:col-span-5">
-          <div data-reveal className="ml-auto aspect-[4/5] w-[78%] overflow-hidden">
-            <img src={IMG.fragments[0]} alt="A student weighing a career decision" className="size-full object-cover bw-hi" loading="lazy" />
-          </div>
-          <div data-reveal data-delay="0.15" className="absolute -bottom-10 left-0 aspect-square w-[46%] overflow-hidden border-8 border-paper">
-            <img src={IMG.fragments[1]} alt="A counsellor and student in conversation" className="size-full object-cover bw-hi" loading="lazy" />
-          </div>
-        </div>
+        <p data-reveal data-delay="0.1" className="lead max-w-xl text-ink-60 md:col-span-5 md:border-l md:border-line md:pl-8">{COPY.problemBody}</p>
       </div>
     </section>
   )
@@ -258,7 +260,7 @@ function Product() {
                   <div>
                     <h3 className="text-[20px] font-medium tracking-tight">{p.title}</h3>
                     <p className="mt-1.5 max-w-md text-[14.5px] leading-relaxed text-paper/55">{p.body}</p>
-                    <div className="more"><span className="mono text-[11px] uppercase tracking-[0.14em] text-paper/45">{PRODUCT_MORE[i]}</span></div>
+                    <div className="more"><span className="mono text-[11px] uppercase tracking-[0.14em] text-paper/55">{PRODUCT_MORE[i]}</span></div>
                   </div>
                   <span className="lockmark mono self-center text-[20px] leading-none text-paper">+</span>
                 </div>
@@ -394,9 +396,16 @@ function Experts() {
           })}
         </div>
       ) : (
-        <div data-reveal className="wrap grid grid-cols-2 gap-px sm:grid-cols-4 lg:grid-cols-7">
+        // While the live roster loads (or if the API is down) this used to show seven
+        // random stock portraits — strangers standing in for the counsellor network.
+        // Now it is an honest skeleton: the shape of the grid, no invented faces.
+        <div className="wrap grid grid-cols-2 gap-px sm:grid-cols-4 lg:grid-cols-7" aria-busy="true" aria-label="Loading the counsellor network">
           {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4] overflow-hidden bg-ink-20"><img src={avatar(`ph${i}`)} alt="" className="size-full object-cover bw" loading="lazy" /></div>
+            <div key={i}>
+              <div className="aspect-[3/4] bg-ink-10" />
+              <div className="mt-3 h-3 w-3/4 bg-ink-10" />
+              <div className="mt-2 h-2 w-1/2 bg-ink-10" />
+            </div>
           ))}
         </div>
       )}
@@ -436,7 +445,7 @@ function Stat({ value, label, suffix }: { value: number; label: string; suffix?:
   return (
     <div data-reveal className="border-t border-paper/15 pt-6">
       <div className="display !text-[clamp(2.6rem,7vw,5.5rem)] font-extralight tabular-nums">
-        <span ref={ref}>0</span><span className="text-paper/40">{suffix}</span>
+        <span ref={ref}>0</span><span className="text-paper/55">{suffix}</span>
       </div>
       <p className="mono mt-2 text-[11px] uppercase tracking-[0.12em] text-paper/50">{label}</p>
     </div>
@@ -452,7 +461,7 @@ function Start() {
           <Kicker>{COPY.startKicker}</Kicker>
           <SplitReveal className="h-xl mt-6">A few minutes<br />is <span className="b">enough</span>.</SplitReveal>
           <p data-reveal data-delay="0.1" className="lead mt-7 max-w-md text-ink-60">{COPY.startBody}</p>
-          <div data-reveal data-delay="0.15" className="mt-9"><Magnetic href={PORTAL_URL}>{COPY.ctaPrimary}</Magnetic></div>
+          <div data-reveal data-delay="0.15" className="mt-9"><Magnetic href="/cri">{COPY.ctaPrimary}</Magnetic></div>
         </div>
         <div className="md:col-span-6 md:col-start-7">
           {STARTERS.map((s, i) => (

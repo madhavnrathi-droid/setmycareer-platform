@@ -7,7 +7,7 @@ export interface MethodStep { no: string; title: string; body: string }
 export interface ProductItem { title: string; body: string }
 
 export const COPY = {
-  heroKicker: "EST. 2010 · CAREER INTELLIGENCE",
+  heroKicker: "Career counselling & assessment · Since 2010",
   heroHeadline: "Measured,\nthen yours.",
   heroSub: "The largest decision of a life is made on its thinnest evidence — a rank, a rumour, the loudest voice at home. We measure who you actually are; the deciding stays yours.",
   ctaPrimary: "See where you stand",

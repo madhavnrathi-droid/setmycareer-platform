@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 
 /* Cookie / tracking consent — DPDP-style opt-IN for non-essential categories
@@ -23,6 +23,7 @@ export function CookieConsent() {
   const [manage, setManage] = useState(false)
   const [analytics, setAnalytics] = useState(false)
   const [marketing, setMarketing] = useState(false)
+  const bar = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // reduced-motion / first-paint safe: only show if no prior choice
@@ -30,45 +31,67 @@ export function CookieConsent() {
     return () => clearTimeout(t)
   }, [])
 
+  // Reserve the space the bar occupies instead of floating over content. The bar
+  // publishes its live height as --consent-h on <html>; the hero and the Compass pill
+  // add it to their bottom offsets. Previously a 440x190 card sat on top of the hero
+  // subhead on desktop and covered 28% of a phone screen — directly over the primary
+  // CTA — so a first-time visitor could not see the page's main action at all.
+  useLayoutEffect(() => {
+    const root = document.documentElement
+    if (!open || !bar.current) { root.style.setProperty("--consent-h", "0px"); return }
+    const el = bar.current
+    const sync = () => root.style.setProperty("--consent-h", `${Math.ceil(el.getBoundingClientRect().height)}px`)
+    sync()
+    const ro = new ResizeObserver(sync)
+    ro.observe(el)
+    return () => { ro.disconnect(); root.style.setProperty("--consent-h", "0px") }
+  }, [open, manage])
+
   if (!open) return null
   const decide = (a: boolean, m: boolean) => { save({ necessary: true, analytics: a, marketing: m, ts: Date.now() }); setOpen(false) }
 
+  // Accept and Reject carry EQUAL visual weight, deliberately. The old banner made
+  // "Accept all" the solid button and "Reject" an outline — steering by prominence,
+  // which the DPDP Act's freely-given standard and EDPB dark-pattern guidance both
+  // count against valid consent. It also put a second solid CTA on every first view,
+  // competing with the page's real primary action.
+  const choice = "btn !min-h-[44px] !px-4 !py-2 !text-[12.5px]"
   return (
-    <div role="dialog" aria-label="Cookie consent" aria-live="polite"
-      className="fixed inset-x-3 bottom-3 z-[9998] mx-auto max-w-[440px] rounded-[16px] border border-line bg-paper-pure p-5 shadow-[0_24px_60px_-24px_rgba(11,11,11,0.35)] md:left-5 md:right-auto md:mx-0">
-      <p className="text-[13px] font-medium tracking-tight text-ink">We use cookies</p>
-      <p className="mt-2 text-[12.5px] leading-relaxed text-ink-60">
-        Strictly-necessary cookies keep you signed in and the site working. With your consent we also use analytics and marketing cookies to improve SetMyCareer. You can change this any time.{" "}
-        <Link to="/legal/cookie-policy" className="ul">Cookie Policy</Link> · <Link to="/legal/privacy-policy" className="ul">Privacy</Link>
-      </p>
+    <div ref={bar} role="region" aria-label="Cookie consent"
+      className="fixed inset-x-0 bottom-0 z-[9998] border-t border-line bg-paper-pure">
+      <div className="wrap flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:gap-8">
+        <p className="text-[12.5px] leading-snug text-ink-60 md:max-w-[62ch]">
+          <span className="font-medium text-ink">Cookies.</span>{" "}
+          Necessary ones run the site. Analytics and marketing run only if you allow them.{" "}
+          <Link to="/legal/cookie-policy" className="ul whitespace-nowrap">Cookie Policy</Link>
+        </p>
 
-      {manage && (
-        <div className="mt-4 flex flex-col gap-2.5 border-t border-line pt-4 text-[12.5px]">
-          <label className="flex items-center justify-between gap-3 text-ink-60">
-            <span><b className="text-ink">Strictly necessary</b> — always on</span>
-            <input type="checkbox" checked disabled className="size-4 accent-ink opacity-60" />
-          </label>
-          <label className="flex items-center justify-between gap-3 text-ink-80">
-            <span><b className="text-ink">Analytics</b> — how the site is used</span>
-            <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="size-4 accent-[var(--color-growth)]" />
-          </label>
-          <label className="flex items-center justify-between gap-3 text-ink-80">
-            <span><b className="text-ink">Marketing</b> — relevant ads &amp; campaigns</span>
-            <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="size-4 accent-[var(--color-growth)]" />
-          </label>
+        {manage && (
+          <fieldset className="flex flex-wrap gap-x-6 gap-y-2 text-[12.5px] text-ink-80 md:order-none">
+            <legend className="sr-only">Cookie categories</legend>
+            <label className="flex min-h-[44px] items-center gap-2 text-ink-60">
+              <input type="checkbox" checked disabled className="size-4 accent-ink" /> Necessary (always on)
+            </label>
+            <label className="flex min-h-[44px] items-center gap-2">
+              <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="size-4 accent-ink" /> Analytics
+            </label>
+            <label className="flex min-h-[44px] items-center gap-2">
+              <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="size-4 accent-ink" /> Marketing
+            </label>
+          </fieldset>
+        )}
+
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          {manage ? (
+            <button onClick={() => decide(analytics, marketing)} className={choice}><span>Save choices</span></button>
+          ) : (
+            <>
+              <button onClick={() => decide(false, false)} className={choice}><span>Reject non-essential</span></button>
+              <button onClick={() => decide(true, true)} className={choice}><span>Accept all</span></button>
+              <button onClick={() => setManage(true)} className="ul min-h-[44px] px-2 text-[12.5px] text-ink-60">Choose</button>
+            </>
+          )}
         </div>
-      )}
-
-      <div className="mt-4 flex flex-wrap items-center gap-2.5">
-        {manage ? (
-          <button onClick={() => decide(analytics, marketing)} className="btn btn--solid !py-2.5 !text-[12.5px]"><span>Save choices</span></button>
-        ) : (
-          <button onClick={() => decide(true, true)} className="btn btn--solid !py-2.5 !text-[12.5px]"><span>Accept all</span></button>
-        )}
-        <button onClick={() => decide(false, false)} className="btn !py-2.5 !text-[12.5px]"><span>Reject non-essential</span></button>
-        {!manage && (
-          <button onClick={() => setManage(true)} className="ul ml-1 text-[12px] text-ink-50">Manage</button>
-        )}
       </div>
     </div>
   )

@@ -83,9 +83,9 @@ function PackageCard(c: Extract<CompassCardData, { type: "packageCard" }>) {
       <p className={`mt-1.5 text-[13px] leading-relaxed ${featured ? "text-paper/70" : "text-ink-60"}`}>{c.whyFit ?? o.tagline}</p>
       <ul className={`mt-3 space-y-1 text-[12.5px] leading-relaxed ${featured ? "text-paper/80" : "text-ink-80"}`}>
         {o.includes.slice(0, 3).map((inc) => (
-          <li key={inc} className="flex items-baseline gap-2"><span className={`mono text-[10px] ${featured ? "text-paper/40" : "text-ink-40"}`}>—</span>{inc}</li>
+          <li key={inc} className="flex items-baseline gap-2"><span className={`mono text-[10px] ${featured ? "text-paper/55" : "text-ink-40"}`}>—</span>{inc}</li>
         ))}
-        {o.sessions > 0 && <li className="flex items-baseline gap-2"><span className={`mono text-[10px] ${featured ? "text-paper/40" : "text-ink-40"}`}>—</span>{o.sessions} counselling session{o.sessions > 1 ? "s" : ""}</li>}
+        {o.sessions > 0 && <li className="flex items-baseline gap-2"><span className={`mono text-[10px] ${featured ? "text-paper/55" : "text-ink-40"}`}>—</span>{o.sessions} counselling session{o.sessions > 1 ? "s" : ""}</li>}
       </ul>
       {o.ai && o.ai.careerCredits > 0 && (
         <p className={`mt-2.5 text-[12px] ${featured ? "text-paper/60" : "text-ink-40"}`}>

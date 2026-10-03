@@ -15,7 +15,10 @@
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 
-const SRC = "/art/mona.jpg"
+// 640px webp (was a 960px, 505KB jpg). The frame caps display at 340px wide, so
+// ~600px covers a 2x retina screen; the extra resolution was downloaded and thrown
+// away on every homepage visit.
+const SRC = "/art/mona.webp"
 const MASK_SIZE = 512 // reveal-mask resolution (stored in canvas-UV space)
 
 const VERT = /* glsl */ `

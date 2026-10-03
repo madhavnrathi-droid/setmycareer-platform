@@ -28,7 +28,7 @@ function BigNum({ value, suffix = "", cls = "!text-[clamp(2.2rem,4.6vw,3.3rem)]"
   const ref = useCounter(value)
   return (
     <div className={`display ${cls} font-extralight leading-[0.9] tabular-nums text-paper`}>
-      <span ref={ref}>0</span><span className="text-paper/40">{suffix}</span>
+      <span ref={ref}>0</span><span className="text-paper/55">{suffix}</span>
     </div>
   )
 }
@@ -37,7 +37,7 @@ function Stat({ children, source }: { children: ReactNode; source: string }) {
   return (
     <div data-reveal className="border-t border-paper/15 pt-6">
       {children}
-      <p className="mono mt-4 text-[10px] uppercase tracking-[0.13em] text-paper/35">{source}</p>
+      <p className="mono mt-4 text-[10px] uppercase tracking-[0.13em] text-paper/55">{source}</p>
     </div>
   )
 }
@@ -55,7 +55,7 @@ export function Stakes() {
           <div data-reveal>
             <BigNum value={93} suffix="%" cls="!text-[clamp(2.8rem,6.5vw,5rem)]" />
             <p className="mt-4 max-w-sm text-[1.1rem] leading-snug text-paper/80">of Indian schools have no dedicated career counsellor.</p>
-            <p className="mono mt-3 text-[10px] uppercase tracking-[0.13em] text-paper/35">Higher Education Digest, 2023</p>
+            <p className="mono mt-3 text-[10px] uppercase tracking-[0.13em] text-paper/55">Higher Education Digest, 2023</p>
           </div>
           <div data-reveal className="md:justify-self-end"><DotGrid filled={93} /></div>
         </div>
@@ -81,7 +81,7 @@ export function Stakes() {
           <div data-reveal>
             <BigNum value={47} suffix="%" cls="!text-[clamp(2.6rem,5.5vw,4.2rem)]" />
             <p className="mt-4 max-w-md text-[1.1rem] leading-snug text-paper/80">of adults wish they had chosen a different career path.</p>
-            <p className="mono mt-3 text-[10px] uppercase tracking-[0.13em] text-paper/35">Harris Poll for CNBC, 2021</p>
+            <p className="mono mt-3 text-[10px] uppercase tracking-[0.13em] text-paper/55">Harris Poll for CNBC, 2021</p>
           </div>
           <p data-reveal className="max-w-xs text-[14px] leading-relaxed text-paper/50 md:justify-self-end md:text-right">Regret is the quiet tax on a choice made without evidence — paid across a working life, not a year.</p>
         </div>
