@@ -125,7 +125,7 @@ export function PortalResultsSummary() {
             return (
               <article key={t.id} data-reveal className="rounded-2xl border border-dashed border-ink-300 p-5">
                 <div className="flex items-center gap-3">
-                  <span className="text-ink-400"><IsoGlyph id={glyph} className="size-8" /></span>
+                  <span className="text-muted-foreground"><IsoGlyph id={glyph} className="size-8" /></span>
                   <div>
                     <p className="text-[15px] font-medium text-foreground">{t.name}</p>
                     <p className="text-[12.5px] text-ink-500">Not taken yet · ~{t.minutes} min</p>
@@ -159,7 +159,7 @@ export function PortalResultsSummary() {
 
               <ScoreBars rows={rows} />
               {Object.keys(r.scores).length > rows.length && (
-                <p className="mt-2 text-[11.5px] text-ink-400">
+                <p className="mt-2 text-[11.5px] text-muted-foreground">
                   Showing the {rows.length} highest of {Object.keys(r.scores).length} — the full set is in the report.
                 </p>
               )}

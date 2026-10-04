@@ -73,10 +73,10 @@ function AskRow({ n, q, note, children }: { n: string; q: string; note?: string;
   return (
     <div className="grid gap-4 border-t border-border py-7 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] sm:gap-10">
       <div className="flex gap-4">
-        <span className="font-mono text-[11px] tabular-nums leading-[1.7] text-ink-300">{n}</span>
+        <span className="font-mono text-[11px] tabular-nums leading-[1.7] text-muted-foreground">{n}</span>
         <div>
           <p className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-foreground">{q}</p>
-          {note && <p className="mt-1.5 max-w-[44ch] text-[12.5px] font-light leading-relaxed text-ink-400">{note}</p>}
+          {note && <p className="mt-1.5 max-w-[44ch] text-[12.5px] font-light leading-relaxed text-muted-foreground">{note}</p>}
         </div>
       </div>
       <div className="self-end sm:pl-0">{children}</div>
@@ -152,7 +152,7 @@ function ProfileIntake() {
       {/* header — progress is the headline until it's done */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">Your profile</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Your profile</p>
           <h1 className="mt-2 font-editorial text-[30px] font-light leading-[1.05] tracking-tight sm:text-[38px]">
             {complete ? "Profile complete." : "First, the person."}
           </h1>
@@ -164,14 +164,14 @@ function ProfileIntake() {
         </div>
         <div className="min-w-[180px]">
           <div className="flex items-baseline justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-300">Complete</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Complete</span>
             <span className="font-mono text-[13px] tabular-nums text-foreground">{pct}%</span>
           </div>
           <div className="mt-1.5 h-[3px] overflow-hidden rounded-full bg-border">
             <div className="h-full rounded-full bg-foreground transition-[width] duration-500" style={{ width: `${pct}%` }} />
           </div>
           {!complete && missing.length > 0 && (
-            <p className="mt-1.5 text-[11px] font-light text-ink-300">
+            <p className="mt-1.5 text-[11px] font-light text-muted-foreground">
               {missing.length} item{missing.length === 1 ? "" : "s"} left
             </p>
           )}
@@ -179,17 +179,17 @@ function ProfileIntake() {
       </div>
 
       {/* legend */}
-      <p className="mt-8 text-[11.5px] font-light text-ink-400">
+      <p className="mt-8 text-[11.5px] font-light text-muted-foreground">
         Fields marked <span className="font-medium text-brand-600">*</span> are required — they unlock your tests and sessions.
       </p>
 
       {/* 01 — about you */}
       <div className="mt-10">
         <div className="flex items-baseline gap-4 border-b-2 border-foreground pb-3">
-          <span className="font-editorial text-[26px] font-light leading-none text-ink-300">01</span>
+          <span className="font-editorial text-[26px] font-light leading-none text-muted-foreground">01</span>
           <div>
             <h2 className="text-[16px] font-medium tracking-[-0.01em] text-foreground">About you</h2>
-            <p className="text-[12px] font-light text-ink-400">Who the report is for — and which score tables it uses.</p>
+            <p className="text-[12px] font-light text-muted-foreground">Who the report is for — and which score tables it uses.</p>
           </div>
         </div>
         <div className="mt-1">
@@ -248,10 +248,10 @@ function ProfileIntake() {
       {/* 02 — reaching you */}
       <div className="mt-12">
         <div className="flex items-baseline gap-4 border-b-2 border-foreground pb-3">
-          <span className="font-editorial text-[26px] font-light leading-none text-ink-300">02</span>
+          <span className="font-editorial text-[26px] font-light leading-none text-muted-foreground">02</span>
           <div>
             <h2 className="text-[16px] font-medium tracking-[-0.01em] text-foreground">Reaching you</h2>
-            <p className="text-[12px] font-light text-ink-400">How your counsellor and your report find you.</p>
+            <p className="text-[12px] font-light text-muted-foreground">How your counsellor and your report find you.</p>
           </div>
         </div>
         <div className="mt-1">
@@ -287,10 +287,10 @@ function ProfileIntake() {
       {/* 03 — in your own words */}
       <div className="mt-12">
         <div className="flex items-baseline gap-4 border-b-2 border-foreground pb-3">
-          <span className="font-editorial text-[26px] font-light leading-none text-ink-300">03</span>
+          <span className="font-editorial text-[26px] font-light leading-none text-muted-foreground">03</span>
           <div>
             <h2 className="text-[16px] font-medium tracking-[-0.01em] text-foreground">In your own words</h2>
-            <p className="text-[12px] font-light text-ink-400">
+            <p className="text-[12px] font-light text-muted-foreground">
               Goes to your counsellor and your report exactly as written. A sentence or two is plenty — never scored.
             </p>
           </div>
@@ -331,12 +331,12 @@ function ProfileIntake() {
             Your assessments are unlocked <ArrowRight className="size-3.5" />
           </Link>
         ) : (
-          <p className="text-[12px] font-light text-ink-300">
+          <p className="text-[12px] font-light text-muted-foreground">
             Tests and session booking unlock when every required field is saved.
           </p>
         )}
         {pkg && (
-          <p className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-300">
+          <p className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
             Package · <span className="text-ink-600">{pkg}</span>
           </p>
         )}

@@ -91,7 +91,7 @@ function Process({ story }: { story: ProductStory }) {
             <Reveal key={s.title} delay={i * 90}>
               <div className="relative h-full rounded-2xl border border-border bg-card p-5">
                 <span className="grid size-10 place-items-center rounded-xl bg-brand-50 text-brand-600"><Icon className="size-5" /></span>
-                <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-300">{s.kicker}</p>
+                <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{s.kicker}</p>
                 <p className="mt-1 text-[15px] font-semibold text-foreground">{s.title}</p>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{s.desc}</p>
               </div>
@@ -119,7 +119,7 @@ function ReportPreview({ story }: { story: ProductStory }) {
           <div className="rounded-3xl border border-border bg-card p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <p className="text-[14px] font-semibold text-foreground">{report.title}</p>
-              <span className="rounded-full bg-secondary px-2.5 py-1 text-[10.5px] font-medium uppercase tracking-wide text-ink-400">{report.subtitle}</span>
+              <span className="rounded-full bg-secondary px-2.5 py-1 text-[10.5px] font-medium uppercase tracking-wide text-muted-foreground">{report.subtitle}</span>
             </div>
             <div className="mt-5 space-y-2.5">
               {report.bars.map((b, i) => {
@@ -137,7 +137,7 @@ function ReportPreview({ story }: { story: ProductStory }) {
                         {b.label}
                         {i === top && <span className="rounded-full bg-brand-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white">Best fit</span>}
                       </span>
-                      <span className={cn("tabular-nums transition-colors", isActive ? "text-foreground" : "text-ink-300")}>{b.value}</span>
+                      <span className={cn("tabular-nums transition-colors", isActive ? "text-foreground" : "text-muted-foreground")}>{b.value}</span>
                     </div>
                     <div className="mt-1 h-2.5 overflow-hidden rounded-full bg-secondary">
                       <div
@@ -181,7 +181,7 @@ function TestPreview({ story }: { story: ProductStory }) {
         <div className="overflow-hidden rounded-3xl border border-border bg-card">
           <div className="flex items-center justify-between border-b border-border px-5 py-3 sm:px-6">
             <span className="text-[12px] font-medium text-muted-foreground">{test.progress}</span>
-            <span className="text-[11px] text-ink-300">{test.intro}</span>
+            <span className="text-[11px] text-muted-foreground">{test.intro}</span>
           </div>
           <div className="px-5 py-7 sm:px-8 sm:py-9">
             <p className="mx-auto max-w-[44ch] text-center font-display text-[20px] font-medium leading-snug text-foreground sm:text-[22px]">“{test.question}”</p>
@@ -199,7 +199,7 @@ function TestPreview({ story }: { story: ProductStory }) {
                 </button>
               ))}
             </div>
-            <p className="mt-7 text-center text-[11.5px] text-ink-300">A preview — the full test adapts to your answers, no right or wrong.</p>
+            <p className="mt-7 text-center text-[11.5px] text-muted-foreground">A preview — the full test adapts to your answers, no right or wrong.</p>
           </div>
         </div>
       </Reveal>

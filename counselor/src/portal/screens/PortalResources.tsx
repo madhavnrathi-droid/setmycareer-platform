@@ -111,7 +111,7 @@ export function PortalResources() {
         {COMING.map((c) => (
           <span key={c.label} className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium ${c.live ? "border-brand-600/30 bg-brand-600/5 text-brand-600" : "border-border text-muted-foreground"}`}>
             <c.icon className="size-3.5" />{c.label}
-            {c.live ? <span className="ml-0.5 size-1.5 rounded-full bg-brand-600" /> : <span className="ml-0.5 text-[10px] uppercase tracking-wide opacity-70">soon</span>}
+            {c.live ? <span className="ml-0.5 size-1.5 rounded-full bg-brand-600" /> : <span className="ml-0.5 text-[10px] uppercase tracking-wide">soon</span>}
           </span>
         ))}
       </div>

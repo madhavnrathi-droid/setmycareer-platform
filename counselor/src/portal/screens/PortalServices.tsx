@@ -135,7 +135,7 @@ export function PortalServices() {
       {/* ── editorial masthead + the track switch ── */}
       <div data-reveal className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-300">{copy.eyebrow}</p>
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">{copy.eyebrow}</p>
           <h1 className="mt-2 font-display text-[30px] font-semibold leading-[1.02] tracking-tight sm:text-[38px]">{copy.h1}</h1>
           <p className="mt-2 max-w-[62ch] text-[14px] leading-relaxed text-muted-foreground">{copy.sub}</p>
         </div>

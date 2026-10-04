@@ -217,10 +217,10 @@ export function PortalAuth() {
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="su-email" className={AUTH_LABEL}>Email</Label>
                 <Input id="su-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" autoComplete="email" required />
-                <p className="text-[11px] text-ink-300">One-click start — no password to remember.</p>
+                <p className="text-[11px] text-muted-foreground">One-click start — no password to remember.</p>
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="su-goal" className={AUTH_LABEL}>What brings you here? <span className="text-ink-300">(optional)</span></Label>
+                <Label htmlFor="su-goal" className={AUTH_LABEL}>What brings you here? <span className="text-muted-foreground">(optional)</span></Label>
                 <Input id="su-goal" value={goal} onChange={(e) => setGoal(e.target.value)} placeholder="e.g. unsure what to do after my degree" />
               </div>
 
@@ -231,7 +231,7 @@ export function PortalAuth() {
               <OrDivider />
               <GoogleSignInButton />
 
-              <p className="text-center text-[11px] leading-relaxed text-ink-300">
+              <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
                 By continuing you agree to our{" "}
                 <a href={`${LEGAL}/terms-of-service`} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-600">Terms</a> and{" "}
                 <a href={`${LEGAL}/privacy-policy`} target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-600">Privacy Policy</a>.

@@ -129,7 +129,7 @@ export function TrajectoryMap({
   return (
     <figure ref={ref} className="w-full" aria-label={`Career trajectory: the journey to "${currentLabel}", then branching into ${rs.length} possible routes.`}>
       <div className="overflow-hidden rounded-2xl border border-hairline bg-gradient-to-br from-canvas via-card to-brand-100/15">
-        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img">
+        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`Career trajectory from ${currentLabel}${routes.length ? ` towards ${routes.map((r) => r.title).join(", ")}` : ""}`}>
           <defs>
             <linearGradient id={`tj-fill-${uid}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--color-brand-500)" stopOpacity={0.16} />

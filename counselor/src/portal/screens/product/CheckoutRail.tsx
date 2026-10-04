@@ -125,7 +125,7 @@ export function CheckoutRail({ product, tier, onSelectTier, isOwned, busy, onBuy
       {/* tier picker — only for multi-tier products */}
       {product.tiers && product.tiers.length > 1 && (
         <div className="mb-5">
-          <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-300">Choose your option</p>
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Choose your option</p>
           <div className="space-y-2">
             {product.tiers.map((t) => {
               const active = t.id === tierKey
@@ -188,7 +188,7 @@ export function CheckoutRail({ product, tier, onSelectTier, isOwned, busy, onBuy
                 </button>
               </div>
               {couponErr && <p className="mt-1.5 text-[11.5px] text-risk-600">{couponErr}</p>}
-              <p className="mt-1.5 text-[11px] text-ink-300">Try <button onClick={() => setCoupon("WELCOME10")} className="font-medium text-brand-600 hover:underline">WELCOME10</button> for 10% off.</p>
+              <p className="mt-1.5 text-[11px] text-muted-foreground">Try <button onClick={() => setCoupon("WELCOME10")} className="font-medium text-brand-600 hover:underline">WELCOME10</button> for 10% off.</p>
             </div>
           ) : (
             <button onClick={() => setCouponOpen(true)} className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-brand-600 transition hover:underline">
@@ -215,9 +215,9 @@ export function CheckoutRail({ product, tier, onSelectTier, isOwned, busy, onBuy
             <dt className="text-foreground">Total payable</dt>
             <dd className="tabular-nums text-foreground">{rupees(total)}</dd>
           </div>
-          <p className="text-[10.5px] text-ink-300">Inclusive of all taxes.</p>
         </dl>
       )}
+      {!isFree && <p className="mt-2 text-[10.5px] text-muted-foreground">Inclusive of all taxes.</p>}
 
       {/* buy / unlock */}
       <button
@@ -255,7 +255,7 @@ export function CheckoutRail({ product, tier, onSelectTier, isOwned, busy, onBuy
           Notes & terms <ChevronDown className={cn("size-4 transition-transform", termsOpen && "rotate-180")} />
         </button>
         {termsOpen && (
-          <div className="mt-2 space-y-1.5 text-[11.5px] leading-relaxed text-ink-400">
+          <div className="mt-2 space-y-1.5 text-[11.5px] leading-relaxed text-muted-foreground">
             <p>Sessions are scheduled within the package validity once payment is confirmed.</p>
             <p>Reports are delivered to your account; assessment fees are non-refundable once a report is generated.</p>
             <p>Pricing is inclusive of applicable taxes. By continuing you agree to SetMyCareer's terms of service.</p>

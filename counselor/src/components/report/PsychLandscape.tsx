@@ -88,7 +88,7 @@ export function PsychLandscape({
   return (
     <figure ref={ref} className="w-full" aria-label="Psychological landscape: personality traits as a terrain of peaks, with cluster strengths as a constellation above.">
       <div className="overflow-hidden rounded-2xl border border-hairline bg-gradient-to-b from-brand-100/25 via-card to-ink-050/40">
-        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img">
+        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`Trait landscape: ${traits.map((t) => `${t.axis} ${Math.round(t.value)}`).join(", ")}`}>
           <defs>
             <linearGradient id={`hill-${uid}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--color-brand-500)" stopOpacity={0.16} />

@@ -342,7 +342,7 @@ export function PortalTherapy() {
       )}
 
       {/* the caveat, where the decision happens — not buried in a footer page */}
-      <p className="mt-2 text-center text-[11px] text-ink-300">
+      <p className="mt-2 text-center text-[11px] text-muted-foreground">
         Compass — it can be wrong. Your counsellor confirms the big calls. 1 Career Credit per message.
       </p>
     </div>

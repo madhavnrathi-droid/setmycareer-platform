@@ -239,7 +239,7 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
       {/* ── the numbers board — what's inside, at a glance ── */}
       {inside.length > 0 && (
         <section className="mt-12">
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-300">What's inside</p>
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">What's inside</p>
           {/* per-tile borders (not the gap-as-line trick) so an odd item count
               never leaves a solid grey filler cell in the trailing track */}
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -256,14 +256,14 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
       {/* ── the machinery — a PIPELINE diagram of how it works, then the exact
           instruments beneath it (framework first, evidence second) ── */}
       <section className="mt-14">
-        <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-300">How the work happens</p>
+        <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">How the work happens</p>
         <h2 className="mt-3 max-w-[20ch] font-editorial text-[27px] font-light leading-[1.08] tracking-tight sm:text-[32px]">
           Instruments in, a decision out.
         </h2>
         <div className="mt-6"><PipelineDiagram o={o} /></div>
         {machinery(o).length > 0 && (
           <div className="mt-8">
-            <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-300">What's under the hood</p>
+            <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">What's under the hood</p>
             <InstrumentList rows={machinery(o)} />
           </div>
         )}
@@ -271,7 +271,7 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
 
       {/* ── the arc — how it runs over time, as a connected rail ── */}
       <section className="mt-14">
-        <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-300">How it runs</p>
+        <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">How it runs</p>
         <h2 className="mt-3 font-editorial text-[27px] font-light leading-[1.08] tracking-tight sm:text-[32px]">
           {o.track === "custom" ? "A multi-year partnership." : o.track === "marketplace" ? "One focused hour." : "Four moves, at your pace."}
         </h2>
@@ -283,7 +283,7 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
         <section className="mt-12 rounded-2xl border border-border bg-card p-6 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-[54ch]">
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-300">After you {free ? "start" : "pay"}</p>
+              <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">After you {free ? "start" : "pay"}</p>
               <ul className="mt-3 flex flex-col gap-1.5 text-[13px] leading-relaxed text-ink-600">
                 <li className="flex items-center gap-2"><Check className="size-3.5 shrink-0 text-well-600" /> Everything unlocks instantly — credits land in your wallet</li>
                 <li className="flex items-center gap-2"><Check className="size-3.5 shrink-0 text-well-600" /> The programme appears in your journey, step by step</li>
@@ -302,7 +302,7 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
                   {busy ? "Opening secure checkout…" : free ? "Start free" : consumable && (purchased || done) ? <>Book another · {fmtINR(o.inr)}</> : <>Pay {fmtINR(o.inr)} <Lock className="size-3.5" /></>}
                 </button>
               )}
-              <span className="text-[11px] text-ink-300">{free ? "No card needed." : "Secure Razorpay checkout · verified before unlock."}</span>
+              <span className="text-[11px] text-muted-foreground">{free ? "No card needed." : "Secure Razorpay checkout · verified before unlock."}</span>
             </div>
           </div>
         </section>
@@ -314,7 +314,7 @@ export function Offering2026Page({ o }: { o: Offering2026 }) {
         <Link to="/portal/therapy" className="inline-flex items-center gap-1.5 font-medium text-brand-600 hover:underline">
           <Sparkles className="size-3.5" /> Ask your AI guide
         </Link>
-        <span className="text-ink-300">·</span>
+        <span className="text-muted-foreground">·</span>
         <Link to="/portal/services" className="font-medium text-brand-600 hover:underline">Compare programmes</Link>
       </div>
     </div>

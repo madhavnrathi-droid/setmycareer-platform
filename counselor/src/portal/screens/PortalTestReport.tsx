@@ -28,7 +28,7 @@ const fmtDate = (iso: string) => new Date(iso).toLocaleDateString([], { day: "nu
 // the final engines band on 5 levels — tone by direction
 const bandTone = (b: string | null | undefined) =>
   /Very pronounced|Pronounced|Very strong|Strong/.test(b ?? "") ? "text-well-600"
-    : /Much less|Less|Very low|Low/.test(b ?? "") ? "text-ink-400"
+    : /Much less|Less|Very low|Low/.test(b ?? "") ? "text-muted-foreground"
     : "text-warn-600"
 const barTone = (v: number) => (v >= 65 ? "bg-well-500" : v <= 35 ? "bg-ink-300" : "bg-brand-500")
 const catTone = (c: string | null | undefined) =>
@@ -291,7 +291,7 @@ export function PortalTestReport() {
       </Link>
 
       <div data-reveal>
-        <p className="text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Test report</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Test report</p>
         <h1 className="mt-2 font-display text-[34px] font-semibold leading-[1.05] tracking-tight sm:text-[40px]">{def.name}</h1>
         <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-ink-600">{def.tagline}</p>
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12.5px] text-muted-foreground">

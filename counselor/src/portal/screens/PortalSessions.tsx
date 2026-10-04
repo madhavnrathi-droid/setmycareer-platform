@@ -95,7 +95,7 @@ function MiniMonth({ selected, onSelect, busyDays }: { selected: Date; onSelect:
       </div>
       <div className="mt-3 grid grid-cols-7 gap-y-1 text-center">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-          <span key={i} className="font-mono text-[9.5px] uppercase text-ink-300">{d}</span>
+          <span key={i} className="font-mono text-[9.5px] uppercase text-muted-foreground">{d}</span>
         ))}
         {Array.from({ length: startPad }).map((_, i) => <span key={`p${i}`} />)}
         {Array.from({ length: days }).map((_, i) => {
@@ -127,7 +127,7 @@ function DayTimeline({ date, bookings }: { date: Date; bookings: { at: string; t
     <div className="rounded-2xl border border-border p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[13.5px] font-medium text-foreground">Overview · {label}</p>
-        <div className="flex items-center gap-4 text-[11px] text-ink-400">
+        <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-well-500" /> Confirmed</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-warn-500" /> Pending</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-ink-300" /> Done</span>
@@ -141,7 +141,7 @@ function DayTimeline({ date, bookings }: { date: Date; bookings: { at: string; t
         </div>
         <div className="absolute inset-x-0 bottom-0 flex text-center">
           {HOURS.map((h) => (
-            <span key={h} className="flex-1 font-mono text-[9.5px] tabular-nums text-ink-300">
+            <span key={h} className="flex-1 font-mono text-[9.5px] tabular-nums text-muted-foreground">
               {h <= 12 ? h : h - 12}{h < 12 ? "am" : "pm"}
             </span>
           ))}
@@ -162,7 +162,7 @@ function DayTimeline({ date, bookings }: { date: Date; bookings: { at: string; t
           )
         })}
         {dayBookings.length === 0 && (
-          <p className="absolute left-0 top-2 text-[12px] font-light text-ink-300">Nothing on this day — request a session below.</p>
+          <p className="absolute left-0 top-2 text-[12px] font-light text-muted-foreground">Nothing on this day — request a session below.</p>
         )}
       </div>
     </div>
@@ -220,7 +220,7 @@ export function PortalSessions() {
     <div className="w-full space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-300">The hour that moves things</p>
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground">The hour that moves things</p>
           <h1 className="mt-2 font-editorial text-[32px] font-light tracking-tight sm:text-[38px]">Sessions</h1>
           <p className="mt-1.5 max-w-[52ch] text-[14px] text-muted-foreground">
             Book time with {counsellor?.name ?? "your counsellor"} — each session runs <span className="font-medium text-foreground">60 minutes</span>.
@@ -233,13 +233,13 @@ export function PortalSessions() {
             <p className="font-display text-[32px] font-semibold leading-none tabular-nums text-foreground">{account.credits.sessions}</p>
             <Link to="/portal/billing" className="shrink-0 rounded-full bg-foreground px-3.5 py-1.5 text-[11.5px] font-medium text-background transition-opacity hover:opacity-90">Buy more</Link>
           </div>
-          <p className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">session{account.credits.sessions === 1 ? "" : "s"} remaining</p>
+          <p className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-muted-foreground">session{account.credits.sessions === 1 ? "" : "s"} remaining</p>
           <div className="flex gap-1">
             {Array.from({ length: Math.max(account.credits.sessions + pastBookings.length, 4) }).slice(0, 10).map((_, i) => (
               <span key={i} className={cn("h-1.5 flex-1 rounded-full", i < pastBookings.length ? "bg-ink-200" : i < pastBookings.length + account.credits.sessions ? "bg-[#d8e94f]" : "bg-border")} />
             ))}
           </div>
-          <p className="text-[10.5px] font-light text-ink-400">{pastBookings.length} used · <span className="text-ink-600">lime = ready to book</span></p>
+          <p className="text-[10.5px] font-light text-muted-foreground">{pastBookings.length} used · <span className="text-ink-600">lime = ready to book</span></p>
         </div>
       </div>
 
@@ -439,7 +439,7 @@ export function PortalSessions() {
                     <div className="mb-3 ml-12 space-y-4 rounded-2xl bg-secondary/50 p-4 ring-1 ring-border">
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <p className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-300">
+                          <p className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                             <NotebookPen className="size-3.5" /> Session notes
                           </p>
                           {b.notes?.length ? (
@@ -456,7 +456,7 @@ export function PortalSessions() {
                           )}
                         </div>
                         <div>
-                          <p className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-300">
+                          <p className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                             <FileText className="size-3.5" /> Transcript
                           </p>
                           {b.transcript ? (
@@ -502,7 +502,7 @@ export function PortalSessions() {
             <div className="mx-auto max-w-3xl">
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">Session transcript</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Session transcript</p>
                   <h2 className="mt-1 font-editorial text-[24px] font-light tracking-tight">{b.topic}</h2>
                   <p className="text-[12px] text-muted-foreground">{new Date(b.at).toLocaleString()}</p>
                 </div>

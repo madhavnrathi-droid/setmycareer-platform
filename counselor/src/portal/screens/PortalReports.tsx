@@ -215,7 +215,7 @@ export function PortalReports() {
               </li>
             ))}
           </ol>
-          <p className="mt-2 border-t border-border pt-3 text-[11.5px] leading-relaxed text-ink-400">
+          <p className="mt-2 border-t border-border pt-3 text-[11.5px] leading-relaxed text-muted-foreground">
             {careerReady ? "Written by your counsellor from your measured results." : "Fills in as you complete your instruments and sessions."}
           </p>
         </Pane>
@@ -348,7 +348,7 @@ export function PortalReports() {
               {notes.map((n, i) => (
                 <div key={i} className="rounded-2xl bg-secondary/60 p-4 ring-1 ring-border">
                   <p className="text-[13.5px] leading-relaxed text-foreground">{n.comment}</p>
-                  <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
+                  <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                     {n.navigator_name ?? "Counsellor"}{n.date ? ` · ${n.date}` : ""}
                   </p>
                 </div>

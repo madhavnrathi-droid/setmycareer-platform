@@ -400,6 +400,8 @@ export function PortalVoice() {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-canvas">
+      {/* the room is full-screen and visually self-explanatory, but it had no heading at all */}
+      <h1 className="sr-only">Voice session with Compass</h1>
       {/* the aurora — colour at the edges, listening to the room; centre stays clean */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <EdgeGlow palette={VOICE_GLOW} energyRef={energyRef} idle={0.12} />
@@ -488,8 +490,8 @@ export function PortalVoice() {
             <div className="lg:hidden">
               <div className="flex items-center gap-1.5 px-5 pb-1.5 pt-1">
                 <Sparkles className="size-3.5 text-mind-500" />
-                <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] text-ink-400">Live insights</span>
-                <span className="text-[10.5px] tabular-nums text-ink-300">{insights.length}</span>
+                <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Live insights</span>
+                <span className="text-[10.5px] tabular-nums text-muted-foreground">{insights.length}</span>
               </div>
               <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {insights.map((c) => (
@@ -525,7 +527,7 @@ export function PortalVoice() {
                 <Phone className="size-5 rotate-[135deg]" /> End session
               </button>
             )}
-            <p className="text-[11px] text-ink-300">
+            <p className="text-[11px] text-muted-foreground">
               Credits burn at {BURN_MULTIPLIER}× real time · {reportMode ? "report mode" : "general chat"} · mic is live only during the session · AI counsellor — it can be wrong
             </p>
           </div>
@@ -638,7 +640,7 @@ function CounsellorPicker({ style, voices, chosenVoice, firstName, onSelectStyle
             ))}
           </select>
         )}
-        <p className="mt-2 text-[11px] text-ink-300">
+        <p className="mt-2 text-[11px] text-muted-foreground">
           {chosenVoice ? `Speaking as ${style.name} in ${chosenVoice.name}.` : "We'll pick a fitting voice automatically."} Your choice is remembered.
         </p>
       </div>

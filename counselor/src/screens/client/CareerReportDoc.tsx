@@ -950,7 +950,7 @@ export function CareerReportDoc({
                       i === 0 ? "border-brand-500 bg-brand-100 text-brand-600" : "border-hairline bg-ink-050 text-ink-700",
                     )}
                   >
-                    {a.axis} <span className="tabular-nums text-muted-foreground">{a.value}</span>
+                    {a.axis} <span className="tabular-nums text-ink-600">{a.value}</span>
                   </span>
                 ))}
               </div>
@@ -993,7 +993,7 @@ export function CareerReportDoc({
                   <span className="flex items-center gap-2">
                     <span className={cn(
                       "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                      meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-600" : "bg-risk-100 text-risk-600",
+                      meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-700" : "bg-risk-100 text-risk-600",
                     )}>{meta.label}</span>
                     <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{r.percentile}<span className="text-[10px] text-muted-foreground">th</span></span>
                   </span>
@@ -1029,7 +1029,7 @@ export function CareerReportDoc({
                     <span className="text-[13px] font-medium text-foreground">{g.name}</span>
                     <span className={cn(
                       "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                      meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-600" : "bg-risk-100 text-risk-600",
+                      meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-700" : "bg-risk-100 text-risk-600",
                     )}>{meta.label}</span>
                   </div>
                   <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{g.similarity}<span className="text-[10px] text-muted-foreground">%</span></span>
@@ -1444,7 +1444,7 @@ export function CareerReportDoc({
                   <div key={p.title} className="flex items-start gap-3 rounded-xl border border-hairline p-3.5">
                     <span className={cn(
                       "shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
-                      p.priority === "P1" ? "bg-risk-100 text-risk-600" : p.priority === "P2" ? "bg-warn-100 text-warn-600" : "bg-ink-050 text-ink-500",
+                      p.priority === "P1" ? "bg-risk-100 text-risk-600" : p.priority === "P2" ? "bg-warn-100 text-warn-700" : "bg-ink-050 text-ink-500",
                     )}>{p.priority}</span>
                     <div className="min-w-0">
                       <p className="text-[13px] font-medium text-foreground">{p.title}</p>

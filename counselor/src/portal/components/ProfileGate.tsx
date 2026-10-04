@@ -54,7 +54,7 @@ export function ProfileNudge() {
                 )}>
                   <Check className="size-2.5 stroke-[3]" />
                 </span>
-                <span className={r.done ? "text-ink-300 line-through decoration-ink-300/50" : "text-ink-600"}>{r.label}</span>
+                <span className={r.done ? "text-muted-foreground line-through decoration-ink-300/50" : "text-ink-600"}>{r.label}</span>
               </li>
             ))}
           </ul>
@@ -76,7 +76,7 @@ export function ProfileGateCard({ action }: { action: string }) {
   const pct = profileCompleteness(account)
   return (
     <div className="rounded-2xl border border-border bg-card p-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-300">Profile first</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Profile first</p>
       <p className="mt-2 text-[14.5px] font-normal leading-snug text-foreground">
         {action} unlocks once your profile is complete.
       </p>

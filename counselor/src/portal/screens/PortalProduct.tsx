@@ -91,7 +91,7 @@ export function PortalProduct() {
           <div className="mt-14 flex flex-wrap items-center gap-3 border-t border-border pt-6 text-[13px] text-muted-foreground">
             <span>Have questions about this?</span>
             <Link to="/portal/therapy" className="inline-flex items-center gap-1.5 font-medium text-brand-600 hover:underline"><Sparkles className="size-3.5" /> Ask your AI guide</Link>
-            <span className="text-ink-300">·</span>
+            <span className="text-muted-foreground">·</span>
             <Link to="/portal/services/consultation" className="font-medium text-brand-600 hover:underline">Book a consultation first</Link>
           </div>
         </div>

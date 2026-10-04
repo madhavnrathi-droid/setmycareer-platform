@@ -36,7 +36,7 @@ export function PortalAssessments() {
     <div ref={root}>
       {/* masthead */}
       <div data-reveal className="border-b border-border pb-8">
-        <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-300">The instruments</p>
+        <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground">The instruments</p>
         <h1 className="mt-3 font-editorial text-[34px] font-light leading-[1.05] tracking-tight sm:text-[44px]">
           Measured properly,
           <br />
@@ -120,7 +120,7 @@ export function PortalAssessments() {
         })}
       </div>
 
-      <p data-reveal className="mt-8 text-[11.5px] leading-relaxed text-ink-300">
+      <p data-reveal className="mt-8 text-[11.5px] leading-relaxed text-muted-foreground">
         All four final instruments are scored by SetMyCareer's own engines; your third test follows your track automatically.
         Results are one-take so your report reflects a true first reading.
       </p>

@@ -75,7 +75,7 @@ function Row({ to, icon: Icon, label, badge, end, onNavigate }: {
 // adding a hard divider between every item.
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="px-3 pb-1 pt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-300">
+    <p className="px-3 pb-1 pt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
       {children}
     </p>
   )

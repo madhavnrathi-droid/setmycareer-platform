@@ -38,9 +38,9 @@ export function CounsellorCredentials({ counsellor, className }: { counsellor: C
         const isUncertified = r.label === "Certification" && !counsellor.certified
         return (
           <div key={r.label} className="flex items-start gap-3 py-3">
-            <Icon className={cn("mt-0.5 size-4 shrink-0", isUncertified ? "text-ink-300" : "text-brand-600")} />
+            <Icon className={cn("mt-0.5 size-4 shrink-0", isUncertified ? "text-muted-foreground" : "text-brand-600")} />
             <dt className="w-[132px] shrink-0 text-[12.5px] text-muted-foreground">{r.label}</dt>
-            <dd className={cn("min-w-0 flex-1 text-[13px]", isUncertified ? "text-ink-400" : "font-medium text-foreground")}>
+            <dd className={cn("min-w-0 flex-1 text-[13px]", isUncertified ? "text-muted-foreground" : "font-medium text-foreground")}>
               {r.value}
             </dd>
           </div>

@@ -125,7 +125,7 @@ export function PortalTour() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <LogoMark size={16} className="text-brand-600" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">{i + 1} / {STEPS.length}</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{i + 1} / {STEPS.length}</span>
           </div>
           <button onClick={finish} aria-label="Skip tour" className="grid size-6 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground">
             <X className="size-3.5" />

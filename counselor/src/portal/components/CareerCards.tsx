@@ -94,7 +94,7 @@ function CardShell({
         <span className={cn("grid size-6 place-items-center rounded-full bg-secondary", accent)}>
           <Icon className="size-3.5 stroke-[1.75]" />
         </span>
-        <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] text-ink-400">{eyebrow}</span>
+        <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{eyebrow}</span>
       </div>
       <div className="px-3.5 py-3">{children}</div>
     </div>
@@ -153,7 +153,7 @@ function StudyPathCard({ input }: { input: StudyPathInput }) {
       </div>
       {colleges.length > 0 && (
         <div className="mt-2.5">
-          <p className="mb-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-300">Example colleges</p>
+          <p className="mb-1 text-[10.5px] font-medium uppercase tracking-[0.08em] text-muted-foreground">Example colleges</p>
           <div className="flex flex-wrap gap-1.5">
             {colleges.map((c) => (
               <span key={c} className="rounded-lg border border-border bg-secondary px-2 py-0.5 text-[11.5px] text-ink-600">{c}</span>

@@ -69,7 +69,7 @@ function RailNode({ s, accent, isCurrent }: { s: JourneyStep; accent: string; is
         {done ? <Check className="size-[18px] stroke-[2.5]" /> : locked ? <Lock className="size-4" /> : <Icon className="size-[18px] stroke-[1.75]" />}
       </span>
       <span className="min-w-0" title={s.label}>
-        <span className={cn("block text-[12.5px] font-medium leading-tight", locked ? "text-ink-400" : "text-foreground")}>{s.short}</span>
+        <span className={cn("block text-[12.5px] font-medium leading-tight", locked ? "text-muted-foreground" : "text-foreground")}>{s.short}</span>
         <span className="mt-0.5 block font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-500">Step {String(s.n).padStart(2, "0")}</span>
       </span>
     </div>
@@ -93,7 +93,7 @@ function MoveCard({ s, accent, counsellor }: {
           title wraps to two lines instead of being cut. */}
       <div className="min-w-0 flex-1">
         <p className="line-clamp-2 text-[14.5px] font-semibold leading-snug text-foreground">{s.label}</p>
-        <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
+        <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
           Step {String(s.n).padStart(2, "0")} · <span className="text-foreground">{s.cta}</span>
           <ArrowRight className="size-3 text-foreground transition-transform group-hover:translate-x-0.5" />
         </p>
@@ -114,7 +114,7 @@ function SavedPlan() {
     <Pane className="p-4">
       <div className="mb-2 flex items-baseline justify-between gap-3">
         <Eyebrow>Saved from Compass</Eyebrow>
-        <p className="text-[11.5px] font-light text-ink-400">{items.length} idea{items.length === 1 ? "" : "s"}</p>
+        <p className="text-[11.5px] font-light text-muted-foreground">{items.length} idea{items.length === 1 ? "" : "s"}</p>
       </div>
       <ul className="divide-y divide-border">
         {items.map((p) => (
@@ -123,7 +123,7 @@ function SavedPlan() {
             <button
               type="button"
               onClick={() => removePlanItem(p.id)}
-              className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium text-ink-400 transition hover:bg-secondary hover:text-foreground"
+              className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
             >
               Done
             </button>

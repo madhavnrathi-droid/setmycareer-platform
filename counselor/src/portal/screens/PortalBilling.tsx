@@ -93,7 +93,7 @@ export function PortalBilling() {
     <div className="mx-auto max-w-4xl space-y-12">
       {/* masthead */}
       <div className="border-b border-border pb-8">
-        <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-300">Package &amp; credits</p>
+        <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground">Package &amp; credits</p>
         <h1 className="mt-3 font-editorial text-[32px] font-light leading-[1.05] tracking-tight sm:text-[40px]">
           One package.
           <br />
@@ -247,7 +247,7 @@ export function PortalBilling() {
                 <p className="text-[14px] font-normal leading-relaxed text-foreground">“{item.q}”</p>
               </div>
               <div>
-                <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-300">What you get back</p>
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-muted-foreground">What you get back</p>
                 <p className="mt-1 text-[13px] font-light leading-relaxed text-ink-600">{item.a}</p>
               </div>
             </div>

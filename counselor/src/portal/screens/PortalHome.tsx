@@ -208,7 +208,7 @@ function YourPeople({ account }: { account: PortalAccount }) {
             {/* credentials, not a rating — members don't shop for a counsellor,
                 so what earns trust here is qualification */}
             {counsellor && credentialSummary(counsellor) && (
-              <p className="mt-0.5 truncate text-[11.5px] text-ink-400">{credentialSummary(counsellor)}</p>
+              <p className="mt-0.5 truncate text-[11.5px] text-muted-foreground">{credentialSummary(counsellor)}</p>
             )}
           </div>
           {counsellor && (
@@ -310,7 +310,7 @@ function YourSignal({ clientId }: { clientId: string }) {
         <div className="flex items-center gap-4">
           <FitGauge value={market.topGroup.fitPct} size={92} stroke={8} label="Best fit" />
           <div className="min-w-0">
-            <p className="text-[12px] font-medium uppercase tracking-wide text-ink-300">Best-fit job family</p>
+            <p className="text-[12px] font-medium uppercase tracking-wide text-muted-foreground">Best-fit job family</p>
             <p className="mt-0.5 font-editorial text-[20px] font-light leading-tight tracking-tight text-foreground">{market.topGroup.group}</p>
             <p className="mt-0.5"><Chip tone="brand">{market.topGroup.band} fit</Chip></p>
           </div>
@@ -319,7 +319,7 @@ function YourSignal({ clientId }: { clientId: string }) {
         <div className="flex items-end gap-4">
           <p className={cn("font-display text-[54px] font-semibold leading-[0.9] tracking-tight tabular-nums sm:text-[64px]", lead.accent)}>{lead.big}</p>
           <div className="pb-1.5">
-            <p className="text-[12px] font-medium uppercase tracking-wide text-ink-300">{lead.label}</p>
+            <p className="text-[12px] font-medium uppercase tracking-wide text-muted-foreground">{lead.label}</p>
             <p className="mt-0.5 font-editorial text-[19px] font-light leading-tight tracking-tight text-foreground">{lead.sub}</p>
           </div>
         </div>
@@ -329,7 +329,7 @@ function YourSignal({ clientId }: { clientId: string }) {
           {rest.map((r) => (
             <div key={r.label} className="py-3 sm:px-4 sm:first:pl-0">
               <p className={cn("font-display text-[24px] font-semibold leading-none tabular-nums", r.accent)}>{r.big}</p>
-              <p className="mt-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-300">{r.label}</p>
+              <p className="mt-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{r.label}</p>
               <p className="mt-0.5 truncate text-[12.5px] text-muted-foreground">{r.sub}</p>
             </div>
           ))}
@@ -392,7 +392,7 @@ function WorldForYou({ clientId }: { clientId: string }) {
       <Eyebrow right={terminalLink}>The market you're deciding in</Eyebrow>
       <p className="font-display text-[30px] font-semibold leading-none tracking-tight text-warn-600">{OUTLOOK.headline}</p>
       <p className="mt-1.5 max-w-[54ch] text-[14px] text-foreground">{OUTLOOK.headlineLabel} — {OUTLOOK.note}.</p>
-      <p className="mb-1 mt-5 text-[12px] font-medium uppercase tracking-wide text-ink-300">Fastest-rising careers</p>
+      <p className="mb-1 mt-5 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">Fastest-rising careers</p>
       <div className="divide-y divide-border border-y border-border">
         {rising.map((r, i) => careerRow(r, i + 1))}
       </div>

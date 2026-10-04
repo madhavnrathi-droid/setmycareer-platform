@@ -92,7 +92,7 @@ export function InfluenceMap({
   return (
     <figure ref={ref} className="w-full" aria-label={`Influence map for ${centerName}: ${nodes.length} surrounding forces placed by strength.`}>
       <div className="overflow-hidden rounded-2xl border border-hairline bg-gradient-to-br from-canvas via-card to-ink-050/40">
-        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img">
+        <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label={`Influences on ${centerName}: ${nodes.map((n) => `${n.label} ${Math.round(n.strength)}`).join(", ")}`}>
           <defs>
             <radialGradient id={`core-${uid}`} cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="var(--color-brand-500)" stopOpacity={0.18} />

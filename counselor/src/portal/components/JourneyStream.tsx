@@ -70,7 +70,7 @@ export function JourneyStream() {
     <section className="mb-8">
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-600">Your record, in order</p>
-        <p className="text-[11.5px] font-light text-ink-400"><span className="mr-1 inline-block size-2 rounded-full bg-[#d8e94f] align-middle" />lime = live now</p>
+        <p className="text-[11.5px] font-light text-muted-foreground"><span className="mr-1 inline-block size-2 rounded-full bg-[#d8e94f] align-middle" />lime = live now</p>
       </div>
       <div className="relative -mx-1 overflow-x-auto pb-2 [scrollbar-width:thin]">
         <div className="flex min-w-max items-stretch gap-0 px-1">
@@ -82,14 +82,14 @@ export function JourneyStream() {
                 <div className="flex items-center gap-2">
                   <span className={cn(
                     "grid size-8 shrink-0 place-items-center rounded-full border bg-card",
-                    e.live ? "border-transparent bg-[#d8e94f] text-foreground" : e.kind === "upcoming" ? "border-dashed border-ink-300 text-ink-400" : "border-border text-ink-600",
+                    e.live ? "border-transparent bg-[#d8e94f] text-foreground" : e.kind === "upcoming" ? "border-dashed border-ink-300 text-muted-foreground" : "border-border text-ink-600",
                   )}>
                     {e.kind === "test" && e.glyph ? <IsoGlyph id={e.glyph} className="size-5" />
                       : e.kind === "upcoming" ? <Clock className="size-3.5" />
                       : e.kind === "purchase" ? <ArrowUpRight className="size-3.5" />
                       : <Check className="size-3.5" />}
                   </span>
-                  <span className="font-mono text-[10px] tabular-nums uppercase tracking-[0.12em] text-ink-400">{fmt(e.at)} · {fmtT(e.at)}</span>
+                  <span className="font-mono text-[10px] tabular-nums uppercase tracking-[0.12em] text-muted-foreground">{fmt(e.at)} · {fmtT(e.at)}</span>
                 </div>
                 {/* widget card */}
                 <Link
@@ -102,7 +102,7 @@ export function JourneyStream() {
                   <p className="text-[13px] font-medium leading-snug text-foreground">{e.title}</p>
                   <p className="text-[11.5px] font-light leading-relaxed text-ink-600">{e.summary}</p>
                   <div className="mt-auto flex items-center justify-between pt-1">
-                    <span className="text-[10.5px] font-medium text-ink-400">
+                    <span className="text-[10.5px] font-medium text-muted-foreground">
                       {e.kind === "test" ? "Open report" : e.kind === "purchase" ? "Package & credits" : "Open sessions"} →
                     </span>
                     {e.joinHref && (
