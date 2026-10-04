@@ -63,29 +63,35 @@ export function openrouterModel(key?: string): LanguageModel | null {
 export type ProviderName = "gemini" | "openrouter" | "groq"
 
 // ── failure classification + circuit breaker ────────────────────────────────
-export type FailKind = "quota" | "rate_limit" | "auth" | "model_not_found" | "timeout" | "error"
+export type FailKind = "quota" | "rate_limit" | "too_large" | "auth" | "model_not_found" | "timeout" | "error"
 
 /** Classify a provider error. Word-bounded on purpose: the old check matched "rate"
  *  anywhere, so the AI SDK's own "No output gene-RATE-d" wrapper read as a rate limit
  *  and every failure of any kind told users "I'm momentarily at the rate limit". */
 export function failKind(e: unknown): FailKind {
-  const m = e instanceof Error ? e.message : String(e)
+  // URLs are stripped first: Gemini's quota error links to ".../docs/rate-limits", and
+  // matching inside that link filed a hard quota as a 45 s rate limit. Gemini was then
+  // retried on nearly every request, at 9-20 s a time.
+  const m = (e instanceof Error ? e.message : String(e)).replace(/https?:\/\/\S+/g, " ")
   // Per-minute limits first: Groq's "Rate limit reached ... tokens per minute ... try
   // again in 12s" also links to its billing page, and must not earn a 10-minute cooldown.
   // a DAILY cap reads like a rate limit but will not clear for hours
   if (/per day|\btpd\b|\brpd\b|daily/i.test(m)) return "quota"
+  // "Request too large ... tokens per minute (TPM): Limit 8000" is about THIS request,
+  // not the provider: waiting will not help it, and a smaller request would still succeed.
+  if (/request too large|too large for model|maximum context length|context[_ ]length[_ ]exceeded/i.test(m)) return "too_large"
   if (/rate[ -]?limit|per minute|\btpm\b|\brpm\b|try again in|too many requests/i.test(m)) return "rate_limit"
   if (/exceeded your current quota|insufficient credits|resource[_ ]exhausted|per day/i.test(m)) return "quota"
   if (/\b429\b/.test(m)) return "rate_limit"
   if (/\b40[13]\b|api key|unauthori[sz]ed|permission denied/i.test(m)) return "auth"
-  if (/\b404\b|does not exist|not found|no endpoints|unknown model/i.test(m)) return "model_not_found"
+  if (/\b404\b|does not exist|not found|no endpoints|unknown model|decommissioned|no longer supported/i.test(m)) return "model_not_found"
   if (/time[ -]?out|timed out|aborted/i.test(m)) return "timeout"
   return "error"
 }
 
 // How long to skip a provider after it fails, by kind. A quota or a missing model will
 // not fix itself in seconds; a transient rate limit usually does.
-const COOL_MS: Record<FailKind, number> = { quota: 10 * 60e3, model_not_found: 30 * 60e3, auth: 30 * 60e3, rate_limit: 45e3, timeout: 20e3, error: 15e3 }
+const COOL_MS: Record<FailKind, number> = { quota: 10 * 60e3, model_not_found: 30 * 60e3, auth: 30 * 60e3, rate_limit: 45e3, too_large: 0, timeout: 20e3, error: 15e3 }
 const downUntil = new Map<ProviderName, number>()
 
 /** Record a provider failure so the next requests in this instance skip it. */
@@ -125,22 +131,68 @@ export function streamingModel(keys: AIKeys): LanguageModel | null {
 }
 
 /** generateText across the provider chain — returns the text of the first model that succeeds. */
+/** Longest stated rate-limit wait worth sitting out instead of falling back. Callers that
+ *  answer through a non-streamed Edge response must stay well inside its 25 s limit;
+ *  a streamed one (the report) can afford more. */
+const DEFAULT_MAX_WAIT_MS = 12_000
+
+/** The wait a provider asks for in its rate-limit message, if it states one. */
+export function statedWaitMs(e: unknown): number | null {
+  const m = e instanceof Error ? e.message : String(e)
+  const hit = m.match(/(?:try again|retry) in\s+(?:(\d+)m)?\s*(\d+(?:\.\d+)?)\s*(ms|s)\b/i)
+  if (!hit) return null
+  const mins = hit[1] ? Number(hit[1]) * 60_000 : 0
+  const n = Number(hit[2])
+  return mins + (hit[3].toLowerCase() === "ms" ? n : n * 1000)
+}
+
 export async function generateTextWithFallback(
   keys: AIKeys,
-  params: { system: string; prompt: string; temperature?: number; maxRetries?: number },
+  params: { system: string; prompt: string; temperature?: number },
+  label = "generate",
+  opts: { maxWaitMs?: number } = {},
 ): Promise<string> {
+  const maxWait = opts.maxWaitMs ?? DEFAULT_MAX_WAIT_MS
   const chain = streamingChain(keys)
   if (!chain.length) throw new Error("No AI provider key configured")
   let lastErr: unknown
+  // One line per attempt in the function logs: which provider, what happened, how long.
+  // Without it a slow or failing report was invisible: the only trace was a 504.
+  // Never logs keys or prompt text, only the provider's own error message.
+  const approxTokens = Math.round((params.system.length + params.prompt.length) / 4)
   for (const { name, model } of chain) {
-    try {
-      // Retrying the SAME provider only makes sense for a transient blip. A quota or a
-      // missing model fails identically each time, so those move straight to the next.
-      const r = await generateText({ model, maxRetries: 1, providerOptions: PROVIDER_OPTIONS, ...params })
-      if (r.text && r.text.trim()) return r.text
-    } catch (err) {
-      lastErr = err
-      markDown(name, failKind(err))
+    // The SDK's own retry runs before the error can be classified, so it is off
+    // (maxRetries: 0) and the decision is made here instead: a transient failure gets
+    // one more try on the same provider, while a quota, rate limit, bad key or missing
+    // model moves straight on. The SDK retry used to spend 9-20 s re-asking an exhausted
+    // Gemini before every Groq answer, which itself arrived in about 2 s.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const t0 = Date.now()
+      try {
+        const r = await generateText({ model, maxRetries: 0, providerOptions: PROVIDER_OPTIONS, ...params })
+        if (r.text && r.text.trim()) {
+          console.info(`[ai] ${label} ${name} ok ${Date.now() - t0}ms ~${approxTokens}tok`)
+          return r.text
+        }
+        console.warn(`[ai] ${label} ${name} empty ${Date.now() - t0}ms`)
+        break
+      } catch (err) {
+        lastErr = err
+        const kind = failKind(err)
+        const stated = kind === "rate_limit" ? statedWaitMs(err) : null
+        console.warn(`[ai] ${label} ${name} ${kind} ${Date.now() - t0}ms ~${approxTokens}tok${stated != null ? ` wait=${stated}ms` : ""}: ${(err instanceof Error ? err.message : String(err)).slice(0, 160)}`)
+        if (attempt === 0 && (kind === "error" || kind === "timeout")) continue
+        // A per-minute cap that names a short wait ("try again in 9.75s") is cheaper to
+        // sit out than to fall back: Groq then answers in ~2 s, where the free OpenRouter
+        // model took ~36 s for the same report section.
+        const wait = attempt === 0 ? stated : null
+        if (wait != null && wait <= maxWait) {
+          await new Promise((r) => setTimeout(r, wait + 250))
+          continue
+        }
+        markDown(name, kind)
+        break
+      }
     }
   }
   throw lastErr ?? new Error("All AI providers failed")

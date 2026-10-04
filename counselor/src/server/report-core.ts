@@ -12,6 +12,7 @@
 // even if a sub-call fails (missing fields fall back to "").
 
 import { type AIKeys, generateTextWithFallback } from "./ai-providers"
+import { jsonWithKeepalive } from "./keepalive"
 
 export interface AINarrative {
   framingThesis: string
@@ -192,7 +193,7 @@ export async function generateReport(
       '- "journey": array of objects { "key": string, "narrative": string } with EXACTLY these five keys in order: "problem", "assessment", "sessions", "synthesis", "future". Quote the client VERBATIM from the transcript at least once per stage where one fits, and reason ACROSS sessions to show change over time.\n' +
       '- "counsellorSynthesis": string — 1-2 paragraphs that integrate the counsellor notes HEAVILY and reference specific transcript moments; the counsellor\'s observations should visibly drive the read.\n' +
       "Return the JSON object now.",
-  })
+  }, "report:spine", { maxWaitMs: 30_000 })
 
   // Call B — the section reads: one tight paragraph per analytical section,
   // pulling specifics from the full client record.
@@ -204,7 +205,7 @@ export async function generateReport(
       'Write the SECTION NARRATIVES, grounded in the record above. Return ONLY a JSON object with key "sectionNarratives" whose value is an object with exactly these string keys, each a single evidence-grounded paragraph in the second person:\n' +
       '"personality" (big-five levels), "interests" (Holland / RIASEC code), "abilities", "clusters" (the five cluster scores), "jobGroups" (top job groups), "workRoles" (top work roles), "wellbeing" (sustainability / reserves — honest, non-clinical).\n' +
       "Where a real session moment or note supports a point, reference it. Use a concrete metaphor in at least the personality and clusters paragraphs. Return the JSON object now.",
-  })
+  }, "report:sections", { maxWaitMs: 30_000 })
 
   // Call C — outlook & actions: job-market reading, per-route rationales (ids
   // MUST match the route ids in the payload), recommendations, and pull quotes.
@@ -219,7 +220,7 @@ export async function generateReport(
       '- "recommendations": string[] — 4-6 concrete, sequenced next moves; let the counsellor notes carry high weight here.\n' +
       '- "pullQuotes": string[] — 3-5 short, memorable McKinsey-style takeaway lines drawn from the analysis.\n' +
       "Return the JSON object now.",
-  })
+  }, "report:outlook", { maxWaitMs: 30_000 })
 
   const out = emptyNarrative()
 
@@ -273,17 +274,14 @@ export async function handleReportRequest(
   openrouterKey?: string,
 ): Promise<Response> {
   if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 })
+  let input: unknown
   try {
-    const input = await request.json()
-    if (!input || typeof input !== "object") {
-      return Response.json({ error: "No report payload provided" }, { status: 400 })
-    }
-    const narrative = await generateReport(input, { groq: apiKey, openrouter: openrouterKey })
-    return Response.json(narrative)
-  } catch (err) {
-    return Response.json(
-      { error: err instanceof Error ? err.message : "Report generation failed" },
-      { status: 500 },
-    )
+    input = await request.json()
+  } catch {
+    return Response.json({ error: "Malformed report payload" }, { status: 400 })
   }
+  if (!input || typeof input !== "object") {
+    return Response.json({ error: "No report payload provided" }, { status: 400 })
+  }
+  return jsonWithKeepalive(() => generateReport(input, { groq: apiKey, openrouter: openrouterKey }))
 }

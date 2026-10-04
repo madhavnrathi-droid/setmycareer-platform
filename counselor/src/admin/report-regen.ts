@@ -84,7 +84,8 @@ export async function generateRegenNarrative(input: RegenInput): Promise<AINarra
     body: JSON.stringify(payload),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error((data && data.error) || `Report agent failed (HTTP ${res.status})`)
+  // the endpoint streams, so a failure arrives as {"error"} with a 200 status
+  if (!res.ok || (data && data.error)) throw new Error((data && data.error) || `Report agent failed (HTTP ${res.status})`)
   return data as AINarrative
 }
 

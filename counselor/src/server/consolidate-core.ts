@@ -5,6 +5,7 @@
 // prompt forbids inventing scores.
 
 import { generateTextWithFallback, type AIKeys } from "./ai-providers"
+import { responseWithKeepalive } from "./keepalive"
 
 export interface ConsolidateBody {
   details: { name: string; age: number; gender: string; grade: string }
@@ -86,5 +87,6 @@ export async function handleConsolidateRequest(req: Request, keys: AIKeys): Prom
   if (req.method !== "POST") return new Response("Method Not Allowed", { status: 405 })
   const body = (await req.json().catch(() => null)) as ConsolidateBody | null
   if (!body) return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers: { "content-type": "application/json" } })
-  return runConsolidate(body, keys)
+  if (!body?.details?.name) return new Response(JSON.stringify({ error: "Bad payload" }), { status: 400, headers: { "content-type": "application/json" } })
+  return responseWithKeepalive(() => runConsolidate(body, keys))
 }

@@ -7,8 +7,8 @@
 
 import { streamText, convertToModelMessages, tool, stepCountIs, createUIMessageStream, createUIMessageStreamResponse, type UIMessage } from "ai"
 import { z } from "zod"
-import { streamingChain, failKind, markDown, PROVIDER_OPTIONS, type FailKind } from "./ai-providers"
-import { SMC_KNOWLEDGE } from "./career-knowledge"
+import { streamingChain, failKind, markDown, statedWaitMs, PROVIDER_OPTIONS, type FailKind } from "./ai-providers"
+import { SMC_KNOWLEDGE, SMC_KNOWLEDGE_COMPACT } from "./career-knowledge"
 import { CATALOG_2026_BRIEF, OFFERINGS_2026 } from "./offerings-2026"
 import { CAREER_INTELLIGENCE_KNOWLEDGE } from "../intelligence/context"
 import { runIntelligence, formatReport } from "../intelligence"
@@ -91,7 +91,7 @@ const RESPONSE_ENGINE = [
   "",
 ].join("\n")
 
-function system(ctx?: AssistantContext) {
+function system(ctx?: AssistantContext, compact = false) {
   return [
     "You are Compass, the copilot inside the Setmycareer counselor console.",
     "You help a career counselor navigate the app, recall client reads, draft next steps, and explain how the platform's scores are built.",
@@ -116,7 +116,7 @@ function system(ctx?: AssistantContext) {
     "Grounding: for anything about THIS counselor's clients, practice, or numbers, prefer and ground your answer in the ACCOUNT BRIEF provided in the context below. You are not restricted to that brief for general or world-knowledge questions — use your broader knowledge there.",
     "Guardrails: you are a workflow copilot and general assistant, not a clinician or licensed financial adviser. Never give a clinical diagnosis or personalized investment advice; for those, defer to the counselor's judgment. Outside the account brief, never invent client numbers — if you don't have a value, say so and offer to open the client.",
     "You also know SetMyCareer's full product catalogue, pricing and the Career Tests + career-fit assessment methodology (knowledge base below) — use it to advise which product fits a client and to explain exactly how any report figure was derived. Prefer the 2026 catalog when recommending programmes; the earlier catalogue is legacy.",
-    SMC_KNOWLEDGE,
+    compact ? SMC_KNOWLEDGE_COMPACT : SMC_KNOWLEDGE,
     CATALOG_2026_BRIEF,
     CAREER_INTELLIGENCE_KNOWLEDGE,
     ctx?.intelligenceContext ? `\n=== CAREER INTELLIGENCE (the student in context — ground every admission-odds, ROI, scholarship and employability figure here; do not invent cutoffs/fees/ranks) ===\n${ctx.intelligenceContext}` : "",
@@ -129,7 +129,7 @@ function system(ctx?: AssistantContext) {
 // The member-facing AI guide — a separate, client-safe persona used by the
 // client portal. No counsellor tools, no caseload visibility; a warm companion
 // with firm clinical guardrails that always defers to the human counsellor.
-function clientSystem(ctx?: AssistantContext) {
+function clientSystem(ctx?: AssistantContext, compact = false) {
   const name = ctx?.clientName?.trim() || "there"
   const persona = ctx?.counsellorStyle
   return [
@@ -165,7 +165,7 @@ function clientSystem(ctx?: AssistantContext) {
     "Assessments are ONE-TAKE: each Career Test is taken a single time so the report reflects a true first reading. If they ask to retake a test, explain this warmly (the counsellor can discuss results with them) — never suggest gaming or redoing an instrument. Before they take one, your best advice is: rested, honest, unhurried.",
     "Safety: if they express crisis, hopelessness, or any risk of harming themselves or others, respond with calm warmth, take it seriously, and immediately encourage them to reach their counsellor or local emergency services / a crisis line right away. Never minimise it.",
     "You can recommend the right SetMyCareer product or package for the member's situation, explain what it includes and its price, and explain HOW their assessment results and career-fit were calculated — use the knowledge base below as ground truth and never invent prices or scores. When recommending programmes, prefer the 2026 catalog below; describe AI allowances only as Career Credits / Voice Credits ('AI Career Copilot included'), never as message counts or minutes.",
-    SMC_KNOWLEDGE,
+    compact ? SMC_KNOWLEDGE_COMPACT : SMC_KNOWLEDGE,
     CATALOG_2026_BRIEF,
     CAREER_INTELLIGENCE_KNOWLEDGE,
     ctx?.intelligenceContext ? `\n=== CAREER INTELLIGENCE (the student in context — ground every admission-odds, ROI, scholarship and employability figure here; do not invent cutoffs/fees/ranks) ===\n${ctx.intelligenceContext}` : "",
@@ -186,7 +186,7 @@ function clientSystem(ctx?: AssistantContext) {
 // ops / finance / growth lead who runs the whole company from the admin dashboard.
 // Grounded in a LIVE snapshot of every figure on the dashboard, so it can answer
 // AND compute anything across the business.
-function adminSystem(ctx?: AssistantContext) {
+function adminSystem(ctx?: AssistantContext, compact = false) {
   return [
     "You are the Mission Control AI — the operating copilot inside SetMyCareer's ADMIN dashboard.",
     "You are talking to a power user who runs the company: founder / operations / finance / growth / counsellor-lead. Treat them as an expert peer.",
@@ -199,7 +199,7 @@ function adminSystem(ctx?: AssistantContext) {
     "You also know SetMyCareer's complete product catalogue, pricing and the Career Tests + career-fit assessment methodology (knowledge base below) — use it to reason about pricing, packaging, margin and unit economics, and to explain how any report/score is derived.",
     "Data freshness: this dashboard is connected to the LIVE SetMyCareer production backend — the registered-user counts, counsellor roster, package catalogue and the per-client analyses in the snapshot are real. Some company-wide financial roll-ups (MRR, cohorts, forecasts) are still modelled where the backend doesn't yet expose them; if asked, be honest about which figure is a live pull vs a model, and point to the screen that has the live number. Never say the backend is unconnected.",
     "Guardrail: you are an internal analytics + ops copilot, not a licensed financial/legal adviser — flag when something needs a professional, but otherwise be maximally useful with the company's own data.",
-    SMC_KNOWLEDGE,
+    compact ? SMC_KNOWLEDGE_COMPACT : SMC_KNOWLEDGE,
     CATALOG_2026_BRIEF,
     CAREER_INTELLIGENCE_KNOWLEDGE,
     ctx?.intelligenceContext ? `\n=== CAREER INTELLIGENCE (the student in context — ground every admission-odds, ROI, scholarship and employability figure here; do not invent cutoffs/fees/ranks) ===\n${ctx.intelligenceContext}` : "",
@@ -623,14 +623,16 @@ export async function runAssistant(opts: {
 
   // Build the identical streamText call for whichever model we're trying — so the
   // system prompt, tools, and limits are the same no matter which provider serves.
-  const build = (model: (typeof chain)[number]["model"], onError?: (e: unknown) => void) =>
+  // Groq's free tier refuses any request over 8k tokens, so it gets the compact
+  // knowledge base; every other provider gets the full one.
+  const build = (model: (typeof chain)[number]["model"], onError?: (e: unknown) => void, provider?: (typeof chain)[number]["name"]) =>
     streamText({
       model,
       // the provider's real error only arrives here — awaiting r.text afterwards just
       // throws a generic "No output generated" wrapper
       ...(onError ? { onError: ({ error }: { error: unknown }) => onError(error) } : {}),
       providerOptions: PROVIDER_OPTIONS,
-      system: isAdmin ? adminSystem(opts.context) : isClient ? clientSystem(opts.context) : isVisitor ? visitorSystem(opts.context) : system(opts.context),
+      system: isAdmin ? adminSystem(opts.context, provider === "groq") : isClient ? clientSystem(opts.context, provider === "groq") : isVisitor ? visitorSystem(opts.context) : system(opts.context, provider === "groq"),
       messages: modelMessages,
       // Every surface gets the Career Intelligence tool (so the chatbot answers
       // admission/ROI/scholarship/fit questions with real numbers in ALL contexts).
@@ -656,6 +658,10 @@ export async function runAssistant(opts: {
       maxRetries: 0,
     })
 
+  // One line per failed provider in the function logs (never keys or message content).
+  const logAttempt = (mode: string, name: string, k: FailKind, ms: number, err: unknown) =>
+    console.warn(`[ai] compass:${mode} ${name} ${k} ${ms}ms: ${(err instanceof Error ? err.message : String(err)).replace(/^.*?(Limit \d+[^.]*)\..*$/s, "$1").slice(0, 200)}`)
+
   // What to tell a person when no provider could answer. Accurate, not reassuring: the
   // old copy said "I'm momentarily at the rate limit" for EVERY failure (see failKind).
   const unavailable = (kinds: FailKind[]) =>
@@ -673,13 +679,14 @@ export async function runAssistant(opts: {
     // in a header. Every provider's error used to be swallowed into one friendly line.
     const attempts: string[] = []
     const kinds: FailKind[] = []
-    for (const { name, model } of chain) {
+    // One provider, one try: the JSON answer, or the classified failure.
+    const tryPlain = async (name: (typeof chain)[number]["name"], model: (typeof chain)[number]["model"]): Promise<Response | { k: FailKind; err: unknown }> => {
       const ta = Date.now()
       let streamErr: unknown = null
       try {
         // the provider's real error arrives via onError; awaiting r.text afterwards only
         // throws the SDK's generic "No output generated" wrapper
-        const r = build(model, (e) => { streamErr = e })
+        const r = build(model, (e) => { streamErr = e }, name)
         // Collect generative-UI tool calls across ALL steps — with echo-execute
         // tools the model calls a card in one step then narrates in the next, so
         // `result.toolCalls` (final step only) misses them. careerIntelligence is
@@ -705,13 +712,32 @@ export async function runAssistant(opts: {
           )
         }
         attempts.push(`${name}:empty@${Date.now() - ta}ms`)
+        return { k: "error", err: new Error("empty response") }
       } catch (err) {
         const k = failKind(streamErr ?? err)
-        kinds.push(k)
-        markDown(name, k) // the next request in this instance skips it while it cools down
         attempts.push(`${name}:${k}@${Date.now() - ta}ms`)
+        logAttempt("plain", name, k, Date.now() - ta, streamErr ?? err)
+        return { k, err: streamErr ?? err }
       }
     }
+    const later: { name: (typeof chain)[number]["name"]; model: (typeof chain)[number]["model"]; wait: number }[] = []
+    for (const { name, model } of chain) {
+      const r = await tryPlain(name, model)
+      if (r instanceof Response) return r
+      kinds.push(r.k)
+      const wait = r.k === "rate_limit" ? statedWaitMs(r.err) : null
+      if (wait != null) later.push({ name, model, wait })
+      else markDown(name, r.k) // the next request in this instance skips it while it cools down
+    }
+    // Everything refused. If a provider named a short wait and it still fits inside the
+    // 25 s Edge window this response must open within, sit it out once and retry.
+    const soonest = later.sort((x, y) => x.wait - y.wait)[0]
+    if (soonest && Date.now() - t0 + soonest.wait + 6000 < 24_000) {
+      await new Promise((res) => setTimeout(res, soonest.wait + 250))
+      const r = await tryPlain(soonest.name, soonest.model)
+      if (r instanceof Response) return r
+    }
+    for (const x of later) markDown(x.name, "rate_limit")
     // provider "none" lets the site show its own recovery path instead of an "answer"
     return Response.json({ text: unavailable(kinds), provider: "none" }, { status: 503, headers: { "x-ai-attempts": attempts.join(",") } })
   }
@@ -727,12 +753,14 @@ export async function runAssistant(opts: {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const kinds: FailKind[] = []
-      for (const { name, model } of chain) {
+      // One provider: true once its content is flowing to the user, else the failure.
+      const tryStream = async (name: (typeof chain)[number]["name"], model: (typeof chain)[number]["model"]): Promise<true | { k: FailKind; err: unknown }> => {
+        const ta = Date.now()
         let streamErr: unknown = null
         const held: Parameters<typeof writer.write>[0][] = []
         let live = false
         let failed = false
-        const ui = build(model, (e) => { streamErr = e }).toUIMessageStream({ onError: () => "provider-error" })
+        const ui = build(model, (e) => { streamErr = e }, name).toUIMessageStream({ onError: () => "provider-error" })
         for await (const part of ui) {
           if (live) { writer.write(part); continue }
           if (part.type === "error") { failed = true; break }
@@ -742,12 +770,31 @@ export async function runAssistant(opts: {
             for (const h of held) writer.write(h)
           }
         }
-        if (live) return
+        if (live) return true
         // ended with no content and no error part: treat as a failure too
-        const k = failKind(streamErr ?? (failed ? "provider-error" : "empty response"))
-        kinds.push(k)
-        markDown(name, k)
+        const err = streamErr ?? (failed ? "provider-error" : "empty response")
+        const k = failKind(err)
+        logAttempt("stream", name, k, Date.now() - ta, err)
+        return { k, err }
       }
+      const later: { name: (typeof chain)[number]["name"]; model: (typeof chain)[number]["model"]; wait: number }[] = []
+      for (const { name, model } of chain) {
+        const r = await tryStream(name, model)
+        if (r === true) return
+        kinds.push(r.k)
+        const wait = r.k === "rate_limit" ? statedWaitMs(r.err) : null
+        if (wait != null) later.push({ name, model, wait })
+        else markDown(name, r.k)
+      }
+      // Everything refused. A stream that has started may run long, so a provider that
+      // named a short wait ("try again in 9.75s") is worth one more try after it,
+      // rather than telling the person to come back later.
+      const soonest = later.sort((x, y) => x.wait - y.wait)[0]
+      if (soonest && soonest.wait <= 15_000) {
+        await new Promise((res) => setTimeout(res, soonest.wait + 250))
+        if ((await tryStream(soonest.name, soonest.model)) === true) return
+      }
+      for (const x of later) markDown(x.name, "rate_limit")
       // every provider failed before producing anything: say so plainly
       writer.write({ type: "error", errorText: unavailable(kinds) })
     },

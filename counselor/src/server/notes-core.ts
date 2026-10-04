@@ -8,6 +8,7 @@
 // the json_schema structured-output mode, so we instruct + parse instead).
 
 import { generateTextWithFallback } from "./ai-providers"
+import { jsonWithKeepalive } from "./keepalive"
 
 export type GeneratedNotes = { summary: string; counselor: string; client: string }
 
@@ -67,8 +68,7 @@ export async function handleNotesRequest(request: Request, apiKey?: string, open
     if (!Array.isArray(transcript) || transcript.length === 0) {
       return Response.json({ error: "No transcript provided" }, { status: 400 })
     }
-    const notes = await generateNotes({ transcript, clientName, apiKey, openrouterKey })
-    return Response.json(notes)
+    return jsonWithKeepalive(() => generateNotes({ transcript, clientName, apiKey, openrouterKey }))
   } catch (err) {
     return Response.json(
       { error: err instanceof Error ? err.message : "Notes generation failed" },

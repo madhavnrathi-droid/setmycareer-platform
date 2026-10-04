@@ -165,10 +165,9 @@ export async function handleFitReportRequest(request: Request, keys: AIKeys): Pr
   try {
     const text = await generateTextWithFallback(keys, {
       temperature: 0.6,
-      maxRetries: 1, // keep the Edge call snappy — one shot, one retry, then fall back
       system: systemPrompt(asStr(ctx.firstName), asStr(ctx.stageLabel)),
       prompt: buildPrompt(report, ctx),
-    })
+    }, "fit-report")
     const merged = merge(report, extractJsonObject(text))
     return json({ ok: true, report: merged })
   } catch {

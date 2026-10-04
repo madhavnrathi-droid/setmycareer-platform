@@ -9,6 +9,15 @@ import { PRODUCTS, fmtINR } from "../portal/products"
 import { CAREER_PATTERNS_BRIEF } from "../intelligence/data/career-patterns"
 import { CAREER_BANK_KNOWLEDGE } from "../intelligence/data/career-bank"
 
+/** One line per product: name, price, tiers, tagline. No narrative. */
+function productLinesBrief(): string {
+  return PRODUCTS.map((p) => {
+    const price = p.priceLabel ?? fmtINR(p.priceFrom)
+    const tiers = p.tiers ? " Tiers: " + p.tiers.map((t) => `${t.name} ${fmtINR(t.price)}`).join("; ") + "." : ""
+    return `• ${p.name} — from ${price}. ${p.tagline}${tiers}`.trim()
+  }).join("\n")
+}
+
 function productLines(): string {
   return PRODUCTS.map((p) => {
     const price = p.priceLabel ?? fmtINR(p.priceFrom)
@@ -49,4 +58,22 @@ ${CAREER_PATTERNS_BRIEF}
 
 === CAREER BANK & GUIDANCE (from setmycareer.com — use this to answer career, stream, course, stage and service questions in SetMyCareer's own voice) ===
 ${CAREER_BANK_KNOWLEDGE}
+=== END KNOWLEDGE BASE ===`
+
+/** The same knowledge base without the career bank (~6.4k of its ~9.6k tokens), for a
+ *  provider with a small request budget. Groq's free tier allows 8,000 tokens a minute
+ *  and refuses any single request larger than that outright, so the full in-app prompts
+ *  (~12k tokens) could never run there. The client copilot's 8 card tools add ~2.2k
+ *  more, so the brief also keeps products to one line each and leaves out the patterns. With Gemini on quota that left the console,
+ *  admin and portal copilots on one intermittent free model. The career specifics stay
+ *  reachable through the careerIntelligence tool. */
+export const SMC_KNOWLEDGE_COMPACT = `=== SETMYCAREER KNOWLEDGE BASE (compact) ===
+${COMPANY}
+
+PRODUCTS, SERVICES & PRICING (recommend the right one for the person's situation; never invent prices):
+${productLinesBrief()}
+
+${METHODOLOGY}
+
+(The full career bank, the product write-ups and the recommendation patterns are left out of this brief. For specific careers, courses, colleges, exams and outcomes, call careerIntelligence rather than answering from memory.)
 === END KNOWLEDGE BASE ===`

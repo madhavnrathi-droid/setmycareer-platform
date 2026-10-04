@@ -599,7 +599,7 @@ export function CareerReportDoc({
 
     const cid = client.id
     Promise.resolve()
-      .then(() => fetchReportNarrative(payload))
+      .then(() => fetchReportNarrative(payload, { cacheKey: cid, fresh: regenKey > 0 }))
       .then((res) => {
         if (!live) return
         setResult({ id: cid, ai: res, state: res ? "done" : "error" })
