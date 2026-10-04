@@ -15,7 +15,7 @@ import { Pane, Eyebrow, Chip, AvatarStack } from "@/components/custom/ui-kit"
 import { ScoreRing } from "@/components/custom/ScoreRing"
 import { usePortalAccount, usePurchases, usePlanItems, removePlanItem, type Purchase, type PortalCredits } from "../portal-store"
 import { usePortalCounsellor } from "../counsellors"
-import { usePortalJourney, type JourneyStep } from "../journey-model"
+import { usePortalJourney, type JourneyStep, type JourneyKey } from "../journey-model"
 import { cn } from "@/lib/utils"
 import { JourneyStream } from "../components/JourneyStream"
 
@@ -34,13 +34,16 @@ function grantSummary(g?: Partial<PortalCredits>): string {
 }
 
 // three acts, each with its own vivid accent so a member always knows the room
-const PHASES = [
-  { key: "discover", name: "Discover", sub: "Map who you are", ns: [1, 2, 3], accent: "var(--color-brand-600)" },
-  { key: "decide", name: "Decide", sub: "Talk it through", ns: [4, 5, 6], accent: "var(--color-mind-600)" },
-  { key: "deliver", name: "Deliver", sub: "Lock the plan", ns: [7, 8, 9], accent: "var(--color-well-600)" },
-] as const
+// Phases and counsellor-led steps are keyed by what a step IS. They were keyed by step
+// number, so adding the third test shifted every number: "Write a Review" fell out of
+// every phase and vanished, and the report slid into the wrong one.
+const PHASES: { key: string; name: string; sub: string; keys: readonly JourneyKey[]; accent: string }[] = [
+  { key: "discover", name: "Discover", sub: "Map who you are", keys: ["profile", "interest", "personality", "third"], accent: "var(--color-brand-600)" },
+  { key: "decide", name: "Decide", sub: "Talk it through", keys: ["session1", "session2", "report"], accent: "var(--color-mind-600)" },
+  { key: "deliver", name: "Deliver", sub: "Lock the plan", keys: ["strategy", "certificate", "review"], accent: "var(--color-well-600)" },
+]
 
-const COUNSELLOR_STEPS = new Set([4, 5, 7])
+const COUNSELLOR_STEPS = new Set<JourneyKey>(["session1", "session2", "strategy"])
 
 /* one node on the horizontal rail */
 function RailNode({ s, accent, isCurrent }: { s: JourneyStep; accent: string; isCurrent: boolean }) {
@@ -84,16 +87,20 @@ function MoveCard({ s, accent, counsellor }: {
       <span className="grid size-11 shrink-0 place-items-center rounded-full text-white" style={{ background: accent }}>
         <Icon className="size-5 stroke-[1.75]" />
       </span>
+      {/* The whole card is the link. It also carried a solid "Take it" pill, which took
+          enough width that three-up the titles truncated to "Int…", "Per…", "Co…" — and
+          put three solid buttons side by side. The verb now sits in the meta line and the
+          title wraps to two lines instead of being cut. */}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[14.5px] font-semibold text-foreground">{s.label}</p>
-        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">Step {String(s.n).padStart(2, "0")} · your move now</p>
+        <p className="line-clamp-2 text-[14.5px] font-semibold leading-snug text-foreground">{s.label}</p>
+        <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
+          Step {String(s.n).padStart(2, "0")} · <span className="text-foreground">{s.cta}</span>
+          <ArrowRight className="size-3 text-foreground transition-transform group-hover:translate-x-0.5" />
+        </p>
       </div>
-      {COUNSELLOR_STEPS.has(s.n) && counsellor && (
+      {COUNSELLOR_STEPS.has(s.key) && counsellor && (
         <AvatarStack size={7} people={[{ initials: counsellor.initials, img: counsellor.img }]} className="shrink-0" />
       )}
-      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground px-3.5 py-1.5 text-[12px] font-semibold text-background transition group-hover:gap-2">
-        {s.cta} <ArrowRight className="size-3" />
-      </span>
     </Link>
   )
 }
@@ -139,10 +146,10 @@ export function PortalJourney() {
   const { steps, current, doneCount, pct } = journey
 
   const phases = PHASES.map((ph) => {
-    const phSteps = steps.filter((s) => (ph.ns as readonly number[]).includes(s.n))
+    const phSteps = steps.filter((s) => ph.keys.includes(s.key))
     return { ...ph, steps: phSteps, done: phSteps.filter((s) => s.status === "done").length, total: phSteps.length }
   })
-  const accentOf = (n: number) => phases.find((p) => (p.ns as readonly number[]).includes(n))?.accent ?? "var(--color-brand-600)"
+  const accentOf = (k: JourneyKey) => phases.find((p) => p.keys.includes(k))?.accent ?? "var(--color-brand-600)"
   // the moves available now — the branched cards under the rail
   const moves = steps.filter((s) => s.status === "now" || (s.status === "todo" && s.n === current?.n))
 
@@ -189,11 +196,14 @@ export function PortalJourney() {
       <Pane className="overflow-hidden">
         <Eyebrow>Your path, end to end</Eyebrow>
         <div className="-mx-1 overflow-x-auto pb-2">
-          <div className="min-w-[880px] px-1">
-            {/* phase headers, each spanning its three steps */}
-            <div className="grid grid-cols-9 gap-2">
+          {/* Columns, phase spans and the line's insets all derive from the real step
+              count. They were fixed at nine (grid-cols-9, col-span-3, 5.5% insets), so a
+              tenth step wrapped onto its own row under the first. */}
+          <div className="px-1" style={{ minWidth: steps.length * 98 }}>
+            {/* phase headers, each spanning its own steps */}
+            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
               {phases.map((ph) => (
-                <div key={ph.key} className="col-span-3 rounded-xl px-3 py-2.5" style={{ background: `color-mix(in srgb, ${ph.accent} 7%, transparent)` }}>
+                <div key={ph.key} className="rounded-xl px-3 py-2.5" style={{ gridColumn: `span ${Math.max(1, ph.total)}`, background: `color-mix(in srgb, ${ph.accent} 7%, transparent)` }}>
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: ph.accent }}>{ph.name}</p>
                     <span className="font-mono text-[10.5px] tabular-nums text-ink-500">{ph.done}/{ph.total}</span>
@@ -203,13 +213,14 @@ export function PortalJourney() {
               ))}
             </div>
 
-            {/* the rail — a connected line with the nine nodes */}
-            <div className="relative mt-6 grid grid-cols-9">
-              <span aria-hidden className="absolute left-[5.5%] right-[5.5%] top-[22px] h-[3px] -translate-y-1/2 rounded-full bg-border" />
-              <span aria-hidden className="absolute left-[5.5%] top-[22px] h-[3px] -translate-y-1/2 rounded-full bg-well-500 transition-[width] duration-700"
-                style={{ width: `${Math.max(0, pct - 11)}%` }} />
+            {/* the rail — a connected line through every node; it starts and ends at the
+                centre of the first and last columns, i.e. half a column in from each edge */}
+            <div className="relative mt-6 grid" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
+              <span aria-hidden className="absolute top-[22px] h-[3px] -translate-y-1/2 rounded-full bg-border" style={{ left: `${50 / steps.length}%`, right: `${50 / steps.length}%` }} />
+              <span aria-hidden className="absolute top-[22px] h-[3px] -translate-y-1/2 rounded-full bg-well-500 transition-[width] duration-700"
+                style={{ left: `${50 / steps.length}%`, width: `${Math.max(0, pct - 100 / steps.length)}%` }} />
               {steps.map((s) => (
-                <RailNode key={s.n} s={s} accent={accentOf(s.n)} isCurrent={current?.n === s.n} />
+                <RailNode key={s.n} s={s} accent={accentOf(s.key)} isCurrent={current?.n === s.n} />
               ))}
             </div>
           </div>
@@ -221,7 +232,7 @@ export function PortalJourney() {
         <section data-reveal>
           <Eyebrow>Your moves now</Eyebrow>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {moves.map((s) => <MoveCard key={s.n} s={s} accent={accentOf(s.n)} counsellor={counsellor ?? undefined} />)}
+            {moves.map((s) => <MoveCard key={s.n} s={s} accent={accentOf(s.key)} counsellor={counsellor ?? undefined} />)}
           </div>
         </section>
       )}

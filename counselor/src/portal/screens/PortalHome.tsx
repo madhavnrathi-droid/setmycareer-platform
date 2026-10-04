@@ -37,7 +37,7 @@ import { getClient } from "@/lib/mock"
 import { useIsShared } from "@/lib/report-share"
 import { useGsap, revealChildren } from "@/lib/gsap"
 import {
-  usePortalAccount, useBookings, useThread, accountTrack, aiBalance,
+  usePortalAccount, useBookings, useThread, accountTrack, aiBalance, profileComplete,
   portalCallHref, type PortalAccount,
 } from "../portal-store"
 import { usePortalCounsellor } from "../counsellors"
@@ -45,6 +45,7 @@ import { ProfileNudge } from "../components/ProfileGate"
 import { credentialSummary } from "../components/CounsellorCredentials"
 import { useUserSessions } from "@/lib/live-queries"
 import { usePortalJourney, type JourneyStep } from "../journey-model"
+import { testsFor } from "../tests/catalog"
 import {
   hasRealAssessments, realPersonalityFor, realAbilitiesFor,
 } from "../tests/report-bridge"
@@ -105,6 +106,16 @@ function HeroSpine({ steps, current }: { steps: JourneyStep[]; current?: Journey
 /* ── the hero — the one colour moment. Greeting + a live state read + the state's
       SINGLE primary action, over the member's track-coloured liquid gradient,
       with the whole journey as the card's bottom strip. ── */
+
+/** The member's real battery, from the catalogue — never a hardcoded "two tests,
+ *  twenty minutes" again. Students: 3 tests, ~80 min. Professionals: 3, ~68 min. */
+function battery(track: ReturnType<typeof accountTrack>) {
+  const tests = testsFor(track)
+  const minutes = tests.reduce((m, t) => m + t.minutes, 0)
+  const words = ["zero", "one", "two", "three", "four", "five"]
+  return { count: words[tests.length] ?? String(tests.length), minutes: Math.round(minutes / 5) * 5 }
+}
+
 function StateHero({
   account, state, current, steps,
 }: { account: PortalAccount; state: DashState; current?: JourneyStep; steps: JourneyStep[] }) {
@@ -122,14 +133,21 @@ function StateHero({
     state === "new" ? `Welcome, ${firstName}.`
     : state === "assessing" ? `You're on your way, ${firstName}.`
     : `Here's where you stand, ${firstName}.`
+  // The profile gates every test and booking. For a new member the hero's job is the
+  // step that actually comes next — it used to send them to the assessments, three clicks
+  // from discovering they were locked behind a 30% profile.
+  const profiled = profileComplete(account) || Boolean(account.demo)
+  const b = battery(track)
   const read =
     state === "new"
-      ? "Your career map is blank — that's the exciting part. Two assessments, about twenty minutes, and we turn how you think into where you could go."
+      ? profiled
+        ? `Your career map is blank — that's the exciting part. ${b.count[0].toUpperCase() + b.count.slice(1)} assessments, about ${b.minutes} minutes in all, and you can take them in separate sittings. Then we turn how you think into where you could go.`
+        : `First, four minutes on your profile: your age and class choose the score tables your results are compared against. Then ${b.count} assessments, about ${b.minutes} minutes in all, in as many sittings as you like.`
       : state === "assessing"
       ? current ? `Next: ${current.label}. Each step sharpens the recommendation.` : "You're close. Finish the last steps to unlock your report."
       : "Below: your strongest career fit, how the market's moving for it, and your next move — all drawn from your own results."
   const primary =
-    state === "new" ? { to: "/portal/assessments", label: "Start your assessment" }
+    state === "new" ? (profiled ? { to: "/portal/assessments", label: "Start your assessments" } : { to: "/portal/account", label: "Complete your profile · 4 min" })
     : state === "assessing" ? { to: current?.to ?? "/portal/journey", label: current ? `${current.cta} · ${current.short}` : "Continue your journey" }
     : { to: "/portal/reports", label: "Open your report" }
 
@@ -246,6 +264,8 @@ interface Read { big: string; label: string; sub: string; accent: string }
 
 function YourSignal({ clientId }: { clientId: string }) {
   const has = hasRealAssessments(clientId)
+  const bt = battery(accountTrack(usePortalAccount()))
+  const signalTime = `About ${bt.minutes} focused minutes across ${bt.count} assessments, in separate sittings if you like`
   if (!has) {
     return (
       <Pane>
@@ -253,9 +273,11 @@ function YourSignal({ clientId }: { clientId: string }) {
         <p className="font-editorial text-[22px] font-light leading-snug tracking-tight text-foreground sm:text-[25px]">
           Nothing measured yet. Your personality, interests and aptitude become a career map the moment you take them.
         </p>
-        <p className="mt-2.5 max-w-[54ch] text-[13.5px] text-muted-foreground">Roughly twenty focused minutes. No AI, no distractions — just you, answered honestly, scored on the same engine our counsellors read.</p>
-        <Link to="/portal/assessments" className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition hover:opacity-90">
-          Take the assessments <ArrowRight className="size-3.5" />
+        <p className="mt-2.5 max-w-[54ch] text-[13.5px] text-muted-foreground">{signalTime}. No AI, no distractions — just you, answered honestly, scored on the same engine our counsellors read.</p>
+        {/* a quiet link, not a second solid button: the hero above carries the one primary
+            action, and for a member without a profile these tests are still locked */}
+        <Link to="/portal/assessments" className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-foreground underline-offset-4 hover:underline">
+          See the assessments <ArrowRight className="size-3.5" />
         </Link>
       </Pane>
     )
@@ -451,7 +473,8 @@ export function PortalHome() {
   if (!account) return null
 
   const isDemo = Boolean(getClient(clientId))
-  const hasSession = bookings.some((b) => b.status !== "canceled") || journey.steps[3].status === "done"
+  // look Session 1 up by what it is, not by position — the spine's length changes
+  const hasSession = bookings.some((b) => b.status !== "canceled") || journey.steps.find((st) => st.key === "session1")?.status === "done"
   const reportReady = shared || isDemo
   const state: DashState = reportReady ? "active" : (hasRealAssessments(clientId) || hasSession) ? "assessing" : "new"
 
