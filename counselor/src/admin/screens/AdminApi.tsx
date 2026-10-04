@@ -44,7 +44,7 @@ function useProviders() {
 }
 
 function StateChip({ p }: { p: ProviderStatus }) {
-  if (!p.configured) return <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-ink-400"><MinusCircle className="size-3.5" /> Not configured</span>
+  if (!p.configured) return <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-muted-foreground"><MinusCircle className="size-3.5" /> Not configured</span>
   if (p.error) return <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-risk-600"><XCircle className="size-3.5" /> Error</span>
   return <span className="inline-flex items-center gap-1 text-[11.5px] font-medium text-well-600"><CheckCircle2 className="size-3.5" /> Connected</span>
 }
@@ -116,7 +116,7 @@ export function AdminApi() {
         )}
       </div>
 
-      <p data-reveal className="text-[11.5px] text-ink-300">
+      <p data-reveal className="text-[11.5px] text-muted-foreground">
         Razorpay and OpenRouter report live figures from their own APIs. Groq and LiveKit have no public usage feed, so they show connection status only — no number is ever invented to fill the gap. Keys are server-side environment variables, never exposed to the browser.
       </p>
     </div>

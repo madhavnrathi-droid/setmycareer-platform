@@ -236,7 +236,7 @@ export function CompassBar() {
         {/* quick prompts — left-aligned to the input's edge */}
         {!hidden && asking && !showAnswer && (
           <div className="absolute bottom-full left-0 mb-3 flex w-max max-w-[92vw] flex-col gap-1.5 rounded-2xl border border-hairline bg-[var(--surface-frost-strong)] p-2 shadow-[var(--shadow-float)] backdrop-blur-xl">
-            <span className="px-1.5 pb-0.5 pt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Try asking</span>
+            <span className="px-1.5 pb-0.5 pt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Try asking</span>
             {quickPrompts.map((q) => (
               <button key={q} onClick={() => send(q)} className="rounded-xl px-3 py-1.5 text-left text-[13px] text-ink-600 transition-colors hover:bg-secondary hover:text-foreground">
                 {q}

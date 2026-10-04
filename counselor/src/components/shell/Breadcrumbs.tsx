@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
 import { ChevronRight } from "lucide-react"
-import { Fragment } from "react"
 import { getSession } from "@/lib/mock"
 import { useCaseloadClients } from "@/lib/caseload"
 
@@ -32,7 +31,7 @@ export function Breadcrumbs() {
         {crumbs.map((c, i) => {
           const last = i === crumbs.length - 1
           return (
-            <Fragment key={c.href}>
+            <li key={c.href} className="flex min-w-0 items-center gap-1">
               {i > 0 && <ChevronRight aria-hidden className="size-3.5 shrink-0 stroke-[1.5] text-ink-300" />}
               {last ? (
                 <span aria-current="page" className="truncate font-medium text-foreground">{c.label}</span>
@@ -41,7 +40,7 @@ export function Breadcrumbs() {
                   {c.label}
                 </Link>
               )}
-            </Fragment>
+            </li>
           )
         })}
       </ol>

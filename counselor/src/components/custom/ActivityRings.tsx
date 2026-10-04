@@ -97,7 +97,7 @@ export function ActivityRings({
           <div className="absolute inset-0 grid place-items-center text-center">
             <div>
               <div className="font-display text-[19px] font-light leading-none tabular-nums text-foreground">{centerLabel}</div>
-              {centerSub && <div className="mt-0.5 text-[8.5px] font-medium uppercase tracking-wider text-ink-300">{centerSub}</div>}
+              {centerSub && <div className="mt-0.5 text-[8.5px] font-medium uppercase tracking-wider text-muted-foreground">{centerSub}</div>}
             </div>
           </div>
         )}

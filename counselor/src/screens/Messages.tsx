@@ -62,7 +62,7 @@ export function Messages() {
     return (
       <div>
         <header className="mb-6">
-          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Client communication</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Client communication</p>
           <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Messages</h1>
         </header>
         <div className="grid min-h-[44vh] place-items-center rounded-2xl border border-dashed border-border bg-card">
@@ -83,7 +83,7 @@ export function Messages() {
   return (
     <div className="flex h-[calc(100vh-7rem)] flex-col">
       <header className="mb-4 shrink-0">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Client communication</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Client communication</p>
         <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Messages</h1>
       </header>
 
@@ -108,7 +108,7 @@ export function Messages() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="truncate text-[13.5px] font-semibold text-foreground">{nameFor(t.clientId)}</p>
-                    <span className="shrink-0 text-[11px] text-ink-300">{fmtTime(t.last.ts)}</span>
+                    <span className="shrink-0 text-[11px] text-muted-foreground">{fmtTime(t.last.ts)}</span>
                   </div>
                   <p className="truncate text-[12.5px] text-muted-foreground">{preview}</p>
                 </div>

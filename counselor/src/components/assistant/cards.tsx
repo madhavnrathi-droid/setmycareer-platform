@@ -229,7 +229,7 @@ export function ExplainCard({ metric }: { metric: string }) {
               "rounded-md border px-2 py-1 text-[10.5px]",
               i === e.steps.length - 1 ? "border-brand-500/40 bg-brand-100 text-brand-600" : "border-border bg-secondary text-ink-600",
             )}>{s}</span>
-            {i < e.steps.length - 1 && <span className="text-ink-300" aria-hidden>→</span>}
+            {i < e.steps.length - 1 && <span className="text-muted-foreground" aria-hidden>→</span>}
           </span>
         ))}
       </div>

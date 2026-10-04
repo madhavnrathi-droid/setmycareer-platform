@@ -132,7 +132,7 @@ export function ClientNotes({ client }: { client: Client }) {
       {sessionNotes.length > 0 && (
         <section data-reveal>
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
               Session notes · approval
             </p>
             {pendingCount > 0 && (
@@ -185,7 +185,7 @@ export function ClientNotes({ client }: { client: Client }) {
 
       {/* feed */}
       <section data-reveal>
-        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           Notes · {sorted.length}
         </p>
 

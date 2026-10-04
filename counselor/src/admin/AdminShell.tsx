@@ -1,6 +1,7 @@
 // Admin shell — sidebar + frosted topbar + content well, matching the console.
 import { useEffect, useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
+import { ScreenBoundary } from "@/components/shell/ScreenBoundary"
 import { Database, Menu } from "lucide-react"
 import { AdminSidebar } from "./AdminSidebar"
 import { AdminSearch } from "./parts/AdminSearch"
@@ -76,7 +77,7 @@ export function AdminShell({ onSignOut }: { onSignOut: () => void }) {
         </header>
         <main className="flex-1">
           <div className="mx-auto w-full max-w-[1320px] px-6 py-6 pb-28">
-            <Outlet />
+            <ScreenBoundary home="/admin"><Outlet /></ScreenBoundary>
           </div>
         </main>
       </div>

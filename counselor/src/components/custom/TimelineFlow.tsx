@@ -33,7 +33,7 @@ function RecoChip({ label, count }: { label: string; count: number }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10.5px] text-ink-600">
       {label}
-      {count > 1 && <span className="tabular-nums text-ink-300">×{count}</span>}
+      {count > 1 && <span className="tabular-nums text-muted-foreground">×{count}</span>}
     </span>
   )
 }

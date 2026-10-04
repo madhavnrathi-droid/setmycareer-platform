@@ -38,7 +38,7 @@ const STATUS_TONE: Record<string, string> = {
   pending: "bg-warn-50 text-warn-700",
   completed: "bg-well-50 text-well-700",
   cancelled: "bg-ink-100 text-ink-500",
-  deleted: "bg-ink-100 text-ink-400",
+  deleted: "bg-ink-100 text-muted-foreground",
 }
 const joinable = (status?: string) => {
   const s = (status ?? "").toLowerCase()
@@ -78,8 +78,8 @@ function Section({ title, count, children }: { title: string; count?: number; ch
   return (
     <section className="border-t border-border pt-6">
       <div className="mb-3 flex items-baseline gap-2">
-        <h2 className="text-[13px] font-medium uppercase tracking-[0.1em] text-ink-400">{title}</h2>
-        {typeof count === "number" && <span className="text-[12px] tabular-nums text-ink-300">{count}</span>}
+        <h2 className="text-[13px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{title}</h2>
+        {typeof count === "number" && <span className="text-[12px] tabular-nums text-muted-foreground">{count}</span>}
       </div>
       {children}
     </section>
@@ -183,7 +183,7 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
               {packages.map((p) => (
                 <span key={p} className="rounded-full bg-secondary px-2.5 py-0.5 text-[11.5px] font-medium text-ink-600">{p}</span>
               ))}
-              {counsellor && <span className="text-[11.5px] text-ink-400">· with {counsellor}</span>}
+              {counsellor && <span className="text-[11.5px] text-muted-foreground">· with {counsellor}</span>}
             </div>
           )}
         </div>
@@ -195,7 +195,7 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
           {sessions.loading && sess.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Loading sessions…</p>
           ) : sess.length === 0 ? (
-            <p className="text-[13px] text-ink-400">No sessions recorded yet.</p>
+            <p className="text-[13px] text-muted-foreground">No sessions recorded yet.</p>
           ) : (
             <ul className="flex flex-col">
               {sess.map((s, i) => {
@@ -252,7 +252,7 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
           {reports.loading && reportList.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Loading reports…</p>
           ) : reportList.length === 0 ? (
-            <p className="text-[13px] text-ink-400">No reports generated for this client yet.</p>
+            <p className="text-[13px] text-muted-foreground">No reports generated for this client yet.</p>
           ) : (
             <ul className="flex flex-col">
               {reportList.map((r, i) => (
@@ -280,7 +280,7 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
           {tests.loading && tests.data.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Loading assessments…</p>
           ) : tests.data.length === 0 ? (
-            <p className="text-[13px] text-ink-400">No Career Tests completed yet.</p>
+            <p className="text-[13px] text-muted-foreground">No Career Tests completed yet.</p>
           ) : (
             <ul className="flex flex-col">
               {tests.data.map((t, i) => {
@@ -308,8 +308,8 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
         {(countries.length > 0 || cities.length > 0) && (
           <Section title="Admission preferences">
             <div className="flex flex-col gap-2 text-[13px]">
-              {countries.length > 0 && <div><span className="text-ink-400">Countries: </span><span className="font-medium text-foreground">{countries.join(", ")}</span></div>}
-              {cities.length > 0 && <div><span className="text-ink-400">Cities: </span><span className="font-medium text-foreground">{cities.join(", ")}</span></div>}
+              {countries.length > 0 && <div><span className="text-muted-foreground">Countries: </span><span className="font-medium text-foreground">{countries.join(", ")}</span></div>}
+              {cities.length > 0 && <div><span className="text-muted-foreground">Cities: </span><span className="font-medium text-foreground">{cities.join(", ")}</span></div>}
             </div>
           </Section>
         )}
@@ -348,13 +348,13 @@ export function LiveClientHub({ clientId }: { clientId: string }) {
           {notes.loading && noteList.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Loading notes…</p>
           ) : noteList.length === 0 ? (
-            <p className="text-[13px] text-ink-400">No session notes yet.</p>
+            <p className="text-[13px] text-muted-foreground">No session notes yet.</p>
           ) : (
             <ul className="flex flex-col gap-3">
               {noteList.map((n, i) => (
                 <li key={`${n.id}-${i}`} className="rounded-xl bg-card p-3.5 shadow-[var(--shadow-e1)]">
                   <p className="text-[13px] leading-relaxed text-foreground">{clean(n.comment)}</p>
-                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-ink-400">
+                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-muted-foreground">
                     <NotebookPen className="size-3 stroke-[1.5]" />
                     {[clean(n.navigator_name), fmtDate(n.date)].filter(Boolean).join(" · ") || "Note"}
                   </div>

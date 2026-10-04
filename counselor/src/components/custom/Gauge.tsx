@@ -226,16 +226,16 @@ export function Gauge({
             {value ?? "—"}
           </span>
           {unit && (
-            <span className="font-display text-[12px] font-light text-ink-300">{unit}</span>
+            <span className="font-display text-[12px] font-light text-muted-foreground">{unit}</span>
           )}
         </div>
         {band && (
-          <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+          <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             {band}
           </div>
         )}
         {label && !band && (
-          <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+          <div className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             {label}
           </div>
         )}

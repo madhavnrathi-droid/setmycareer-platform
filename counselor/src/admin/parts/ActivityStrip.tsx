@@ -22,7 +22,7 @@ export function ActivityStrip({ limit = 6, filter, title = "Latest activity" }: 
   if (events.length === 0) return null
   return (
     <section className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-e1)]">
-      <h2 className="mb-2 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">{title}</h2>
+      <h2 className="mb-2 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">{title}</h2>
       <div className="divide-y divide-border/70">
         {events.map((e) => {
           const Icon = ICON[e.kind]
@@ -34,7 +34,7 @@ export function ActivityStrip({ limit = 6, filter, title = "Latest activity" }: 
                 {e.detail && <p className="truncate text-[11px] text-muted-foreground">{e.detail}</p>}
               </div>
               {e.amount != null && <span className={cn("shrink-0 text-[12px] font-medium tabular-nums", e.amount < 0 ? "text-risk-600" : "text-well-600")}>{e.amount < 0 ? "−" : "+"}{fmtINR(Math.abs(e.amount))}</span>}
-              <span className="w-14 shrink-0 text-right text-[11px] tabular-nums text-ink-300">{relTime(e.at)}</span>
+              <span className="w-14 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">{relTime(e.at)}</span>
             </div>
           )
         })}

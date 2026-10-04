@@ -19,13 +19,15 @@ const TONE: Record<string, string> = {
 
 export function LiveStats() {
   const { data, loading, error, reload } = useStatistics()
-  const sections = data ? Object.entries(data) : []
+  // A section that is not a list (the backend has returned bare counts before) is dropped
+  // rather than thrown on — one malformed field used to blank all of Mission Control.
+  const sections = data ? Object.entries(data).filter((x): x is [string, NonNullable<(typeof x)[1]>] => Array.isArray(x[1])) : []
 
   return (
     <section className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
       <div className="mb-4 flex items-center gap-2">
-        <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"><Database className="size-3.5" /> SetMyCareer operations</h2>
-        <button onClick={reload} disabled={loading} className="ml-auto grid size-6 place-items-center rounded-full text-ink-400 hover:bg-secondary"><RefreshCw className={cn("size-3", loading && "animate-spin")} /></button>
+        <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"><Database className="size-3.5" /> SetMyCareer operations</h2>
+        <button onClick={reload} disabled={loading} aria-label="Refresh operations" title="Refresh operations" className="ml-auto grid size-6 place-items-center rounded-full text-ink-400 hover:bg-secondary"><RefreshCw className={cn("size-3", loading && "animate-spin")} /></button>
       </div>
 
       {error ? (
@@ -35,13 +37,13 @@ export function LiveStats() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {sections.map(([name, entries]) => {
-            const total = (entries ?? []).reduce((s, e) => s + (Number(e.value) || 0), 0)
+            const total = entries.reduce((s, e) => s + (Number(e.value) || 0), 0)
             return (
               <div key={name} className="rounded-xl border border-border p-3.5">
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{name}</p>
                 <p className={cn("mt-0.5 font-display text-[24px] font-semibold tabular-nums tracking-tight", TONE[name] ?? "text-foreground")}>{intIN(total)}</p>
                 <div className="mt-1.5 space-y-0.5">
-                  {(entries ?? []).slice(0, 4).map((e) => (
+                  {entries.slice(0, 4).map((e) => (
                     <p key={e.key} className="flex items-center justify-between text-[11.5px]">
                       <span className="truncate text-ink-500">{e.key}</span>
                       <span className="ml-2 shrink-0 font-medium tabular-nums text-foreground">{intIN(Number(e.value) || 0)}</span>

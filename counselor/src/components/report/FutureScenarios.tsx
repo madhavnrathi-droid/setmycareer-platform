@@ -36,7 +36,7 @@ export function FutureScenarios({ routes }: { routes: CareerRoute[] }) {
 
   if (!routes?.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-ink-400">
+      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-muted-foreground">
         Future scenarios appear once the career routes are modelled.
       </div>
     )
@@ -113,7 +113,7 @@ function ScenarioCard({ route, lead }: { route: CareerRoute; lead: boolean }) {
                 Lead
               </span>
             )}
-            <span className="truncate text-[10px] font-medium uppercase tracking-[0.12em] text-ink-400">{route.fitTag}</span>
+            <span className="truncate text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{route.fitTag}</span>
           </div>
           <h4 className="mt-2 font-display text-[16px] font-medium leading-snug text-ink-900">{route.title}</h4>
         </div>
@@ -122,7 +122,7 @@ function ScenarioCard({ route, lead }: { route: CareerRoute; lead: boolean }) {
 
       <p className="mt-3 text-[12.5px] leading-relaxed text-ink-500">{firstSentence(route.rationale)}</p>
 
-      <div className="mt-auto flex items-center gap-2 pt-4 text-[10.5px] text-ink-400">
+      <div className="mt-auto flex items-center gap-2 pt-4 text-[10.5px] text-muted-foreground">
         <svg width={12} height={12} viewBox="0 0 12 12" aria-hidden className="shrink-0">
           <circle cx={6} cy={6} r={5} fill="none" stroke="currentColor" strokeWidth={1} />
           <path d="M6 3.2 V6 L7.8 7.4" fill="none" stroke="currentColor" strokeWidth={1} strokeLinecap="round" />

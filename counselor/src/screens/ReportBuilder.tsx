@@ -156,7 +156,7 @@ export function ReportBuilder() {
     <div ref={ref} className="mx-auto max-w-3xl">
       <header data-reveal className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Builder</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Builder</p>
           <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">New report</h1>
         </div>
         <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5 text-muted-foreground">
@@ -178,7 +178,7 @@ export function ReportBuilder() {
                   disabled={i > step}
                   className={cn(
                     "flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-[12px] transition-colors",
-                    active ? "text-foreground" : done ? "text-ink-600 hover:bg-secondary" : "text-ink-300",
+                    active ? "text-foreground" : done ? "text-ink-600 hover:bg-secondary" : "text-muted-foreground",
                     i > step && "cursor-not-allowed",
                   )}
                 >
@@ -186,7 +186,7 @@ export function ReportBuilder() {
                     "grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-medium tabular-nums transition-colors",
                     active ? "bg-foreground text-background"
                       : done ? "bg-brand-100 text-brand-600"
-                      : "border border-border text-ink-300",
+                      : "border border-border text-muted-foreground",
                   )}>
                     {done ? <Check className="size-3.5 stroke-[2]" /> : i + 1}
                   </span>
@@ -302,7 +302,7 @@ function StepSource({
 
         {adding && (
           <div className="mt-1 flex flex-col gap-3 rounded-lg border border-border bg-secondary p-4">
-            <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Quick-add client</div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Quick-add client</div>
             <div className="flex flex-col gap-2.5">
               <Input
                 autoFocus
@@ -479,7 +479,7 @@ function StepReview({
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Preview</span>
+        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Preview</span>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-[11px] text-ink-600">
             {AUDIENCES.find((a) => a.key === audience)!.label} · {TEMPLATES.find((t) => t.key === template)!.label}
@@ -494,7 +494,7 @@ function StepReview({
 
       {/* page sheet */}
       <div className="rounded-lg border border-border bg-background p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {TEMPLATES.find((t) => t.key === template)!.label} report
         </p>
         <h2 className="mt-1.5 font-display text-[clamp(20px,3vw,26px)] font-extralight tracking-tight">{client.name}</h2>
@@ -680,7 +680,7 @@ function StepExport({
                   on ? "border-brand-500 bg-brand-100" : "border-border hover:border-ink-300",
                 )}
               >
-                <Icon className={cn("mt-0.5 size-4 shrink-0 stroke-[1.5]", on ? "text-brand-600" : "text-ink-300")} />
+                <Icon className={cn("mt-0.5 size-4 shrink-0 stroke-[1.5]", on ? "text-brand-600" : "text-muted-foreground")} />
                 <div>
                   <div className={cn("text-[13.5px] font-medium", on ? "text-brand-600" : "text-foreground")}>{o.label}</div>
                   <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{o.note}</p>
@@ -762,7 +762,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   return (
     <div className="flex flex-col gap-2.5">
       <div>
-        <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</div>
+        <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
         {hint && <p className="mt-0.5 text-[12px] text-muted-foreground">{hint}</p>}
       </div>
       {children}
@@ -775,7 +775,7 @@ function ReviewBlock({ title, tone, children }: { title: string; tone?: "mind"; 
     <div className="mt-5 border-t border-border pt-4">
       <div className={cn(
         "mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em]",
-        tone === "mind" ? "text-mind-600" : "text-ink-300",
+        tone === "mind" ? "text-mind-600" : "text-muted-foreground",
       )}>
         {title}
       </div>

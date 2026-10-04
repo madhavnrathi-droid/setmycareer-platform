@@ -44,7 +44,7 @@ function RxTable({ rows, ended }: { rows: Prescription[]; ended?: boolean }) {
             {["Medication", "Dose", "Frequency", "Period", ended ? "Status" : "Adherence"].map((h) => (
               <th
                 key={h}
-                className="border-b border-border px-4 py-3 text-left text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300"
+                className="border-b border-border px-4 py-3 text-left text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground"
               >
                 {h}
               </th>
@@ -111,7 +111,7 @@ export function ClientPrescriptions({ client }: { client: Client }) {
     <div ref={ref} className="flex flex-col gap-6">
       <header data-reveal className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Clinical · counselor only</p>
+          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Clinical · counselor only</p>
           <h2 className="mt-1 font-display text-[22px] font-extralight tracking-tight">Prescriptions</h2>
         </div>
         <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => toast("Opening prescription form…")}>
@@ -122,7 +122,7 @@ export function ClientPrescriptions({ client }: { client: Client }) {
       {/* active medication chips — quick glance */}
       {active.length > 0 && (
         <section data-reveal>
-          <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Currently taking</p>
+          <p className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Currently taking</p>
           <div className="flex flex-wrap gap-2">
             {active.map((rx) => (
               <span
@@ -141,8 +141,8 @@ export function ClientPrescriptions({ client }: { client: Client }) {
 
       {/* active table */}
       <section data-reveal>
-        <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
-          Active <span className="tabular-nums text-ink-300">· {active.length}</span>
+        <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+          Active <span className="tabular-nums text-muted-foreground">· {active.length}</span>
         </p>
         {active.length > 0 ? (
           <RxTable rows={active} />
@@ -156,8 +156,8 @@ export function ClientPrescriptions({ client }: { client: Client }) {
       {/* history */}
       {history.length > 0 && (
         <section data-reveal>
-          <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
-            History <span className="tabular-nums text-ink-300">· {history.length}</span>
+          <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            History <span className="tabular-nums text-muted-foreground">· {history.length}</span>
           </p>
           <RxTable rows={history} ended />
         </section>

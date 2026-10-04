@@ -24,7 +24,7 @@ function Shell({ icon: Icon, title, sub, children }: { icon: typeof UserCog; tit
   return (
     <section className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
       <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-        <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"><Icon className="size-3.5" /> {title}</h2>
+        <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"><Icon className="size-3.5" /> {title}</h2>
         <LiveBadge />
         {sub && <span className="ml-auto text-[12px] text-muted-foreground">{sub}</span>}
       </div>
@@ -50,7 +50,7 @@ export function LiveCounsellorsPanel() {
                 <div className="min-w-0">
                   <p className="truncate text-[13.5px] font-semibold text-foreground">{n.name}</p>
                   <p className="truncate text-[11.5px] text-muted-foreground">{meta[0] ?? (n.online_mode && n.online_mode !== "None" ? n.online_mode : "Career counsellor")}</p>
-                  {n.email && n.email !== "None" && <p className="truncate text-[11px] text-ink-400">{n.email}</p>}
+                  {n.email && n.email !== "None" && <p className="truncate text-[11px] text-muted-foreground">{n.email}</p>}
                 </div>
               </div>
             )
@@ -96,14 +96,14 @@ export function LiveCataloguePanel() {
                 </button>
                 {isOpen && (
                   <div className="border-t border-border bg-secondary/20">
-                    <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide text-ink-300">
+                    <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                       <span className="pl-6">Package</span><span className="w-20 text-right">Online</span><span className="w-24 text-right">Face-to-face</span>
                     </div>
                     {g.items.map((p) => (
                       <div key={p.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-3 border-t border-border/50 px-3 py-1.5">
                         <span className="min-w-0 pl-6">
                           <span className="block truncate text-[12px] font-medium text-foreground">{prettyName(p.package_name)}</span>
-                          {p.package_description && <span className="block truncate text-[10.5px] text-ink-400">{p.package_description}</span>}
+                          {p.package_description && <span className="block truncate text-[10.5px] text-muted-foreground">{p.package_description}</span>}
                         </span>
                         <span className="w-20 text-right text-[12px] tabular-nums text-foreground">{inr(p.price_online)}</span>
                         <span className="w-24 text-right text-[12px] tabular-nums text-muted-foreground">{inr(p.price_face_to_face)}</span>
@@ -127,7 +127,7 @@ export function LiveRosterStat({ className }: { className?: string }) {
     <div className={cn("rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-e4)]", className)}>
       <p className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground"><Users className="size-3.5" /> Registered users <LiveBadge /></p>
       <p className="mt-1 font-display text-[24px] font-semibold tabular-nums tracking-tight text-foreground">{error ? "—" : loading ? "…" : (data?.length ?? 0).toLocaleString("en-IN")}</p>
-      <p className="text-[11.5px] text-ink-300">{error ? error : "registered on the platform"}</p>
+      <p className="text-[11.5px] text-muted-foreground">{error ? error : "registered on the platform"}</p>
     </div>
   )
 }

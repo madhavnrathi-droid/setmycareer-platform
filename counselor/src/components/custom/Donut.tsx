@@ -111,7 +111,7 @@ export function Donut({
           {totalValue}
         </span>
         {centerLabel && (
-          <span className="mt-1 text-[9.5px] font-medium uppercase tracking-[0.12em] text-ink-300">
+          <span className="mt-1 text-[9.5px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             {centerLabel}
           </span>
         )}

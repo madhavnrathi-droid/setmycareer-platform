@@ -36,7 +36,7 @@ export function SummarySection({
 }) {
   return (
     <section className={cn("py-4 first:pt-3 last:pb-0", className)}>
-      <div className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</div>
+      <div className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
       <div className="text-[12.5px] leading-relaxed text-ink-600">{children}</div>
     </section>
   )

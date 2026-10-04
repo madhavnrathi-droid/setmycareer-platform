@@ -90,7 +90,7 @@ export function AdminBookingsPanel() {
                   <button
                     onClick={() => { setPortalRevoked(b.clientId, !revoked); bump((n) => n + 1); toast(revoked ? "Portal access restored" : "Portal access revoked — the client is signed out on next load") }}
                     title={revoked ? "Restore portal access" : "Revoke portal access"}
-                    className={cn("grid size-8 place-items-center rounded-full border", revoked ? "border-risk-200 bg-risk-50 text-risk-600" : "border-border text-ink-400 hover:bg-secondary")}
+                    className={cn("grid size-8 place-items-center rounded-full border", revoked ? "border-risk-200 bg-risk-50 text-risk-600" : "border-border text-muted-foreground hover:bg-secondary")}
                   ><Ban className="size-3.5" /></button>
                 </div>
               </div>

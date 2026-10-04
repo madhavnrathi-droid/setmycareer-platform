@@ -100,8 +100,8 @@ export function SmcCoreApiPanel() {
             const r = eps.filter((e) => e.kind === "read").length
             return (
               <div key={g}>
-                <p className="mb-1.5 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-300">
-                  {g} <span className="text-ink-300/70 normal-case tracking-normal">· {r} read · {eps.length - r} write</span>
+                <p className="mb-1.5 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  {g} <span className="text-muted-foreground normal-case tracking-normal">· {r} read · {eps.length - r} write</span>
                 </p>
                 <div className="overflow-hidden rounded-xl border border-border">
                   {eps.map((e, i) => <EndpointRow key={e.path} e={e} first={i === 0} />)}

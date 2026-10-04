@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 const STATUS_META: Record<TestResult["status"], { label: string; tone: string; icon: typeof CheckCircle2 }> = {
   completed: { label: "Completed", tone: "text-well-600", icon: CheckCircle2 },
   in_progress: { label: "In progress", tone: "text-brand-600", icon: Clock },
-  assigned: { label: "Assigned", tone: "text-ink-300", icon: CircleDashed },
+  assigned: { label: "Assigned", tone: "text-muted-foreground", icon: CircleDashed },
 }
 
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" })
@@ -126,7 +126,7 @@ function RadarCard({
 }) {
   return (
     <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {eyebrow} · {data.length} axes
       </p>
       <p className="mt-1.5 max-w-[34ch] text-[13.5px] font-medium leading-snug text-ink-700">
@@ -141,7 +141,7 @@ function RadarCard({
 
 /* Shared bits ───────────────────────────────────────────────────────────── */
 
-const EYEBROW = "text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300"
+const EYEBROW = "text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground"
 
 // Scoped stagger for the Sigma sub-views. Uses a distinct marker (`data-sreveal`)
 // so it never collides with the outer ClientTests `revealChildren` pass — that
@@ -195,7 +195,7 @@ function ViewToggle<T extends string>({
             onClick={() => onChange(o.key)}
             className={cn(
               "grid size-7 place-items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              value === o.key ? "bg-card text-foreground shadow-[var(--shadow-e1)]" : "text-ink-400 hover:text-foreground",
+              value === o.key ? "bg-card text-foreground shadow-[var(--shadow-e1)]" : "text-muted-foreground hover:text-foreground",
             )}
           >
             <Icon className="size-4 stroke-[1.5]" />
@@ -228,7 +228,7 @@ function SetMyCareerView({
   return (
     <div className="flex flex-col gap-6">
       <section data-reveal aria-label="Personality and interest profiles">
-        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           Profiles
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -251,7 +251,7 @@ function SetMyCareerView({
 
       <section data-reveal>
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             Assessments · {tests.length}
           </p>
           <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={() => toastAssign()}>
@@ -301,7 +301,7 @@ function SetMyCareerView({
                       <ScoreRing value={t.score!} size={56} stroke={4} sublabel="score" />
                     ) : (
                       <div className="grid size-14 shrink-0 place-items-center">
-                        <span className="font-display text-[20px] font-extralight text-ink-300">—</span>
+                        <span className="font-display text-[20px] font-extralight text-muted-foreground">—</span>
                       </div>
                     )}
                     <ArrowRight className="size-4 shrink-0 stroke-[1.5] text-ink-300 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -331,7 +331,7 @@ function AbilityCard({ a }: { a: SigmaAptitude }) {
         </div>
         <div className="shrink-0 text-right">
           <span className="font-display text-[26px] font-extralight leading-none tabular-nums text-foreground">{a.score}</span>
-          <span className="text-[12px] font-light tabular-nums text-ink-300">/10</span>
+          <span className="text-[12px] font-light tabular-nums text-muted-foreground">/10</span>
         </div>
       </div>
 
@@ -347,7 +347,7 @@ function AbilityCard({ a }: { a: SigmaAptitude }) {
       </span>
 
       <p className="mt-2.5 text-[12px] leading-snug text-ink-600">{a.definition}</p>
-      <p className="mt-auto pt-2 text-[11px] leading-snug text-ink-300">{a.examples}</p>
+      <p className="mt-auto pt-2 text-[11px] leading-snug text-muted-foreground">{a.examples}</p>
     </div>
   )
 }
@@ -419,7 +419,7 @@ function AbilityView({ profile }: { profile: ReturnType<typeof sigmaProfile> }) 
                   band={BAND_LABEL.ability[b]}
                 />
                 <p className="mt-2 text-center text-[12.5px] font-medium leading-tight text-foreground">{a.label}</p>
-                <span className="mt-0.5 font-mono text-[10px] text-ink-300">{a.code}</span>
+                <span className="mt-0.5 font-mono text-[10px] text-muted-foreground">{a.code}</span>
               </div>
             )
           })}
@@ -451,11 +451,11 @@ function DimensionCard({ d }: { d: SigmaDimension }) {
                 </div>
                 <span className="font-display text-[14px] font-light tabular-nums text-foreground">
                   {s.score}
-                  <span className="text-[10px] font-light text-ink-300">/99</span>
+                  <span className="text-[10px] font-light text-muted-foreground">/99</span>
                 </span>
               </div>
               <BipolarBar low={s.low.label} high={s.high.label} score={s.score} />
-              <p className="mt-1.5 text-[10.5px] leading-snug text-ink-300">
+              <p className="mt-1.5 text-[10.5px] leading-snug text-muted-foreground">
                 {b === "high" ? s.high.desc : b === "low" ? s.low.desc : "Balanced between both poles."}
               </p>
             </div>
@@ -535,7 +535,7 @@ function JobGroupRow({ g }: { g: SigmaJobGroup }) {
         <span className={cn("size-1.5 shrink-0 rounded-full", t.dot)} />
         <span className="truncate text-[12.5px] text-ink-700">{g.label}</span>
       </div>
-      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.08em] text-ink-300">{t.label}</span>
+      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{t.label}</span>
     </li>
   )
 }
@@ -568,7 +568,7 @@ function InterestView({ profile }: { profile: ReturnType<typeof sigmaProfile> })
         <div data-sreveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)] lg:col-span-2 lg:row-span-2">
           <div className="flex items-center justify-between">
             <Eyebrow>Top work roles · percentile</Eyebrow>
-            <span className="text-[10px] tabular-nums text-ink-300">{workRoles.length} roles</span>
+            <span className="text-[10px] tabular-nums text-muted-foreground">{workRoles.length} roles</span>
           </div>
           <p className="mt-1.5 text-[13.5px] font-medium leading-snug text-ink-700">
             {workRoles[0] ? `${workRoles[0].label} sits at the top of the interest profile.` : ""}
@@ -617,7 +617,7 @@ function InterestView({ profile }: { profile: ReturnType<typeof sigmaProfile> })
             <Eyebrow>Job groups · similarity</Eyebrow>
             <div className="flex items-center gap-3">
               {(["similar", "neutral", "dissimilar"] as JobGroupTone[]).map((t) => (
-                <span key={t} className="inline-flex items-center gap-1.5 text-[10px] text-ink-300">
+                <span key={t} className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground">
                   <span className={cn("size-1.5 rounded-full", JOB_TONE[t].dot)} /> {JOB_TONE[t].label}
                 </span>
               ))}
@@ -724,7 +724,7 @@ function SigmaView({ client }: { client: Client }) {
           ))}
         </div>
         <div className="flex items-center gap-3 pr-0.5">
-          <span className="hidden text-[11px] tabular-nums text-ink-300 sm:inline">
+          <span className="hidden text-[11px] tabular-nums text-muted-foreground sm:inline">
             Test {profile.testId} · {fmtDate(profile.takenAt)}
           </span>
           <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={() => navigate(`/clients/${client.id}/test-report`)}>
@@ -811,18 +811,18 @@ export function ClientTests({ client }: { client: Client }) {
                   <ScoreRing value={open.score} size={64} stroke={4} sublabel="score" />
                 ) : (
                   <div className="grid size-16 shrink-0 place-items-center rounded-full bg-ink-100">
-                    <span className="font-display text-[22px] font-extralight text-ink-300">—</span>
+                    <span className="font-display text-[22px] font-extralight text-muted-foreground">—</span>
                   </div>
                 )}
                 <div className="min-w-0">
-                  <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Result</div>
+                  <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Result</div>
                   <div className="mt-0.5 text-[14px] font-medium">{open.result}</div>
                 </div>
               </div>
 
               {detail.subScores.length > 0 && (
                 <div>
-                  <div className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Sub-scores</div>
+                  <div className="mb-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Sub-scores</div>
                   <div className="flex flex-col gap-3">
                     {detail.subScores.map((s) => (
                       <div key={s.label}>
@@ -838,12 +838,12 @@ export function ClientTests({ client }: { client: Client }) {
               )}
 
               <div>
-                <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Interpretation</div>
+                <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Interpretation</div>
                 <p className="text-[13px] leading-relaxed text-foreground">{detail.interpretation}</p>
               </div>
 
               <div className="border-t border-border pt-4">
-                <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Feeds into</div>
+                <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Feeds into</div>
                 <FeedTag feeds={open.feeds} />
                 <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
                   This assessment informs the{" "}

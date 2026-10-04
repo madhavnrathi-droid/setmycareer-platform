@@ -50,13 +50,13 @@ function ReportRow({ report }: { report: CounselorReport }) {
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12px] text-muted-foreground">
           <span>{TYPE_LABEL[report.type]}</span>
-          <span className="text-ink-300">·</span>
+          <span className="text-muted-foreground">·</span>
           <span className="uppercase tracking-wide text-ink-500">{report.format}</span>
-          <span className="text-ink-300">·</span>
+          <span className="text-muted-foreground">·</span>
           <span className="tabular-nums">{fmtDate(report.date)}</span>
           {report.shared && report.recipients.length > 0 && (
             <>
-              <span className="text-ink-300">·</span>
+              <span className="text-muted-foreground">·</span>
               <span className="truncate">To {report.recipients.join(", ")}</span>
             </>
           )}
@@ -113,7 +113,7 @@ export function ClientReports({ client }: { client: Client }) {
     <div ref={ref} className="flex flex-col gap-6">
       <header data-reveal className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Deliverables</p>
+          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Deliverables</p>
           <h2 className="mt-1 font-display text-[22px] font-extralight tracking-tight">Reports</h2>
         </div>
         <Button asChild size="sm" className="h-8 gap-1.5">

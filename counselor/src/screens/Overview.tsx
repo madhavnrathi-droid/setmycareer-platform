@@ -67,9 +67,9 @@ function StatTile({ icon: Icon, label, value, sub, loading }: {
 }) {
   return (
     <div className={cn(CARD, "p-4")}>
-      <div className="flex items-center gap-2 text-ink-400">
+      <div className="flex items-center gap-2 text-muted-foreground">
         <Icon className="size-4 stroke-[1.5]" />
-        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300">{label}</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{label}</span>
       </div>
       <div className="mt-2 font-display text-[28px] font-light leading-none tabular-nums text-foreground">
         {loading ? <span className="text-ink-200">…</span> : value}
@@ -158,7 +158,7 @@ export function Overview() {
   return (
     <div ref={ref}>
       <header data-reveal className="mb-7">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {greeting}, <span className="font-wordmark text-[15px] normal-case tracking-normal text-ink-500">{firstName}</span>
         </p>
         <h1 className="mt-1.5 font-display text-[clamp(28px,4vw,40px)] font-extralight leading-tight tracking-tight">
@@ -188,11 +188,11 @@ export function Overview() {
       {/* caseload composition — package mix + delivery mode, all live */}
       <div data-reveal className="mb-6 grid gap-6 lg:grid-cols-3">
         <section className={cn(CARD, "p-5 lg:col-span-2")}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Caseload by package</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Caseload by package</p>
           {loading ? (
             <p className="mt-4 text-[13px] text-muted-foreground">Loading your caseload…</p>
           ) : s.packages.length === 0 ? (
-            <p className="mt-4 text-[13px] text-ink-400">No services on record yet.</p>
+            <p className="mt-4 text-[13px] text-muted-foreground">No services on record yet.</p>
           ) : (
             <ul className="mt-4 flex flex-col gap-3">
               {s.packages.slice(0, 6).map((p) => {
@@ -214,7 +214,7 @@ export function Overview() {
         </section>
 
         <section className={cn(CARD, "flex flex-col p-5")}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Delivery mode</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Delivery mode</p>
           <div className="mt-4 flex items-end gap-4">
             <div>
               <div className="font-display text-[30px] font-light leading-none tabular-nums">{loading ? "…" : `${Math.round((s.online / s.modeTotal) * 100)}%`}</div>
@@ -229,7 +229,7 @@ export function Overview() {
             <div className="h-full bg-well-500" style={{ width: `${(s.online / s.modeTotal) * 100}%` }} />
             <div className="h-full bg-brand-400" style={{ width: `${(s.offline / s.modeTotal) * 100}%` }} />
           </div>
-          <p className="mt-auto pt-4 text-[11.5px] text-ink-300">Across {en(s.online + s.offline)} services on record.</p>
+          <p className="mt-auto pt-4 text-[11.5px] text-muted-foreground">Across {en(s.online + s.offline)} services on record.</p>
         </section>
       </div>
 
@@ -241,7 +241,7 @@ export function Overview() {
             <Link to="/calendar" className="text-[12px] text-brand-600 hover:underline">Open calendar →</Link>
           </div>
           {upcoming.length === 0 ? (
-            <p className="py-6 text-center text-[13px] text-ink-400">No upcoming sessions booked.</p>
+            <p className="py-6 text-center text-[13px] text-muted-foreground">No upcoming sessions booked.</p>
           ) : (
             <ul className="flex flex-col divide-y divide-border">
               {upcoming.slice(0, 8).map((u) => (
@@ -259,7 +259,7 @@ export function Overview() {
                     </div>
                   )}
                   <span className="shrink-0 text-right text-[12px] tabular-nums text-muted-foreground">
-                    {fmtDay(u.ts)}{u.time ? <span className="block text-[11px] text-ink-300">{u.time}</span> : null}
+                    {fmtDay(u.ts)}{u.time ? <span className="block text-[11px] text-muted-foreground">{u.time}</span> : null}
                   </span>
                 </li>
               ))}
@@ -267,8 +267,8 @@ export function Overview() {
           )}
         </section>
 
-        <section className={cn(CARD, "flex flex-col justify-center gap-3 p-5")}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">This week</p>
+        <section className={cn(CARD, "flex flex-col gap-3 p-5")}>
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">This week</p>
           <div className="flex items-end gap-2">
             <span className="font-display text-[40px] font-extralight leading-none tabular-nums">{loading ? "…" : en(s.servicesWeek)}</span>
             <span className="mb-1 inline-flex items-center gap-0.5 text-[11.5px] text-muted-foreground"><ArrowUpRight className="size-3 stroke-[1.75]" /> services</span>

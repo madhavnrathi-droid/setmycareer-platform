@@ -62,7 +62,7 @@ export function ScoreRing({
         <span ref={numRef} className="font-display text-[18px] font-light leading-none tabular-nums text-foreground">
           {value ?? "—"}
         </span>
-        {sublabel && <div className="mt-0.5 text-[8.5px] font-medium uppercase tracking-wider text-ink-300">{sublabel}</div>}
+        {sublabel && <div className="mt-0.5 text-[8.5px] font-medium uppercase tracking-wider text-muted-foreground">{sublabel}</div>}
       </div>
     </div>
   )

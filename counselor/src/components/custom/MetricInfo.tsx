@@ -97,7 +97,7 @@ function FlowDiagram({ steps }: { steps: string[] }) {
           {i < steps.length - 1 && (
             <svg
               width="8" height="10" viewBox="0 0 8 10" aria-hidden="true"
-              className="shrink-0 text-ink-300"
+              className="shrink-0 text-muted-foreground"
             >
               <path
                 d="M1 1l5 4-5 4" fill="none" stroke="currentColor"
@@ -144,7 +144,7 @@ export function MetricInfo({
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-80 rounded-2xl p-4">
-        <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           What this means
         </div>
         <h3 className="mt-1 text-[14px] font-medium text-foreground">{heading}</h3>
@@ -153,7 +153,7 @@ export function MetricInfo({
         </p>
         {steps && steps.length > 0 && (
           <>
-            <div className="mt-3.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+            <div className="mt-3.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
               How it is built
             </div>
             <FlowDiagram steps={steps} />

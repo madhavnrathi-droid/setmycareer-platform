@@ -61,7 +61,7 @@ const num = (v: unknown) => { const n = Number(v); return Number.isFinite(n) ? n
 const STATE_TONE: Record<string, string> = { active: "bg-well-50 text-well-700", paused: "bg-warn-50 text-warn-700", archived: "bg-ink-100 text-ink-500" }
 const STATUS_TONE: Record<string, string> = {
   booked: "bg-brand-50 text-brand-700", pending: "bg-warn-50 text-warn-700", scheduled: "bg-brand-50 text-brand-700",
-  completed: "bg-well-50 text-well-700", cancelled: "bg-ink-100 text-ink-500", deleted: "bg-ink-100 text-ink-400",
+  completed: "bg-well-50 text-well-700", cancelled: "bg-ink-100 text-ink-500", deleted: "bg-ink-100 text-muted-foreground",
 }
 const joinable = (status?: string) => { const s = (status ?? "").toLowerCase(); return s === "booked" || s === "pending" || s === "scheduled" || s === "" }
 
@@ -90,7 +90,7 @@ function sessionTiming(s: { session_date?: unknown; session_time?: unknown }): "
   if (now >= start - 10 * 60 * 1000) return "live"
   return "upcoming"
 }
-const SECTION = "mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"
+const SECTION = "mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"
 const field = "h-8 rounded-lg border border-border bg-background px-2 text-[12.5px] tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
 
 const BAND: Record<Likelihood, { tone: string; bg: string; label: string }> = {
@@ -103,7 +103,7 @@ const BAND: Record<Likelihood, { tone: string; bg: string; label: string }> = {
 function Section({ title, count, children }: { title: string; count?: number; children: React.ReactNode }) {
   return (
     <section>
-      <div className="mb-3 flex items-baseline gap-2"><h2 className={cn(SECTION, "mb-0")}>{title}</h2>{typeof count === "number" && <span className="text-[12px] tabular-nums text-ink-300">{count}</span>}</div>
+      <div className="mb-3 flex items-baseline gap-2"><h2 className={cn(SECTION, "mb-0")}>{title}</h2>{typeof count === "number" && <span className="text-[12px] tabular-nums text-muted-foreground">{count}</span>}</div>
       {children}
     </section>
   )
@@ -344,7 +344,7 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
         {/* purchases */}
         <Section title="Packages & purchases" count={purchaseList.length}>
           {purchases.loading && purchaseList.length === 0 ? <p className="text-[13px] text-muted-foreground">Loading…</p>
-            : purchaseList.length === 0 ? <p className="text-[13px] text-ink-400">No purchases on this account.</p> : (
+            : purchaseList.length === 0 ? <p className="text-[13px] text-muted-foreground">No purchases on this account.</p> : (
               <ul className="divide-y divide-border">
                 {purchaseList.map((p, i) => (
                   <li key={`${p.id}-${i}`} className="flex items-center gap-2.5 py-2.5">
@@ -361,7 +361,7 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
         {/* reports — open in the inbuilt viewer, with the generated date */}
         <Section title="Reports" count={allReports.length}>
           {reports.loading && allReports.length === 0 ? <p className="text-[13px] text-muted-foreground">Loading…</p>
-            : allReports.length === 0 ? <p className="text-[13px] text-ink-400">No reports generated yet.</p> : (
+            : allReports.length === 0 ? <p className="text-[13px] text-muted-foreground">No reports generated yet.</p> : (
               <ul className="divide-y divide-border">
                 {allReports.map((r, i) => (
                   <li key={`${r.url ?? r.name}-${i}`} className="flex items-center gap-2.5 py-2.5">
@@ -385,16 +385,16 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
           {/* comments shown beneath the reports too, newest first */}
           {allComments.length > 0 && (
             <div className="mt-4 border-t border-border pt-3">
-              <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300"><MessageSquare className="size-3 text-brand-600" /> Comments on this client</p>
+              <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground"><MessageSquare className="size-3 text-brand-600" /> Comments on this client</p>
               <ul className="flex flex-col gap-2">
                 {allComments.slice(0, 4).map((m, i) => (
                   <li key={i} className="rounded-lg bg-secondary/40 p-2.5">
                     <p className="line-clamp-2 text-[12px] leading-relaxed text-ink-700">{m.text}</p>
-                    <p className="mt-1 text-[10.5px] text-ink-400">{[m.navigator, fmtWhen(m.date, m.time)].filter(Boolean).join(" · ") || "Comment"}</p>
+                    <p className="mt-1 text-[10.5px] text-muted-foreground">{[m.navigator, fmtWhen(m.date, m.time)].filter(Boolean).join(" · ") || "Comment"}</p>
                   </li>
                 ))}
               </ul>
-              {allComments.length > 4 && <p className="mt-1.5 text-[11px] text-ink-400">+ {allComments.length - 4} more in Comments below</p>}
+              {allComments.length > 4 && <p className="mt-1.5 text-[11px] text-muted-foreground">+ {allComments.length - 4} more in Comments below</p>}
             </div>
           )}
         </Section>
@@ -408,7 +408,7 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
       {/* sessions */}
       <Section title="Sessions" count={sess.length}>
         {sessions.loading && sess.length === 0 ? <p className="text-[13px] text-muted-foreground">Loading sessions…</p>
-          : sess.length === 0 ? <p className="text-[13px] text-ink-400">No sessions recorded yet.</p> : (
+          : sess.length === 0 ? <p className="text-[13px] text-muted-foreground">No sessions recorded yet.</p> : (
             <ul className="divide-y divide-border">
               {sess.map((s, i) => {
                 const status = clean(s.session_status) ?? ""
@@ -443,8 +443,8 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
       {(countries.length > 0 || cities.length > 0) && (
         <Section title="Admission preferences">
           <div className="flex flex-col gap-2 text-[13px]">
-            {countries.length > 0 && <div><span className="text-ink-400">Countries: </span><span className="font-medium text-foreground">{countries.join(", ")}</span></div>}
-            {cities.length > 0 && <div><span className="text-ink-400">Cities: </span><span className="font-medium text-foreground">{cities.join(", ")}</span></div>}
+            {countries.length > 0 && <div><span className="text-muted-foreground">Countries: </span><span className="font-medium text-foreground">{countries.join(", ")}</span></div>}
+            {cities.length > 0 && <div><span className="text-muted-foreground">Cities: </span><span className="font-medium text-foreground">{cities.join(", ")}</span></div>}
           </div>
         </Section>
       )}
@@ -501,12 +501,12 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
           </div>
         )}
         {(notes.loading || dir.loading) && allComments.length === 0 ? <p className="text-[13px] text-muted-foreground">Loading comments…</p>
-          : allComments.length === 0 ? <p className="text-[13px] text-ink-400">No comments yet.</p> : (
+          : allComments.length === 0 ? <p className="text-[13px] text-muted-foreground">No comments yet.</p> : (
             <ul className="flex flex-col gap-3">
               {allComments.map((m, i) => (
                 <li key={i} className="rounded-xl border border-border bg-card p-3.5">
                   <p className="text-[13px] leading-relaxed text-foreground">{m.text}</p>
-                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-ink-400"><NotebookPen className="size-3" />{[m.navigator, fmtWhen(m.date, m.time)].filter(Boolean).join(" · ") || "Comment"}</div>
+                  <div className="mt-1.5 flex items-center gap-2 text-[11px] text-muted-foreground"><NotebookPen className="size-3" />{[m.navigator, fmtWhen(m.date, m.time)].filter(Boolean).join(" · ") || "Comment"}</div>
                 </li>
               ))}
             </ul>
@@ -566,10 +566,10 @@ export function AdminLiveClient({ clientId }: { clientId: string }) {
           <div className="mt-4 space-y-4">
             <p className="rounded-lg bg-warn-50/70 p-2.5 text-[11.5px] text-ink-600">A projection from the inputs below — the backend doesn’t yet store this client’s psychometric scores, so enter their marks/rank to model admission odds. This is guidance, not the client’s saved result.</p>
             <div className="flex flex-wrap gap-2">
-              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-ink-400">JEE Adv rank</span><input type="number" value={rank || ""} onChange={(e) => setRank(+e.target.value || 0)} className={cn(field, "w-24")} placeholder="—" /></label>
-              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-ink-400">JEE %ile</span><input type="number" step="0.1" value={percentile || ""} onChange={(e) => setPercentile(+e.target.value || 0)} className={cn(field, "w-20")} placeholder="—" /></label>
-              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-ink-400">Category</span><select value={category} onChange={(e) => setCategory(e.target.value as typeof category)} className={field}>{(["general", "ews", "obc_ncl", "sc", "st"] as const).map((c) => <option key={c} value={c}>{c.toUpperCase()}</option>)}</select></label>
-              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-ink-400">Income</span><input type="number" step="50000" value={income || ""} onChange={(e) => setIncome(+e.target.value || 0)} className={cn(field, "w-24")} placeholder="—" /></label>
+              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-muted-foreground">JEE Adv rank</span><input type="number" value={rank || ""} onChange={(e) => setRank(+e.target.value || 0)} className={cn(field, "w-24")} placeholder="—" /></label>
+              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-muted-foreground">JEE %ile</span><input type="number" step="0.1" value={percentile || ""} onChange={(e) => setPercentile(+e.target.value || 0)} className={cn(field, "w-20")} placeholder="—" /></label>
+              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-muted-foreground">Category</span><select value={category} onChange={(e) => setCategory(e.target.value as typeof category)} className={field}>{(["general", "ews", "obc_ncl", "sc", "st"] as const).map((c) => <option key={c} value={c}>{c.toUpperCase()}</option>)}</select></label>
+              <label className="flex flex-col gap-0.5"><span className="text-[9.5px] font-medium uppercase tracking-wide text-muted-foreground">Income</span><input type="number" step="50000" value={income || ""} onChange={(e) => setIncome(+e.target.value || 0)} className={cn(field, "w-24")} placeholder="—" /></label>
             </div>
             <div className="grid gap-5 lg:grid-cols-2">
               <div>

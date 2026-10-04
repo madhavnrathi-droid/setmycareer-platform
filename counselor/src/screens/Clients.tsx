@@ -85,7 +85,7 @@ export function Clients() {
   return (
     <div>
       <header className="mb-6">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Caseload</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Caseload</p>
         <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Clients</h1>
         <p className="mt-1 text-[13px] text-muted-foreground">
           {loading ? "Loading your live caseload…" : `${cards.length.toLocaleString("en-IN")} clients you've worked with`}
@@ -147,7 +147,7 @@ export function Clients() {
                 <span className="inline-flex items-center gap-1.5">
                   <span className="size-1.5 rounded-full bg-well-500" />
                   {c.services} {c.services === 1 ? "service" : "services"}
-                  {c.modes.size > 0 && <span className="text-ink-300">· {[...c.modes].map((m) => (m === "Offline" ? "In-person" : m)).join(", ")}</span>}
+                  {c.modes.size > 0 && <span className="text-muted-foreground">· {[...c.modes].map((m) => (m === "Offline" ? "In-person" : m)).join(", ")}</span>}
                 </span>
                 <span>{c.lastLabel ? `Last ${c.lastLabel}` : ""}</span>
               </div>
@@ -170,7 +170,7 @@ export function Clients() {
         </div>
       )}
 
-      <p className="mt-5 text-[11.5px] text-ink-300">
+      <p className="mt-5 text-[11.5px] text-muted-foreground">
         Your clients and the services they've taken with you. Career index, journey stage and risk flags aren't tracked yet.
         {list.length > 300 && ` Showing the first 300 of ${list.length.toLocaleString("en-IN")}; refine with search.`}
       </p>

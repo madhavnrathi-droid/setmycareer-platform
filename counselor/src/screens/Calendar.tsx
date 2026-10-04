@@ -171,7 +171,7 @@ function HourAxis() {
   return (
     <div className="relative" style={{ height: GRID_H }}>
       {Array.from({ length: DAY_END - DAY_START + 1 }, (_, h) => (
-        <div key={h} className="absolute right-1.5 -translate-y-1/2 text-[10px] tabular-nums text-ink-300" style={{ top: h * HOUR_H }}>
+        <div key={h} className="absolute right-1.5 -translate-y-1/2 text-[10px] tabular-nums text-muted-foreground" style={{ top: h * HOUR_H }}>
           {h < DAY_END - DAY_START ? fmtHour(DAY_START + h) : ""}
         </div>
       ))}
@@ -330,7 +330,7 @@ function WeekView({
           const isToday = ymd(d) === ymd(today)
           return (
             <div key={i} className={cn("border-l border-border px-2 py-2 text-center", isToday && "bg-brand-100")}>
-              <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-ink-300">{WEEKDAYS[i]}</div>
+              <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">{WEEKDAYS[i]}</div>
               <div className={cn("font-display text-[18px] font-extralight tabular-nums", isToday ? "text-brand-600" : "text-foreground")}>{d.getDate()}</div>
             </div>
           )
@@ -425,11 +425,11 @@ function ListView({
             <div className="mb-1 flex items-baseline gap-2">
               <h2 className={cn(
                 "text-[11px] font-medium uppercase tracking-[0.12em]",
-                isToday ? "text-brand-600" : "text-ink-400",
+                isToday ? "text-brand-600" : "text-muted-foreground",
               )}>
                 {relDay(key)}
               </h2>
-              <span className="text-[11px] tabular-nums text-ink-300">{fmtDayLong(d)}</span>
+              <span className="text-[11px] tabular-nums text-muted-foreground">{fmtDayLong(d)}</span>
             </div>
             <div className="flex flex-col">
               {items.map((a) => {
@@ -521,7 +521,7 @@ function SummaryPanel({
   return (
     <aside data-reveal className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Selected session</span>
+        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Selected session</span>
         <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", STATUS_TONE[appt.status])}>
           {STATUS_LABEL[appt.status]}
         </span>
@@ -592,7 +592,7 @@ function SummaryPanel({
                 <X className="size-3.5 stroke-[1.5]" /> Cancel
               </Button>
             </div>
-            <button onClick={onDelete} className="mx-auto mt-0.5 text-[11.5px] text-ink-400 transition-colors hover:text-risk-600">Delete event</button>
+            <button onClick={onDelete} className="mx-auto mt-0.5 text-[11.5px] text-muted-foreground transition-colors hover:text-risk-600">Delete event</button>
           </>
         )}
       </div>
@@ -602,12 +602,10 @@ function SummaryPanel({
 
 function Row({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-3">
-      <span className="mt-0.5">{icon}</span>
-      <div className="min-w-0 flex-1">
-        <dt className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</dt>
-        <dd className="mt-0.5 text-[12.5px] text-foreground">{children}</dd>
-      </div>
+    <div className="relative pl-7">
+      <span aria-hidden className="absolute left-0 top-0.5">{icon}</span>
+      <dt className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</dt>
+      <dd className="mt-0.5 min-w-0 text-[12.5px] text-foreground">{children}</dd>
     </div>
   )
 }
@@ -771,7 +769,7 @@ function ScheduleDialog({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <Label className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</Label>
+      <Label className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</Label>
       {children}
     </div>
   )
@@ -863,7 +861,7 @@ export function Calendar() {
       {/* header */}
       <header data-reveal className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Schedule</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Schedule</p>
           <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Calendar</h1>
         </div>
         <Button className="h-9 gap-1.5" onClick={() => setScheduleOpen(true)}>

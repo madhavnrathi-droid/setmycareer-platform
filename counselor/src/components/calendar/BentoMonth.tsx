@@ -39,8 +39,8 @@ function Chip({ appt, active, onSelect }: { appt: Appointment; active: boolean; 
       )}
     >
       <span className={cn("size-1.5 shrink-0 rounded-full", DOT[appt.platform])} />
-      <span className="shrink-0 tabular-nums text-ink-400">{fmtTime(appt.scheduledAt)}</span>
-      <span className={cn("min-w-0 flex-1 truncate font-medium text-ink-700", (done || canceled) && "text-ink-400 line-through decoration-ink-300")}>{appt.title}</span>
+      <span className="shrink-0 tabular-nums text-muted-foreground">{fmtTime(appt.scheduledAt)}</span>
+      <span className={cn("min-w-0 flex-1 truncate font-medium text-ink-700", (done || canceled) && "text-muted-foreground line-through decoration-ink-300")}>{appt.title}</span>
     </button>
   )
 }
@@ -64,7 +64,7 @@ function Cell({
           aria-label={`Open ${ymd(d)}`}
           className={cn(
             "grid size-6 place-items-center rounded-full text-[12px] tabular-nums transition-colors",
-            isToday ? "bg-brand-500 font-semibold text-white" : inMonth ? "font-medium text-ink-700 hover:bg-secondary" : "text-ink-300 hover:bg-secondary",
+            isToday ? "bg-brand-500 font-semibold text-white" : inMonth ? "font-medium text-ink-700 hover:bg-secondary" : "text-muted-foreground hover:bg-secondary",
           )}
         >
           {d.getDate()}
@@ -90,7 +90,7 @@ function Cell({
           <Chip key={a.id} appt={a} active={a.id === selectedId} onSelect={() => onSelect(a)} />
         ))}
         {overflow > 0 && (
-          <button type="button" onClick={() => onOpenDay(d)} className="px-1.5 pt-0.5 text-left text-[10.5px] font-medium text-ink-400 hover:text-foreground">
+          <button type="button" onClick={() => onOpenDay(d)} className="px-1.5 pt-0.5 text-left text-[10.5px] font-medium text-muted-foreground hover:text-foreground">
             +{overflow} more
           </button>
         )}
@@ -130,7 +130,7 @@ export function BentoMonth({
       {/* weekday header */}
       <div className="grid grid-cols-7">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="border-b border-r border-border/60 bg-secondary/30 px-2 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-400">{w}</div>
+          <div key={w} className="border-b border-r border-border/60 bg-secondary/30 px-2 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{w}</div>
         ))}
       </div>
       {/* days */}

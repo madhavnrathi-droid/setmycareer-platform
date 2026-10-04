@@ -166,7 +166,7 @@ export function Sidebar({ collapsed, onCollapse, open, onClose }: {
                 </NavLink>
               ))}
               {recent.length === 0 && (
-                <span className="px-2 h-8 flex items-center text-[12px] text-ink-300">No clients yet</span>
+                <span className="px-2 h-8 flex items-center text-[12px] text-muted-foreground">No clients yet</span>
               )}
               <NavLink to="/clients" onClick={onClose} className="px-2 h-8 flex items-center text-[12px] text-muted-foreground hover:text-foreground">
                 View all →

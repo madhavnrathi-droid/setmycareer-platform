@@ -42,7 +42,7 @@ function CareerDetail({ row, audience, onAsk, onClose }: {
     <div className="rounded-2xl border border-brand-200 bg-brand-50/40 p-5 shadow-[var(--shadow-e1)] sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-400">{row.ticker} · {row.cluster}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{row.ticker} · {row.cluster}</p>
           <h3 className="mt-1 font-display text-[22px] font-semibold tracking-tight text-foreground">{row.name}</h3>
           <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">{row.oneLine}</p>
         </div>
@@ -56,7 +56,7 @@ function CareerDetail({ row, audience, onAsk, onClose }: {
         </div>
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-[11px] text-muted-foreground">{audience === "student" ? "Entry pay" : "Senior pay"}</p>
-          <p className="mt-1 font-display text-[18px] font-semibold tabular-nums">₹{audience === "student" ? row.payLo : row.payHi}L <span className="text-[11px] font-normal text-ink-400">/yr</span></p>
+          <p className="mt-1 font-display text-[18px] font-semibold tabular-nums">₹{audience === "student" ? row.payLo : row.payHi}L <span className="text-[11px] font-normal text-muted-foreground">/yr</span></p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-[11px] text-muted-foreground">Pay band</p>
@@ -71,7 +71,7 @@ function CareerDetail({ row, audience, onAsk, onClose }: {
       {full && (
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-400">{audience === "student" ? "How you get there" : "The read"}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">{audience === "student" ? "How you get there" : "The read"}</p>
             <p className="mt-1.5 text-[13px] leading-relaxed text-ink-600">{full.growthNote}. {full.aiNote}.</p>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {(audience === "student" ? full.education : full.skills).slice(0, 5).map((s) => (
@@ -80,11 +80,11 @@ function CareerDetail({ row, audience, onAsk, onClose }: {
             </div>
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-400">The pay ladder</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">The pay ladder</p>
             <div className="mt-1.5 space-y-1.5">
               {full.stages.slice(0, 3).map((st) => (
                 <div key={st.label} className="flex items-baseline justify-between gap-3 text-[12.5px]">
-                  <span className="text-ink-600">{st.label} <span className="text-ink-300">· {st.years}</span></span>
+                  <span className="text-ink-600">{st.label} <span className="text-muted-foreground">· {st.years}</span></span>
                   <span className="font-medium tabular-nums text-foreground">₹{st.payLo}–{st.payHi}L</span>
                 </div>
               ))}
@@ -192,7 +192,7 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
             aria-label="Search careers"
             className="min-w-0 flex-1 bg-transparent text-[14px] outline-none placeholder:text-ink-300"
           />
-          <span className="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-ink-300 sm:inline">{ALL_ROWS.length} careers</span>
+          <span className="hidden rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline">{ALL_ROWS.length} careers</span>
         </div>
         {openSearch && results.length > 0 && (
           <div className="absolute inset-x-0 top-full z-20 mt-2 overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-e2)]">
@@ -200,9 +200,9 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
               const pct = trendPctOf(r)
               return (
                 <button key={r.id} onClick={() => pick(r)} className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-ink-50">
-                  <span className="w-14 shrink-0 text-[10.5px] font-semibold uppercase tracking-wide text-ink-400">{r.ticker}</span>
+                  <span className="w-14 shrink-0 text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground">{r.ticker}</span>
                   <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-foreground">{r.name}</span>
-                  <span className="hidden truncate text-[11.5px] text-ink-400 sm:inline">{r.cluster}</span>
+                  <span className="hidden truncate text-[11.5px] text-muted-foreground sm:inline">{r.cluster}</span>
                   <DeltaChip pct={pct} />
                 </button>
               )
@@ -234,7 +234,7 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
             <div key={s.source + s.stat} className="pb-3">
               <p className={cn("font-display text-[25px] font-semibold leading-none tracking-tight tabular-nums", SIGNAL_TONE[s.tone])}>{s.stat}</p>
               <p className="mt-1.5 text-[11.5px] leading-snug text-ink-600">{s.label}</p>
-              <p className="mt-1 text-[9.5px] uppercase tracking-[0.08em] text-ink-300">{s.source}</p>
+              <p className="mt-1 text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">{s.source}</p>
             </div>
           ))}
         </div>
@@ -267,12 +267,12 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
           <div className="rounded-2xl border border-border bg-card shadow-[var(--shadow-e1)]">
             <div className="flex items-center justify-between px-5 pt-4">
               <p className="text-[13px] font-semibold text-foreground">{audience === "student" ? "Movers — the careers rising fastest" : "Movers — where the pivots are heading"}</p>
-              <span className="text-[11px] text-ink-400">10-yr demand · WEF/BLS-grounded</span>
+              <span className="text-[11px] text-muted-foreground">10-yr demand · WEF/BLS-grounded</span>
             </div>
             <div className="mt-2 overflow-x-auto">
               <table className="w-full min-w-[560px] text-left">
                 <thead>
-                  <tr className="border-b border-border text-[10.5px] uppercase tracking-[0.08em] text-ink-400">
+                  <tr className="border-b border-border text-[10.5px] uppercase tracking-[0.08em] text-muted-foreground">
                     <th className="px-5 py-2 font-medium">Career</th>
                     <th className="px-3 py-2 font-medium">Trend</th>
                     <th className="px-3 py-2 font-medium">10-yr</th>
@@ -288,7 +288,7 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
                       <tr key={r.id} className="cursor-pointer border-b border-border/60 transition hover:bg-ink-50/60 last:border-0" onClick={() => pick(r)}>
                         <td className="px-5 py-2.5">
                           <p className="text-[13px] font-medium text-foreground">{r.name}</p>
-                          <p className="text-[11px] text-ink-400">{r.cluster}</p>
+                          <p className="text-[11px] text-muted-foreground">{r.cluster}</p>
                         </td>
                         <td className="px-3 py-2.5"><RowSpark trend={r.demandTrend} up={pct >= 0} /></td>
                         <td className="px-3 py-2.5"><DeltaChip pct={pct} /></td>
@@ -307,7 +307,7 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
           <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e1)]">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="text-[13px] font-semibold text-foreground">The 2030 outlook</p>
-              <span className="text-[11px] text-ink-400">WEF Future of Jobs 2025</span>
+              <span className="text-[11px] text-muted-foreground">WEF Future of Jobs 2025</span>
             </div>
             <p className="mt-2 font-display text-[30px] font-semibold tracking-tight">{OUTLOOK.headline} <span className="text-[13px] font-normal text-muted-foreground">{OUTLOOK.headlineLabel}</span></p>
             <div className="mt-4"><SegBar segments={OUTLOOK.segments} /></div>
@@ -354,7 +354,7 @@ export function CareerTerminalPanel({ defaultAudience = "student", onAsk, onSell
               <a key={n.link || n.title} href={n.link} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 border-t border-border/60 py-2.5 first:border-t-0 sm:[&:nth-child(2)]:border-t-0 xl:[&:nth-child(3)]:border-t-0">
                 <span className="min-w-0 flex-1">
                   <p className="text-[12.5px] font-medium leading-snug text-foreground line-clamp-2 group-hover:underline">{n.title}</p>
-                  <p className="mt-1 flex items-center gap-2 text-[10.5px] text-ink-400">
+                  <p className="mt-1 flex items-center gap-2 text-[10.5px] text-muted-foreground">
                     {n.tag && <span className="rounded-full border border-border px-1.5 py-px text-[9.5px] font-medium text-ink-500">{n.tag}</span>}
                     <span className="truncate">{n.source}</span>{ago(n.date) && <span>· {ago(n.date)}</span>}
                   </p>

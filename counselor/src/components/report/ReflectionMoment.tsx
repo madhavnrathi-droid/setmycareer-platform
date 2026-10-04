@@ -60,7 +60,7 @@ export function ReflectionMoment({
         </blockquote>
 
         {attribution && (
-          <figcaption data-rise className="mt-7 text-[12.5px] font-medium tracking-wide text-ink-400">
+          <figcaption data-rise className="mt-7 text-[12.5px] font-medium tracking-wide text-muted-foreground">
             — {attribution}
           </figcaption>
         )}

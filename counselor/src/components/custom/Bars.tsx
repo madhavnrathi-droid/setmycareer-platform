@@ -115,7 +115,7 @@ export function Heatmap({
       {/* day-of-week rail */}
       <div className="flex flex-col justify-between py-px">
         {dayLabels.map((d, i) => (
-          <div key={i} className="h-3 text-[9px] leading-3 text-ink-300">{d}</div>
+          <div key={i} className="h-3 text-[9px] leading-3 text-muted-foreground">{d}</div>
         ))}
       </div>
       {/* week columns */}

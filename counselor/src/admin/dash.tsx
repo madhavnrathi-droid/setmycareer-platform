@@ -38,7 +38,7 @@ export function PeriodPicker() {
 }
 
 export function LastUpdated() {
-  return <span className="inline-flex items-center gap-1.5 text-[11.5px] text-ink-300"><RefreshCw className="size-3" /> Live · SetMyCareer backend</span>
+  return <span className="inline-flex items-center gap-1.5 text-[11.5px] text-muted-foreground"><RefreshCw className="size-3" /> Live · SetMyCareer backend</span>
 }
 
 /** Period header strip: title + subtitle on the left, picker + last-updated right. */
@@ -57,7 +57,7 @@ export function DashHead({ title, subtitle, right }: { title: string; subtitle?:
 
 // ── delta + scorecard ─────────────────────────────────────────────────────────
 export function Delta({ value, invert, suffix = "%" }: { value: number; invert?: boolean; suffix?: string }) {
-  if (!value) return <span className="text-[11.5px] text-ink-300">—</span>
+  if (!value) return <span className="text-[11.5px] text-muted-foreground">—</span>
   const up = value > 0, good = invert ? !up : up
   const Icon = up ? ArrowUpRight : ArrowDownRight
   return <span className={cn("inline-flex items-center gap-0.5 text-[11.5px] font-medium tabular-nums", good ? "text-well-600" : "text-risk-500")}><Icon className="size-3" />{Math.abs(value).toFixed(1)}{suffix}</span>
@@ -96,7 +96,7 @@ export function TrendChart({ data, compare, labels, tone = "brand", height = 200
   data: number[]; compare?: number[]; labels?: string[]; tone?: string; height?: number; areaFill?: boolean
 }) {
   const W = 600, H = height
-  if (data.length < 2) return <div style={{ height }} className="grid place-items-center text-[12px] text-ink-300">Not enough data</div>
+  if (data.length < 2) return <div style={{ height }} className="grid place-items-center text-[12px] text-muted-foreground">Not enough data</div>
   const all = compare ? [...data, ...compare] : data
   const min = Math.min(...all), max = Math.max(...all)
   const pad = Math.max((max - min) * 0.14, Math.abs(max) * 0.02, 1)
@@ -115,7 +115,7 @@ export function TrendChart({ data, compare, labels, tone = "brand", height = 200
         <polyline points={line} fill="none" className={STROKE[tone]} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         <circle cx={x(data.length - 1)} cy={y(data[data.length - 1])} r={3} className={cn(BG[tone].replace("bg-", "fill-"))} />
       </svg>
-      {labels && <div className="mt-1.5 flex justify-between text-[10.5px] text-ink-300">{labels.map((l, i) => (i % 2 === 0 || i === labels.length - 1) ? <span key={i}>{l}</span> : <span key={i} className="opacity-0">.</span>)}</div>}
+      {labels && <div className="mt-1.5 flex justify-between text-[10.5px] text-muted-foreground">{labels.map((l, i) => (i % 2 === 0 || i === labels.length - 1) ? <span key={i}>{l}</span> : <span key={i} className="opacity-0">.</span>)}</div>}
     </div>
   )
 }
@@ -158,7 +158,7 @@ export function Waterfall({ m, fmt }: { m: MrrMovement; fmt: (n: number) => stri
       <div className="mt-1.5 flex gap-2">
         {steps.map((s, i) => (
           <div key={i} className="flex-1 text-center">
-            <p className="truncate text-[10px] text-ink-300">{s.label}</p>
+            <p className="truncate text-[10px] text-muted-foreground">{s.label}</p>
             <p className={cn("text-[11px] font-medium tabular-nums", s.kind === "down" ? "text-risk-500" : s.kind === "up" ? "text-well-600" : "text-foreground")}>{s.kind === "down" ? "−" : s.kind === "up" ? "+" : ""}{fmt(Math.abs(s.v))}</p>
           </div>
         ))}
@@ -192,7 +192,7 @@ export function FlowWaterfall({ steps, fmt }: { steps: FlowStep[]; fmt: (n: numb
       <div className="mt-1.5 flex gap-2">
         {steps.map((s, i) => (
           <div key={i} className="flex-1 text-center">
-            <p className="truncate text-[10px] text-ink-300">{s.label}</p>
+            <p className="truncate text-[10px] text-muted-foreground">{s.label}</p>
             <p className={cn("text-[11px] font-medium tabular-nums", s.kind === "down" ? "text-risk-500" : "text-foreground")}>{s.kind === "down" ? "−" : ""}{fmt(Math.abs(s.value))}</p>
           </div>
         ))}
@@ -213,7 +213,7 @@ export function Funnel({ stages }: { stages: FunnelStage[] }) {
           <div key={s.label}>
             <div className="flex items-center justify-between text-[12.5px]">
               <span className="font-medium text-foreground">{s.label}</span>
-              <span className="tabular-nums text-muted-foreground">{s.count.toLocaleString("en-IN")} <span className="text-ink-300">· {s.note}</span></span>
+              <span className="tabular-nums text-muted-foreground">{s.count.toLocaleString("en-IN")} <span className="text-muted-foreground">· {s.note}</span></span>
             </div>
             <div className="mt-1 h-7 overflow-hidden rounded-md bg-secondary">
               <div className="flex h-full items-center justify-end rounded-md bg-gradient-to-r from-brand-500/80 to-brand-600 pr-2" style={{ width: `${Math.max(8, pct)}%` }}>
@@ -239,9 +239,9 @@ export function CohortGrid({ cohorts }: { cohorts: Cohort[] }) {
       <table className="border-separate" style={{ borderSpacing: 3 }}>
         <thead>
           <tr>
-            <th className="pr-2 text-left text-[10px] font-medium uppercase tracking-wide text-ink-300">Cohort</th>
-            <th className="pr-2 text-right text-[10px] font-medium uppercase tracking-wide text-ink-300">n</th>
-            {Array.from({ length: maxCols }, (_, m) => <th key={m} className="w-9 text-center text-[10px] font-medium text-ink-300">M{m}</th>)}
+            <th className="pr-2 text-left text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Cohort</th>
+            <th className="pr-2 text-right text-[10px] font-medium uppercase tracking-wide text-muted-foreground">n</th>
+            {Array.from({ length: maxCols }, (_, m) => <th key={m} className="w-9 text-center text-[10px] font-medium text-muted-foreground">M{m}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -263,7 +263,7 @@ export function CohortGrid({ cohorts }: { cohorts: Cohort[] }) {
 }
 
 // ── donut + segment bars ─────────────────────────────────────────────────────
-const DONUT_TONES = ["text-brand-500", "text-mind-500", "text-well-500", "text-warn-500", "text-ink-400", "text-brand-300", "text-mind-300"]
+const DONUT_TONES = ["text-brand-500", "text-mind-500", "text-well-500", "text-warn-500", "text-muted-foreground", "text-brand-300", "text-mind-300"]
 export function Donut({ segments, fmt }: { segments: Segment[]; fmt: (n: number) => string }) {
   const total = segments.reduce((s, x) => s + x.value, 0)
   const R = 52, C = 2 * Math.PI * R
@@ -284,7 +284,7 @@ export function Donut({ segments, fmt }: { segments: Segment[]; fmt: (n: number)
             <span className={cn("size-2 shrink-0 rounded-full bg-current", DONUT_TONES[i % DONUT_TONES.length])} />
             <span className="flex-1 truncate text-ink-600">{s.label}</span>
             <span className="tabular-nums text-foreground">{fmt(s.value)}</span>
-            <span className="w-9 text-right tabular-nums text-ink-300">{Math.round((s.value / total) * 100)}%</span>
+            <span className="w-9 text-right tabular-nums text-muted-foreground">{Math.round((s.value / total) * 100)}%</span>
           </div>
         ))}
       </div>
@@ -322,7 +322,7 @@ export function PaceBar({ pace }: { pace: Pace }) {
         <div className={cn("absolute inset-y-0 left-0 rounded-full", onTrack ? "bg-well-500" : "bg-warn-500")} style={{ width: `${mtdPct}%` }} />
         <div className="absolute inset-y-[-2px] w-0.5 bg-foreground" style={{ left: `${projPct}%` }} title="projected" />
       </div>
-      <div className="mt-1 flex justify-between text-[11px] text-ink-300"><span>{pace.fmt(pace.mtd)} so far</span><span>proj {pace.fmt(pace.projected)} / {pace.fmt(pace.target)}</span></div>
+      <div className="mt-1 flex justify-between text-[11px] text-muted-foreground"><span>{pace.fmt(pace.mtd)} so far</span><span>proj {pace.fmt(pace.projected)} / {pace.fmt(pace.target)}</span></div>
     </div>
   )
 }
@@ -347,7 +347,7 @@ export function ForecastChart({ data, fc, labels, futureLabels, tone = "brand", 
   data: number[]; fc: { proj: number[]; lo: number[]; hi: number[] }; labels: string[]; futureLabels: string[]; tone?: string; height?: number
 }) {
   const W = 600, H = height
-  if (data.length < 2) return <div style={{ height }} className="grid place-items-center text-[12px] text-ink-300">Not enough data</div>
+  if (data.length < 2) return <div style={{ height }} className="grid place-items-center text-[12px] text-muted-foreground">Not enough data</div>
   const all = [...data, ...fc.hi, ...fc.lo]
   const min = Math.min(...all), max = Math.max(...all)
   const pad = Math.max((max - min) * 0.14, Math.abs(max) * 0.02, 1)
@@ -368,7 +368,7 @@ export function ForecastChart({ data, fc, labels, futureLabels, tone = "brand", 
         <polyline points={hist} fill="none" className={STROKE[tone]} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         <polyline points={projPts} fill="none" className={STROKE[tone]} strokeWidth={1.5} strokeDasharray="5 4" vectorEffect="non-scaling-stroke" />
       </svg>
-      <div className="mt-1.5 flex justify-between text-[10.5px] text-ink-300"><span>{labels[0]}</span><span className="text-foreground/60">now</span><span>{futureLabels[futureLabels.length - 1]} (proj)</span></div>
+      <div className="mt-1.5 flex justify-between text-[10.5px] text-muted-foreground"><span>{labels[0]}</span><span className="text-foreground/60">now</span><span>{futureLabels[futureLabels.length - 1]} (proj)</span></div>
     </div>
   )
 }

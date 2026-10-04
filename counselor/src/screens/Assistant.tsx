@@ -181,7 +181,7 @@ export function Assistant() {
         <div className="shrink-0 border-t border-border bg-background/80 px-6 py-3 backdrop-blur">
           <div className="mx-auto w-full max-w-3xl">
             <Composer onSubmit={send} busy={busy} clients={mentionClients} />
-            <p className="mt-1.5 px-1 text-center text-[10.5px] text-ink-300">
+            <p className="mt-1.5 px-1 text-center text-[10.5px] text-muted-foreground">
               Compass can see your caseload and how each score is built. It defers clinical &amp; financial calls to you.
             </p>
           </div>
@@ -211,7 +211,7 @@ function HistoryRail({
           >
             <PanelLeftClose className="size-[16px] stroke-[1.5]" />
           </button>
-          <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Chats</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Chats</span>
         </div>
         <div className="flex items-center gap-1.5">
           {chats.length > 0 && (
@@ -224,7 +224,7 @@ function HistoryRail({
               <Download className="size-[15px] stroke-[1.5]" />
             </button>
           )}
-          <span className={cn("text-[10.5px] tabular-nums", full ? "text-warn-600" : "text-ink-300")}>{chats.length}/{MAX_CHATS}</span>
+          <span className={cn("text-[10.5px] tabular-nums", full ? "text-warn-600" : "text-muted-foreground")}>{chats.length}/{MAX_CHATS}</span>
         </div>
       </div>
       <div className="px-3">
@@ -251,7 +251,7 @@ function HistoryRail({
                 >
                   <button onClick={() => onOpen(c)} className="min-w-0 flex-1 text-left">
                     <div className="truncate text-[12.5px] font-medium text-foreground">{c.title}</div>
-                    <div className="text-[10.5px] text-ink-300">{fmtRel(c.updatedAt)}</div>
+                    <div className="text-[10.5px] text-muted-foreground">{fmtRel(c.updatedAt)}</div>
                   </button>
                   <button
                     onClick={() => exportChatPdf(c)}
@@ -285,7 +285,7 @@ function Turn({ m }: { m: UIMessage }) {
   return (
     <div className={cn("flex flex-col", isUser ? "items-end" : "items-start")}>
       {!isUser && (
-        <div className="mb-1 flex items-center gap-1.5 text-[11px] font-medium text-ink-400">
+        <div className="mb-1 flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
           <span className="grid size-4 place-items-center text-foreground">
             <LogoMark size={14} className="text-foreground" />
           </span>
@@ -342,7 +342,7 @@ function EmptyState({ firstName, onPrompt, onNav }: { firstName: string; onPromp
             onClick={() => p.startsWith("@") ? undefined : onPrompt(p)}
             className={cn(
               "rounded-xl border border-hairline bg-card px-4 py-2.5 text-left text-[13px] text-ink-600 transition-colors",
-              p.startsWith("@") ? "cursor-default text-ink-400" : "hover:border-ink-200 hover:bg-secondary hover:text-foreground",
+              p.startsWith("@") ? "cursor-default text-muted-foreground" : "hover:border-ink-200 hover:bg-secondary hover:text-foreground",
             )}
           >
             {p}
@@ -444,7 +444,7 @@ function Composer({ onSubmit, busy, clients }: { onSubmit: (text: string, files:
       {/* @mention menu */}
       {mention && matches.length > 0 && (
         <div className="absolute bottom-full left-0 mb-2 w-72 overflow-hidden rounded-xl border border-hairline bg-[var(--surface-frost-strong)] p-1 shadow-[var(--shadow-float)] backdrop-blur-xl">
-          <div className="px-2 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-ink-300">Clients</div>
+          <div className="px-2 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Clients</div>
           {matches.map((c, i) => (
             <button
               key={c.id}
@@ -469,7 +469,7 @@ function Composer({ onSubmit, busy, clients }: { onSubmit: (text: string, files:
           {files.map((f, i) => (
             <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-[11px] text-ink-600">
               <Paperclip className="size-3 stroke-[1.5]" /> {f.name}
-              <button onClick={() => setFiles((p) => p.filter((_, j) => j !== i))} aria-label="Remove file" className="text-ink-300 hover:text-foreground">
+              <button onClick={() => setFiles((p) => p.filter((_, j) => j !== i))} aria-label="Remove file" className="text-muted-foreground hover:text-foreground">
                 <X className="size-3 stroke-[2]" />
               </button>
             </span>

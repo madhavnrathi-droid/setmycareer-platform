@@ -21,7 +21,7 @@ export function PillNav({ items }: { items: PillItem[] }) {
               key={it.to}
               title={it.hint}
               aria-disabled
-              className="shrink-0 cursor-not-allowed rounded-full px-3.5 h-8 inline-flex items-center text-[13px] text-ink-300"
+              className="shrink-0 cursor-not-allowed rounded-full px-3.5 h-8 inline-flex items-center text-[13px] text-muted-foreground"
             >
               {it.label}
             </span>

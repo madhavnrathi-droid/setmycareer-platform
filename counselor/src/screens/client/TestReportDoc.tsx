@@ -42,7 +42,7 @@ function Section({
   return (
     <section className="mt-7 break-inside-avoid">
       <div className="flex items-baseline gap-2 border-b border-ink-200 pb-1.5">
-        <span className="font-mono text-[11px] tabular-nums text-ink-300">{no}</span>
+        <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{no}</span>
         <h2 className="text-[14px] font-semibold uppercase tracking-[0.06em] text-foreground">{title}</h2>
       </div>
       {children}
@@ -60,7 +60,7 @@ function ScoreCell({ value, suffix }: { value: number; suffix: string }) {
   return (
     <span className="font-display font-light tabular-nums text-foreground">
       {value}
-      <span className="text-[11px] text-ink-300">{suffix}</span>
+      <span className="text-[11px] text-muted-foreground">{suffix}</span>
     </span>
   )
 }
@@ -83,7 +83,7 @@ function PercentileLine({ item, showCode }: { item: SigmaScaleItem; showCode?: b
     <div className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 break-inside-avoid">
       <div className="flex min-w-0 items-center gap-1.5">
         {showCode && item.code && (
-          <span className="shrink-0 font-mono text-[9px] text-ink-300">{item.code}</span>
+          <span className="shrink-0 font-mono text-[9px] text-muted-foreground">{item.code}</span>
         )}
         <span className="truncate text-[11.5px] text-ink-700">{item.label}</span>
       </div>
@@ -109,7 +109,7 @@ function JobGroupLine({ g }: { g: SigmaJobGroup }) {
         <span className={cn("size-1.5 shrink-0 rounded-full print:border print:border-ink-300", t.dot)} />
         <span className="truncate text-[11.5px] text-ink-700">{g.label}</span>
       </div>
-      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-ink-300">{t.label}</span>
+      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground">{t.label}</span>
     </div>
   )
 }
@@ -152,7 +152,7 @@ export function TestReportDoc({ client }: { client: Client }) {
             </span>
             <div>
               <p className="text-[15px] font-semibold tracking-tight text-foreground">Setmycareer</p>
-              <p className="text-[11px] uppercase tracking-[0.14em] text-ink-300">Psychometric Profile</p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Psychometric Profile</p>
             </div>
           </div>
           <div className="text-right text-[11px] leading-relaxed text-ink-500">
@@ -176,7 +176,7 @@ export function TestReportDoc({ client }: { client: Client }) {
             {p.personality.dimensions.map((d) => (
               <div key={d.key} className="break-inside-avoid">
                 <h3 className="text-[12px] font-semibold text-foreground">{d.label}</h3>
-                <p className="mt-0.5 text-[10.5px] leading-snug text-ink-300">{d.summary}</p>
+                <p className="mt-0.5 text-[10.5px] leading-snug text-muted-foreground">{d.summary}</p>
                 <div className="mt-2 flex flex-col gap-2.5">
                   {d.subs.map((s) => {
                     const b = band(s.score, "personality")
@@ -199,7 +199,7 @@ export function TestReportDoc({ client }: { client: Client }) {
                             style={{ left: `${(s.score / 99) * 100}%` }}
                           />
                         </div>
-                        <div className="mt-1 flex justify-between text-[9px] text-ink-300">
+                        <div className="mt-1 flex justify-between text-[9px] text-muted-foreground">
                           <span>{s.low.label}</span>
                           <span>{s.high.label}</span>
                         </div>
@@ -217,7 +217,7 @@ export function TestReportDoc({ client }: { client: Client }) {
           <p className="mt-2 text-[12px] leading-relaxed text-ink-600">{p.ability.takeaway}</p>
           <table className="mt-3 w-full border-collapse text-left">
             <thead>
-              <tr className="border-b border-ink-200 text-[9.5px] uppercase tracking-[0.08em] text-ink-300">
+              <tr className="border-b border-ink-200 text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
                 <th className="py-1.5 pr-2 font-medium">Aptitude</th>
                 <th className="px-2 py-1.5 font-medium">Definition</th>
                 <th className="w-24 px-2 py-1.5 font-medium">Level</th>
@@ -230,12 +230,12 @@ export function TestReportDoc({ client }: { client: Client }) {
                 return (
                   <tr key={a.code} className="break-inside-avoid border-b border-hairline align-top">
                     <td className="py-2 pr-2">
-                      <span className="font-mono text-[9px] text-ink-300">{a.code}</span>{" "}
+                      <span className="font-mono text-[9px] text-muted-foreground">{a.code}</span>{" "}
                       <span className="text-[11.5px] font-medium text-foreground">{a.label}</span>
                     </td>
                     <td className="px-2 py-2 text-[11px] leading-snug text-ink-600">
                       {a.definition}
-                      <span className="block text-[10px] text-ink-300">{a.examples}</span>
+                      <span className="block text-[10px] text-muted-foreground">{a.examples}</span>
                     </td>
                     <td className="px-2 py-2">
                       <div className="flex items-center gap-2">
@@ -301,11 +301,11 @@ export function TestReportDoc({ client }: { client: Client }) {
 
         {/* footer */}
         <footer className="mt-8 border-t border-ink-200 pt-3">
-          <p className="text-[10px] leading-relaxed text-ink-300">
+          <p className="text-[10px] leading-relaxed text-muted-foreground">
             Scores are illustrative and norm-referenced. This profile is a structured aid for discussion, not a diagnosis;
             interpretation should be carried out by a qualified counselor alongside interview and history.
           </p>
-          <p className="mt-1.5 text-[10px] tabular-nums text-ink-300">
+          <p className="mt-1.5 text-[10px] tabular-nums text-muted-foreground">
             Setmycareer · Career Test {p.testId} · {fmtDate(p.takenAt)} · {client.name}
           </p>
         </footer>
@@ -318,7 +318,7 @@ export function TestReportDoc({ client }: { client: Client }) {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</p>
+      <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p className="mt-0.5 text-[12px] font-medium leading-snug text-foreground">{value}</p>
     </div>
   )

@@ -27,7 +27,7 @@ const fmtNum = (n: number) => new Intl.NumberFormat("en-IN").format(Math.round(n
 function Kpi({ icon: Icon, label, value, sub }: { icon: React.ElementType; label: string; value: string; sub?: string }) {
   return (
     <div className="flex flex-col rounded-2xl border border-border bg-card p-4">
-      <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-ink-400">
+      <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
         <Icon className="size-3.5 stroke-[1.75]" /> {label}
       </div>
       <span className="mt-1.5 font-display text-[24px] font-light leading-none tabular-nums text-foreground">{value}</span>
@@ -82,7 +82,7 @@ export function AdminMarketing() {
         <div className="flex flex-col gap-6">
           {/* hero spend */}
           <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-400">Ad spend · {data.period}</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Ad spend · {data.period}</p>
             <div className="mt-1 font-display text-[40px] font-extralight leading-none tabular-nums">{fmtMoney(data.totalSpend ?? 0, ccy)}</div>
             <p className="mt-2 text-[12.5px] text-muted-foreground">
               {fmtNum(data.conversions ?? 0)} conversions · {fmtMoney(cpa, ccy)} per conversion (CPA)
@@ -100,7 +100,7 @@ export function AdminMarketing() {
           <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <div className="hidden grid-cols-[1fr_auto_auto_auto_auto] items-center gap-6 border-b border-border px-5 py-3 md:grid">
               {["Campaign", "Spend", "Clicks", "Impr.", "Conv."].map((h) => (
-                <div key={h} className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{h}</div>
+                <div key={h} className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{h}</div>
               ))}
             </div>
             <div className="divide-y divide-border">
@@ -111,7 +111,7 @@ export function AdminMarketing() {
                   <div key={`${c.name}-${i}`} className="grid grid-cols-1 items-center gap-x-6 gap-y-1 px-5 py-3 md:grid-cols-[1fr_auto_auto_auto_auto]">
                     <div className="min-w-0">
                       <div className="truncate text-[13.5px] font-medium text-foreground">{c.name}</div>
-                      {c.status && <div className="text-[11px] text-ink-300 capitalize">{c.status.toLowerCase()}</div>}
+                      {c.status && <div className="text-[11px] text-muted-foreground capitalize">{c.status.toLowerCase()}</div>}
                     </div>
                     <span className="text-[12.5px] font-medium tabular-nums md:w-24">{fmtMoney(c.spend, ccy)}</span>
                     <span className="text-[12.5px] tabular-nums text-muted-foreground md:w-16">{fmtNum(c.clicks)}</span>
@@ -143,14 +143,14 @@ export function AdminMarketing() {
                       <span className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full text-[10px] font-bold text-white ${ok ? "bg-well-600" : "bg-ink-300"}`}>{ok ? "✓" : "!"}</span>
                       <div className="min-w-0">
                         <code className="rounded bg-secondary px-1.5 py-0.5 text-[12px] text-foreground">{v.key}</code>
-                        <span className={`ml-2 text-[11.5px] ${ok ? "text-well-600" : "text-warn-600"}`}>{ok ? "set" : "needed"}</span>
-                        {!ok && <p className="mt-0.5 text-[11.5px] leading-relaxed text-ink-400">{v.how}</p>}
+                        <span className={`ml-2 text-[11.5px] ${ok ? "text-well-700" : "text-warn-700"}`}>{ok ? "set" : "needed"}</span>
+                        {!ok && <p className="mt-0.5 text-[11.5px] leading-relaxed text-muted-foreground">{v.how}</p>}
                       </div>
                     </li>
                   )
                 })}
               </ul>
-              <p className="mt-4 max-w-[68ch] text-[12px] leading-relaxed text-ink-400">
+              <p className="mt-4 max-w-[68ch] text-[12px] leading-relaxed text-muted-foreground">
                 The developer token requires a Google Ads <span className="font-medium">Manager (MCC)</span> account and API access approval; the refresh token requires running the OAuth consent once. Both are Google-side actions on your account — once you add those two env vars and redeploy, this page lights up with real spend, clicks, CPA and per-campaign breakdowns. Optional: <code className="rounded bg-secondary px-1">GOOGLE_ADS_LOGIN_CUSTOMER_ID</code> (your MCC id) and <code className="rounded bg-secondary px-1">GOOGLE_ADS_CURRENCY</code>.
               </p>
               {data?.error && <p className="mt-3 rounded-lg bg-risk-50 px-3 py-2 text-[12px] text-risk-600">{data.error}</p>}

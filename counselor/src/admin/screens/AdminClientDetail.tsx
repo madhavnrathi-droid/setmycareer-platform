@@ -31,7 +31,7 @@ const STAGES: JourneyStage[] = ["profile", "testing", "sessions", "report", "com
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" })
 const fmtDateTime = (iso: string) => new Date(iso).toLocaleString([], { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
 const STATE_TONE: Record<string, string> = { active: "bg-well-50 text-well-700", paused: "bg-warn-50 text-warn-700", archived: "bg-ink-100 text-ink-500" }
-const SECTION = "mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"
+const SECTION = "mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"
 
 const ACT_ICON: Record<ActivityKind, typeof Package> = {
   join: UserPlus, package: Package, test: ClipboardCheck, report: FileText, session: Video, booking: CalendarClock, note: StickyNote, message: MessageSquare, state: ShieldAlert,
@@ -121,8 +121,8 @@ export function AdminClientDetail() {
 
       {/* assignment + quick links */}
       <div data-reveal className="flex flex-wrap items-center gap-3">
-        <span className="text-[12.5px] text-muted-foreground">Counsellor</span>
-        <select value={c.counsellorId} onChange={(e) => assignCounsellor(c.id, e.target.value)} className="h-9 rounded-full border border-border bg-card px-3 text-[13px] outline-none">
+        <label htmlFor="assign-counsellor" className="text-[12.5px] text-muted-foreground">Counsellor</label>
+        <select id="assign-counsellor" value={c.counsellorId} onChange={(e) => assignCounsellor(c.id, e.target.value)} className="h-9 rounded-full border border-border bg-card px-3 text-[13px] outline-none">
           <option value="">Unassigned</option>
           {roster.map((cc) => <option key={cc.id} value={cc.id}>{cc.name}</option>)}
         </select>
@@ -282,7 +282,7 @@ export function AdminClientDetail() {
             {thread.slice(-5).map((m) => (
               <div key={m.id} className={cn("max-w-[80%] rounded-2xl px-3.5 py-2 text-[13px]", m.from === "client" ? "bg-secondary text-foreground" : "ml-auto bg-brand-600 text-white")}>
                 <p>{m.text}</p>
-                <p className={cn("mt-0.5 text-[10.5px]", m.from === "client" ? "text-ink-400" : "text-white/70")}>{m.from} · {fmtDateTime(m.ts)}</p>
+                <p className={cn("mt-0.5 text-[10.5px]", m.from === "client" ? "text-muted-foreground" : "text-white/70")}>{m.from} · {fmtDateTime(m.ts)}</p>
               </div>
             ))}
           </div>
@@ -299,7 +299,7 @@ export function AdminClientDetail() {
               <div key={i} className="flex gap-3">
                 <span className={cn("grid size-7 shrink-0 place-items-center rounded-full", TONE_BG[e.tone])}><Icon className="size-3.5" /></span>
                 <div className="min-w-0 flex-1 border-b border-border/60 pb-3">
-                  <div className="flex items-baseline justify-between gap-3"><p className="truncate text-[13px] font-medium text-foreground">{e.title}</p><span className="shrink-0 text-[11px] tabular-nums text-ink-300">{fmtDate(e.ts)}</span></div>
+                  <div className="flex items-baseline justify-between gap-3"><p className="truncate text-[13px] font-medium text-foreground">{e.title}</p><span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">{fmtDate(e.ts)}</span></div>
                   {e.detail && <p className="truncate text-[12px] text-muted-foreground">{e.detail}</p>}
                 </div>
               </div>

@@ -59,7 +59,7 @@ export function InfluenceMap({
 
   if (!nodes?.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-ink-400">
+      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-muted-foreground">
         The influence map appears once the people and forces around {centerName || "the client"} are mapped.
       </div>
     )
@@ -177,14 +177,14 @@ export function InfluenceMap({
         </svg>
       </div>
 
-      <figcaption className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1 text-[10.5px] text-ink-400">
+      <figcaption className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1 text-[10.5px] text-muted-foreground">
         {present.map((k) => (
           <span key={k} className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full" style={{ background: TONE[k].stroke }} aria-hidden />
             {TONE[k].label}
           </span>
         ))}
-        <span className="ml-auto text-ink-300">Closer = stronger influence</span>
+        <span className="ml-auto text-muted-foreground">Closer = stronger influence</span>
       </figcaption>
     </figure>
   )

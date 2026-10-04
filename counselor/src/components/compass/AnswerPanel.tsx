@@ -81,7 +81,7 @@ export function AnswerPanel({
         <span className="compass-gradient-ring grid size-6 place-items-center rounded-full bg-card">
           <LogoMark size={13} className="text-foreground" />
         </span>
-        <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {label}
         </span>
         <div className="ml-auto flex items-center gap-0.5">

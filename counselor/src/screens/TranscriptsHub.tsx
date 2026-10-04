@@ -42,7 +42,7 @@ export function TranscriptsHub() {
   return (
     <div ref={ref}>
       <header data-reveal className="mb-6">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Session intelligence</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Session intelligence</p>
         <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Transcripts</h1>
       </header>
 
@@ -82,7 +82,7 @@ export function TranscriptsHub() {
         <div data-reveal className="overflow-hidden rounded-2xl border border-border bg-card">
           <div className="hidden grid-cols-[1fr_auto_auto_auto_auto] items-center gap-6 border-b border-border px-5 py-3 md:grid">
             {["Client", "Date", "Platform", "State", ""].map((h, i) => (
-              <div key={i} className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{h}</div>
+              <div key={i} className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{h}</div>
             ))}
           </div>
           <div className="flex flex-col divide-y divide-border">

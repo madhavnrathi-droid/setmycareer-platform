@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
+import { ScreenBoundary } from "@/components/shell/ScreenBoundary"
 import { usePortalAccount, isPortalRevoked, signOut } from "./portal-store"
 import { PortalSidebar } from "./PortalSidebar"
 import { PortalTopbar } from "./PortalTopbar"
@@ -58,7 +59,7 @@ export function PortalAppShell() {
         />
         <main className="flex-1">
           <div className="mx-auto w-full max-w-[1360px] px-4 py-6 pb-28 sm:px-8">
-            <Outlet />
+            <ScreenBoundary home="/portal"><Outlet /></ScreenBoundary>
           </div>
         </main>
       </div>

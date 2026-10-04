@@ -21,7 +21,7 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" })
 const CONF_TONE: Record<string, string> = {
   high: "text-well-600", moderate: "text-foreground", tentative: "text-warn-600",
-  low: "text-warn-600", none: "text-ink-300",
+  low: "text-warn-600", none: "text-muted-foreground",
 }
 
 /* A single speaker-labeled turn. When it gated a pc.* metric a quote marker
@@ -31,7 +31,7 @@ function Turn({ turn }: { turn: TranscriptTurn }) {
   const gated = turn.gatesMetric
   return (
     <div data-reveal className="flex gap-3.5">
-      <div className="w-12 shrink-0 pt-0.5 text-right text-[11px] tabular-nums text-ink-300">{turn.ts}</div>
+      <div className="w-12 shrink-0 pt-0.5 text-right text-[11px] tabular-nums text-muted-foreground">{turn.ts}</div>
       <div className="min-w-0 flex-1">
         <div
           className={cn(
@@ -82,7 +82,7 @@ function SummaryPanel({ summary, deltas }: { summary?: string; deltas: ScoreDelt
         data-reveal
         className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]"
       >
-        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Session summary</p>
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Session summary</p>
         <p className="mt-2.5 text-[13.5px] leading-relaxed text-foreground">
           {summary || "No summary recorded for this session."}
         </p>
@@ -90,7 +90,7 @@ function SummaryPanel({ summary, deltas }: { summary?: string; deltas: ScoreDelt
 
       <section data-reveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Proposed score deltas</p>
+          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Proposed score deltas</p>
           <span className="text-[11px] tabular-nums text-muted-foreground">{deltas.length}</span>
         </div>
 
@@ -105,7 +105,7 @@ function SummaryPanel({ summary, deltas }: { summary?: string; deltas: ScoreDelt
                 </div>
                 <div className="flex items-center gap-2 text-[12px] tabular-nums text-muted-foreground">
                   <span>{d.before ?? "—"}</span>
-                  <span className="text-ink-300">→</span>
+                  <span className="text-muted-foreground">→</span>
                   <span className="font-medium text-foreground">{d.after}</span>
                   <span
                     className={cn(
@@ -182,7 +182,7 @@ function SessionNotesPanel({ session }: { session: Session }) {
   return (
     <section data-reveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Session notes</p>
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Session notes</p>
         {approved ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-well-100 px-2.5 py-1 text-[10.5px] font-medium text-well-600">
             <ShieldCheck className="size-3 stroke-[1.75]" /> Shared with client
@@ -198,7 +198,7 @@ function SessionNotesPanel({ session }: { session: Session }) {
       <div className="flex flex-col gap-1.5">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-600">
           <Lock className="size-3 stroke-[1.75] text-ink-300" /> Counselor notes
-          <span className="font-normal text-ink-300">· private</span>
+          <span className="font-normal text-muted-foreground">· private</span>
         </span>
         {locked ? (
           <p className="whitespace-pre-line rounded-lg bg-secondary/60 px-3.5 py-3 text-[12.5px] leading-relaxed text-foreground">
@@ -220,7 +220,7 @@ function SessionNotesPanel({ session }: { session: Session }) {
       <div className="mt-4 flex flex-col gap-1.5">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-600">
           <UserRound className="size-3 stroke-[1.75] text-ink-300" /> Client-facing notes
-          <span className="font-normal text-ink-300">· plain language</span>
+          <span className="font-normal text-muted-foreground">· plain language</span>
         </span>
         {locked ? (
           <p className="whitespace-pre-line rounded-lg bg-brand-100/40 px-3.5 py-3 text-[12.5px] leading-relaxed text-foreground">
@@ -372,7 +372,7 @@ export function SessionDetail() {
         {/* left — transcript */}
         <section data-reveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
           <div className="mb-5 flex items-center justify-between">
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Transcript</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Transcript</p>
             <span className="text-[11px] text-muted-foreground">
               Tap a <Quote className="inline size-3 stroke-[1.75] align-text-bottom text-brand-600" /> quote to see the metric it gated
             </span>

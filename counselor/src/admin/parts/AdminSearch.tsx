@@ -70,7 +70,7 @@ export function AdminSearch() {
           placeholder="Search clients, counsellors…"
           className="w-full bg-transparent text-[13px] outline-none placeholder:text-ink-300"
         />
-        {!q && <kbd className="hidden rounded border border-border px-1.5 text-[10.5px] font-medium text-ink-300 sm:inline">/</kbd>}
+        {!q && <kbd className="hidden rounded border border-border px-1.5 text-[10.5px] font-medium text-muted-foreground sm:inline">/</kbd>}
       </div>
 
       {open && q && (
@@ -83,7 +83,7 @@ export function AdminSearch() {
                 const firstOfKind = i === 0 || hits[i - 1].kind !== h.kind
                 return (
                   <div key={h.kind + h.id}>
-                    {firstOfKind && <p className="px-3 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-300">{h.kind === "Client" ? "Clients" : "Counsellors"}</p>}
+                    {firstOfKind && <p className="px-3 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{h.kind === "Client" ? "Clients" : "Counsellors"}</p>}
                     <button
                       tabIndex={-1}
                       onMouseEnter={() => setActive(i)}

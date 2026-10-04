@@ -93,7 +93,7 @@ export function AdminCopilot() {
             placeholder="Ask about revenue, retention, a counsellor, a client, unit economics… or ask it to compute something."
             className="max-h-40 flex-1 resize-none bg-transparent px-2.5 py-2 text-[14px] text-foreground outline-none placeholder:text-ink-300"
           />
-          <button onClick={() => send(input)} disabled={busy || !input.trim()} className="grid size-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition hover:opacity-90 disabled:opacity-40">
+          <button onClick={() => send(input)} disabled={busy || !input.trim()} aria-label="Send" className="grid size-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition hover:opacity-90 disabled:opacity-40">
             {busy ? <Loader2 className="size-4 animate-spin" /> : <ArrowUp className="size-4" />}
           </button>
         </div>

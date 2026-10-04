@@ -85,7 +85,7 @@ export function TrajectoryMap({
   const hasHistory = history && history.length > 0
   if (!hasHistory && !routes?.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-ink-400">
+      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-muted-foreground">
         The trajectory map draws itself once there is a journey and routes to plot.
       </div>
     )
@@ -236,7 +236,7 @@ export function TrajectoryMap({
       </div>
 
       {/* legend */}
-      <figcaption className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1 text-[10.5px] text-ink-400">
+      <figcaption className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1 text-[10.5px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-[2px] w-5 rounded-full bg-brand-500" aria-hidden />
           Career index
@@ -247,7 +247,7 @@ export function TrajectoryMap({
             Wellbeing
           </span>
         )}
-        <span className="ml-auto text-ink-300">Thicker branch = higher probability</span>
+        <span className="ml-auto text-muted-foreground">Thicker branch = higher probability</span>
       </figcaption>
     </figure>
   )

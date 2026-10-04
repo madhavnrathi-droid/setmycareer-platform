@@ -54,11 +54,11 @@ export function KpiCard({ label, value, unit, delta, sub, bars }: {
       <p className="text-[12px] font-medium text-muted-foreground">{label}</p>
       <div className="mt-1.5 flex items-baseline gap-2">
         <span className="font-display text-[26px] font-semibold leading-none tracking-tight text-foreground sm:text-[30px]">
-          {value}{unit && <span className="ml-0.5 text-[0.55em] font-medium text-ink-400">{unit}</span>}
+          {value}{unit && <span className="ml-0.5 text-[0.55em] font-medium text-muted-foreground">{unit}</span>}
         </span>
         {delta != null && <DeltaChip pct={delta} />}
       </div>
-      <p className="mt-1 text-[11px] text-ink-400">{sub}</p>
+      <p className="mt-1 text-[11px] text-muted-foreground">{sub}</p>
       <div className="mt-3"><BarField values={bars} highlight={[Math.max(0, bars.length - 7), bars.length]} tone="well" h={34} /></div>
     </div>
   )
@@ -119,7 +119,7 @@ export function Gauge({ pct, label, sub }: { pct: number; label: string; sub?: s
       </svg>
       <p className="-mt-5 font-display text-[24px] font-semibold leading-none text-foreground">{clamped}%</p>
       <p className="mt-1 text-[12px] font-medium text-muted-foreground">{label}</p>
-      {sub && <p className="mt-0.5 text-[11px] text-ink-400">{sub}</p>}
+      {sub && <p className="mt-0.5 text-[11px] text-muted-foreground">{sub}</p>}
     </div>
   )
 }
@@ -138,9 +138,9 @@ export function RowSpark({ trend, up }: { trend: number[]; up: boolean }) {
 
 /* ── AI-exposure dots (1–3) ── */
 export function AiDots({ level }: { level: number | null }) {
-  if (level == null) return <span className="text-[11px] text-ink-300">—</span>
+  if (level == null) return <span className="text-[11px] text-muted-foreground">—</span>
   return (
-    <span className="inline-flex items-center gap-1" aria-label={`AI exposure ${level} of 3`}>
+    <span role="img" className="inline-flex items-center gap-1" aria-label={`AI exposure ${level} of 3`}>
       {[1, 2, 3].map((i) => (
         <span key={i} className={cn("size-1.5 rounded-full", i <= level ? (level >= 3 ? "bg-warn-500" : "bg-ink-500") : "bg-ink-200")} />
       ))}

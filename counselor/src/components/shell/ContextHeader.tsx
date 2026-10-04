@@ -15,7 +15,7 @@ function RiskDot({ flag }: { flag: Client["riskFlag"] }) {
 function MiniStat({ label, value, tone }: { label: string; value: React.ReactNode; tone?: string }) {
   return (
     <div className="hidden md:block">
-      <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</div>
+      <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
       <div className={cn("font-display text-[22px] font-extralight leading-none tabular-nums", tone)}>{value}</div>
     </div>
   )

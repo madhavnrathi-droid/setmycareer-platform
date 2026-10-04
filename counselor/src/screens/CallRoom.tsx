@@ -574,7 +574,7 @@ function UpcomingPanel({ bookings, onClose }: { bookings: PortalBooking[]; onClo
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
       <div className="fixed bottom-24 left-1/2 z-40 w-80 -translate-x-1/2 rounded-2xl border border-border bg-card p-3 text-foreground shadow-[var(--shadow-float)]">
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Upcoming sessions</p>
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Upcoming sessions</p>
         {upcoming.length === 0 ? <p className="py-2 text-[12.5px] text-muted-foreground">Nothing scheduled.</p> : (
           <div className="divide-y divide-border">
             {upcoming.map((b) => (
@@ -678,11 +678,11 @@ function RightRail({ tab, setTab, notes, transcript, captionsOn, draft, setDraft
       ) : tab === "split" ? (
         <div className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto border-b border-border p-3">
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Transcript</p>
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Transcript</p>
             <TranscriptBlock transcript={transcript} captionsOn={captionsOn} />
           </div>
           <div className="flex min-h-0 flex-1 flex-col">
-            <div className="flex-1 overflow-y-auto p-3"><p className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Notes</p><NotesList notes={notes} /></div>
+            <div className="flex-1 overflow-y-auto p-3"><p className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Notes</p><NotesList notes={notes} /></div>
             <NoteComposer {...composer} />
           </div>
         </div>
@@ -713,7 +713,7 @@ function ChatPanel({ messages, onSend, hint }: { messages: ChatMsg[]; onSend: (t
           <ul className="flex flex-col gap-2">
             {messages.map((m, i) => (
               <li key={i} className={cn("flex flex-col", m.me ? "items-end" : "items-start")}>
-                {!m.me && m.name && <span className="px-1 pb-0.5 text-[10px] text-ink-300">{m.name}</span>}
+                {!m.me && m.name && <span className="px-1 pb-0.5 text-[10px] text-muted-foreground">{m.name}</span>}
                 <span className={cn("max-w-[85%] rounded-2xl px-3 py-1.5 text-[12.5px] leading-snug", m.me ? "bg-brand-500 text-white" : "bg-secondary text-ink-700")}>
                   {m.text}
                 </span>

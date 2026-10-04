@@ -34,7 +34,7 @@ export function GoogleSignInButton({ label = "Continue with Google", dark = fals
 /** A subtle "or" divider for separating the form from the Google button. */
 export function OrDivider({ dark = false }: { dark?: boolean }) {
   return (
-    <div className={`flex items-center gap-3 text-[11px] uppercase tracking-wide ${dark ? "text-white/35" : "text-ink-300"}`}>
+    <div className={`flex items-center gap-3 text-[11px] uppercase tracking-wide ${dark ? "text-white/35" : "text-muted-foreground"}`}>
       <span className={`h-px flex-1 ${dark ? "bg-white/12" : "bg-border"}`} /> or <span className={`h-px flex-1 ${dark ? "bg-white/12" : "bg-border"}`} />
     </div>
   )

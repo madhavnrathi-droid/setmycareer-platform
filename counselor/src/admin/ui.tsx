@@ -44,7 +44,7 @@ export function Area({ data, tone = "brand", className }: { data: number[]; tone
 }
 
 export function DeltaTag({ value, invert }: { value: number; invert?: boolean }) {
-  if (!value) return <span className="text-[11.5px] text-ink-300">—</span>
+  if (!value) return <span className="text-[11.5px] text-muted-foreground">—</span>
   const up = value > 0
   const good = invert ? !up : up
   const Icon = up ? ArrowUpRight : ArrowDownRight
@@ -59,7 +59,7 @@ export function Section({ title, action, children }: { title: string; action?: R
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">{title}</h2>
+        <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">{title}</h2>
         {action}
       </div>
       {children}
@@ -67,7 +67,7 @@ export function Section({ title, action, children }: { title: string; action?: R
   )
 }
 
-export const tableHead = "border-b border-border text-left text-[11px] font-medium uppercase tracking-wide text-ink-400"
+export const tableHead = "border-b border-border text-left text-[11px] font-medium uppercase tracking-wide text-muted-foreground"
 export const td = "py-3 pr-4 text-[13px] text-foreground align-middle"
 
 // ── modal ─────────────────────────────────────────────────────────────────────

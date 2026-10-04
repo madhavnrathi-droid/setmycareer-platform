@@ -20,7 +20,7 @@ function NoSource({ note }: { note?: string }) {
   return (
     <div className="grid place-items-center rounded-xl border border-dashed border-border bg-secondary/20 px-4 py-8 text-center">
       <p className="text-[12.5px] text-muted-foreground">No live source — connect the backend metric to populate.</p>
-      {note && <p className="mt-1 text-[11px] text-ink-300">{note}</p>}
+      {note && <p className="mt-1 text-[11px] text-muted-foreground">{note}</p>}
     </div>
   )
 }
@@ -45,14 +45,14 @@ export function AdminRevenue() {
 
       {/* recurring-revenue scorecards — no live source */}
       <div data-reveal>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Recurring revenue</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Recurring revenue</h2>
         <NoSource note="Revenue MTD, MRR, net revenue retention and churn have no backend source yet." />
       </div>
 
       {/* package catalogue — 2026 catalog (new line) | Legacy (untouched live catalogue) */}
       <div data-reveal className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Package catalogue</h2>
+          <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Package catalogue</h2>
           <div className="inline-flex rounded-full border border-border bg-card p-0.5" role="tablist" aria-label="Catalogue view">
             {([["2026", "2026 catalog"], ["legacy", "Legacy"]] as const).map(([id, label]) => (
               <button
@@ -81,30 +81,30 @@ export function AdminRevenue() {
       {/* trend + MRR movement — no live source */}
       <div data-reveal className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
-          <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Revenue trend + 3-month forecast</h2>
+          <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Revenue trend + 3-month forecast</h2>
           <NoSource />
         </section>
         <section className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
-          <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">MRR movement · this month</h2>
+          <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">MRR movement · this month</h2>
           <NoSource />
         </section>
       </div>
 
       {/* revenue leakage — no live source */}
       <section data-reveal className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
-        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Revenue leakage · gross bookings → net collected</h2>
+        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Revenue leakage · gross bookings → net collected</h2>
         <NoSource note="Discounts, refunds, fees and dunning leakage land with the billing backend." />
       </section>
 
       {/* dunning recovery — no live source */}
       <section data-reveal className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
-        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Failed-payment recovery · dunning</h2>
+        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Failed-payment recovery · dunning</h2>
         <NoSource note="Smart retries + reminder cadence run through Razorpay once connected." />
       </section>
 
       {/* per-product revenue — no live source */}
       <section data-reveal>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Revenue by product</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Revenue by product</h2>
         <NoSource note="Per-product revenue and units aren't exposed by the backend yet — the live catalogue above shows the real packages and pricing." />
       </section>
     </div>

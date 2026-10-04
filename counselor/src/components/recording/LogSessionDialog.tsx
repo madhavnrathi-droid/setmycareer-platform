@@ -159,7 +159,7 @@ export function LogSessionDialog({
 
         <div className="flex flex-col gap-3">
           <label className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300">Client</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Client</span>
             <Select value={clientId} onValueChange={setClientId}>
               <SelectTrigger aria-label="Assign to client" className="h-10 w-full text-[13px]">
                 <SelectValue placeholder="Assign to a client…" />
@@ -210,7 +210,7 @@ export function LogSessionDialog({
           </label>
 
           <label className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300">Title</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Title</span>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}

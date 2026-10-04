@@ -248,7 +248,7 @@ export function FitGauge({
       <div className="absolute text-center">
         <span className={cn("font-display font-semibold leading-none tabular-nums", dark ? "text-white" : "text-foreground")}
           style={{ fontSize: size * 0.28 }}>{v}<span className="text-[0.5em] font-medium opacity-60">%</span></span>
-        {label && <div className={cn("mt-0.5 text-[9px] font-medium uppercase tracking-[0.12em]", dark ? "text-white/55" : "text-ink-300")}>{label}</div>}
+        {label && <div className={cn("mt-0.5 text-[9px] font-medium uppercase tracking-[0.12em]", dark ? "text-white/55" : "text-muted-foreground")}>{label}</div>}
       </div>
       {sub && <span className="sr-only">{sub}</span>}
     </div>
@@ -271,9 +271,9 @@ export function PayBand({ lo, hi, max = 60, dark = false, className }: {
           style={{ left: `${a * 100}%`, right: `${(1 - b) * 100}%`, background: dark ? "rgba(255,255,255,0.72)" : "var(--color-foreground)" }}
         />
       </div>
-      <div className={cn("mt-1.5 flex items-center justify-between font-mono text-[10px] tabular-nums", dark ? "text-white/60" : "text-ink-400")}>
+      <div className={cn("mt-1.5 flex items-center justify-between font-mono text-[10px] tabular-nums", dark ? "text-white/60" : "text-muted-foreground")}>
         <span>₹{lo}L</span>
-        <span className={dark ? "text-white/55" : "text-ink-300"}>entry → senior</span>
+        <span className={dark ? "text-white/55" : "text-muted-foreground"}>entry → senior</span>
         <span>₹{hi}L</span>
       </div>
     </div>
@@ -300,7 +300,7 @@ export function DemandSpark({ series, pct, dark = false, w = 96, h = 30, label }
       </svg>
       <span className={cn("font-mono text-[11px] font-semibold tabular-nums",
         up ? (dark ? "text-[#34d399]" : "text-well-600") : (dark ? "text-[#f87171]" : "text-risk-600"))}>
-        {up ? "+" : ""}{Math.round(pct)}%{label ? <span className={cn("ml-1 font-normal", dark ? "text-white/45" : "text-ink-300")}>{label}</span> : null}
+        {up ? "+" : ""}{Math.round(pct)}%{label ? <span className={cn("ml-1 font-normal", dark ? "text-white/45" : "text-muted-foreground")}>{label}</span> : null}
       </span>
     </div>
   )
@@ -320,7 +320,7 @@ export function AiExposure({ level, dark = false }: { level: number | null; dark
           }} />
         ))}
       </span>
-      <span className={cn("text-[11px]", dark ? "text-white/60" : "text-ink-400")}>AI: {word}</span>
+      <span className={cn("text-[11px]", dark ? "text-white/60" : "text-muted-foreground")}>AI: {word}</span>
     </span>
   )
 }
@@ -394,13 +394,13 @@ export function JobMatchCard({
           <div className="grid size-[132px] shrink-0 place-items-center rounded-full border border-dashed"
             style={{ borderColor: dark ? "rgba(255,255,255,0.2)" : "var(--color-ink-200)" }}>
             <div className="text-center">
-              <span className={cn("font-display text-[34px] font-light leading-none", dark ? "text-white/40" : "text-ink-300")}>—</span>
-              <p className={cn("mt-1 max-w-[88px] text-[9px] leading-tight", dark ? "text-white/45" : "text-ink-400")}>fit unlocks with the interest test</p>
+              <span className={cn("font-display text-[34px] font-light leading-none", dark ? "text-white/40" : "text-muted-foreground")}>—</span>
+              <p className={cn("mt-1 max-w-[88px] text-[9px] leading-tight", dark ? "text-white/45" : "text-muted-foreground")}>fit unlocks with the interest test</p>
             </div>
           </div>
         )}
         <div className="min-w-0 flex-1">
-          {headline && <p className={cn("font-mono text-[10.5px] uppercase tracking-[0.16em]", dark ? "text-white/50" : "text-ink-300")}>{headline}</p>}
+          {headline && <p className={cn("font-mono text-[10.5px] uppercase tracking-[0.16em]", dark ? "text-white/50" : "text-muted-foreground")}>{headline}</p>}
           <p className="mt-1.5 font-editorial text-[27px] font-light leading-tight tracking-tight sm:text-[31px]">{c.name}</p>
           <p className={cn("mt-1 text-[12.5px]", dark ? "text-white/60" : "text-muted-foreground")}>{c.cluster}{c.band ? ` · ${c.band} fit` : ""}</p>
 
@@ -442,7 +442,7 @@ export function GlassStat({ label, value, unit, delta, bars, className }: {
         )}
       </div>
       <p className="mt-1.5 font-display text-[27px] font-semibold leading-none tracking-tight tabular-nums text-foreground">
-        {value}{unit && <span className="ml-0.5 text-[0.5em] font-medium text-ink-400">{unit}</span>}
+        {value}{unit && <span className="ml-0.5 text-[0.5em] font-medium text-muted-foreground">{unit}</span>}
       </p>
       {bars && bars.length > 1 && (() => {
         const mx = Math.max(...bars, 1)

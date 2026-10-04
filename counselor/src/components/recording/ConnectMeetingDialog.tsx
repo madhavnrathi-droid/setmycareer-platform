@@ -193,7 +193,7 @@ export function ConnectMeetingDialog() {
                 const complete =
                   phaseIndex(phase) > phaseIndex(step.key) || (phase === "done" && step.key === "done")
                 return (
-                  <li key={step.key} className={cn("flex items-center gap-3 text-[13px]", reached ? "text-foreground" : "text-ink-300")}>
+                  <li key={step.key} className={cn("flex items-center gap-3 text-[13px]", reached ? "text-foreground" : "text-muted-foreground")}>
                     <span className="grid size-7 shrink-0 place-items-center rounded-full bg-secondary">
                       {complete ? (
                         <CircleCheck className="size-4 stroke-[1.75] text-well-600" />

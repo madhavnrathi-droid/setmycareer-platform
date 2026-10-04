@@ -30,7 +30,7 @@ const NOTIFS = [
 function SectionHead({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
     <div>
-      <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{eyebrow}</p>
+      <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{eyebrow}</p>
       <h2 className="mt-1 text-[15px] font-medium">{title}</h2>
       {sub && <p className="mt-0.5 text-[12.5px] text-muted-foreground">{sub}</p>}
     </div>
@@ -61,7 +61,7 @@ export function Settings() {
   return (
     <div ref={ref} className="mx-auto max-w-3xl">
       <header data-reveal className="mb-8">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Workspace</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Workspace</p>
         <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Settings</h1>
       </header>
 

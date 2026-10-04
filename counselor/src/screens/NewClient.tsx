@@ -102,7 +102,7 @@ export function NewClient() {
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300">
+      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
         {label}{required && <span className="ml-0.5 text-brand-500">*</span>}
       </span>
       {children}

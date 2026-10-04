@@ -89,7 +89,7 @@ function LiveCounsellorDetail({ id }: { id: string }) {
       {/* live profile facts */}
       {facts.length > 0 && (
         <section>
-          <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Profile</h2>
+          <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Profile</h2>
           <div className="grid grid-cols-2 gap-x-8 gap-y-3 sm:grid-cols-3">
             {facts.map((f) => <div key={f.label}><p className="text-[11.5px] text-muted-foreground">{f.label}</p><p className="text-[13.5px] text-foreground">{f.value}</p></div>)}
           </div>
@@ -107,9 +107,9 @@ function LiveCounsellorDetail({ id }: { id: string }) {
 
       {/* live caseload */}
       <section>
-        <h2 className="mb-3 flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">
+        <h2 className="mb-3 flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Caseload
-          {!caseload.loading && <span className="text-ink-400">· {naviRows(caseload.data).length} clients</span>}
+          {!caseload.loading && <span className="text-muted-foreground">· {naviRows(caseload.data).length} clients</span>}
         </h2>
         {caseload.loading ? (
           <p className="py-3 text-[13px] text-muted-foreground">Pulling live caseload…</p>
@@ -142,7 +142,7 @@ function LiveCounsellorDetail({ id }: { id: string }) {
         )}
       </section>
 
-      <p className="text-[11.5px] text-ink-300">Rating, utilization, notes-SLA and attributed revenue aren't tracked yet and stay blank.</p>
+      <p className="text-[11.5px] text-muted-foreground">Rating, utilization, notes-SLA and attributed revenue aren't tracked yet and stay blank.</p>
     </Shell>
   )
 }
@@ -220,14 +220,14 @@ function MockCounsellorDetail({ id }: { id?: string }) {
           {(["revenue", "sessions"] as const).map((m) => (
             <button key={m} onClick={() => setMetric(m)} className={cn("rounded-full px-2.5 py-1 text-[12px] font-medium capitalize transition-colors", metric === m ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground")}>{m}</button>
           ))}
-          <span className="ml-auto text-[11.5px] text-ink-300">last 12 months</span>
+          <span className="ml-auto text-[11.5px] text-muted-foreground">last 12 months</span>
         </div>
         <TrendChart data={data} labels={MONTHS} tone={metric === "revenue" ? "well" : "brand"} height={180} />
       </section>
 
       {/* caseload */}
       <section>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Caseload · {caseload.length} clients</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Caseload · {caseload.length} clients</h2>
         {caseload.length === 0 ? <p className="py-3 text-[13px] text-muted-foreground">No active clients assigned.</p> : (
           <div className="divide-y divide-border">
             {caseload.slice(0, 10).map((x) => (
@@ -243,7 +243,7 @@ function MockCounsellorDetail({ id }: { id?: string }) {
 
       {/* recent sessions */}
       <section>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Recent sessions</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Recent sessions</h2>
         <div className="divide-y divide-border">
           {sessions.map((s) => (
             <div key={s.id} className="flex items-center gap-4 py-3">

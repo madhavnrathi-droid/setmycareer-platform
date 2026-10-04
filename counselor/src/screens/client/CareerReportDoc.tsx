@@ -172,10 +172,10 @@ function Page({
     >
       {title && (
         <header className="flex items-baseline gap-3 border-b-2 border-foreground pb-2.5">
-          {no && <span className="font-mono text-[12px] tabular-nums text-ink-300">{no}</span>}
+          {no && <span className="font-mono text-[12px] tabular-nums text-muted-foreground">{no}</span>}
           <h3 className="font-display text-[18px] font-semibold tracking-tight text-foreground">{title}</h3>
           {kicker && (
-            <span className="ml-auto text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{kicker}</span>
+            <span className="ml-auto text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{kicker}</span>
           )}
         </header>
       )}
@@ -245,10 +245,10 @@ function StatCallout({ value, unit, label, sub, tone = "ink" }: {
           "font-display text-[44px] font-extralight leading-none tracking-tight tabular-nums",
           tone === "brand" ? "text-brand-600" : "text-foreground",
         )}>{value}</span>
-        {unit && <span className="font-display text-[16px] font-light text-ink-300">{unit}</span>}
+        {unit && <span className="font-display text-[16px] font-light text-muted-foreground">{unit}</span>}
       </div>
       <p className="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500">{label}</p>
-      {sub && <p className="mt-0.5 text-[11px] leading-snug text-ink-400">{sub}</p>}
+      {sub && <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{sub}</p>}
     </div>
   )
 }
@@ -257,7 +257,7 @@ function StatCallout({ value, unit, label, sub, tone = "ink" }: {
 function ExhibitCaption({ children }: { children: React.ReactNode }) {
   return (
     <p className="mt-3 border-l-2 border-brand-500 pl-3 text-[11.5px] leading-snug text-ink-500">
-      <span className="font-semibold uppercase tracking-[0.07em] text-ink-400">Exhibit · </span>{children}
+      <span className="font-semibold uppercase tracking-[0.07em] text-muted-foreground">Exhibit · </span>{children}
     </p>
   )
 }
@@ -362,7 +362,7 @@ function ComposingBanner() {
         </span>
         <div>
           <p className="font-display text-[16px] font-medium text-foreground">Composing your report…</p>
-          <p className="text-[11.5px] text-ink-400">
+          <p className="text-[11.5px] text-muted-foreground">
             Weaving the analysis into a written read — this can take up to half a minute.
           </p>
         </div>
@@ -394,7 +394,7 @@ function ComposingBanner() {
           </div>
         ))}
       </div>
-      <p className="mt-5 text-center text-[10.5px] uppercase tracking-[0.18em] text-ink-300">
+      <p className="mt-5 text-center text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
         Your figures &amp; charts are ready below
       </p>
     </div>
@@ -426,7 +426,7 @@ function SectionRail({ active }: { active: string }) {
                 <span
                   className={cn(
                     "max-w-0 overflow-hidden whitespace-nowrap text-[11px] font-medium tracking-tight opacity-0 transition-all duration-300 group-hover:max-w-[160px] group-hover:opacity-100",
-                    on ? "max-w-[160px] text-foreground opacity-100" : "text-ink-400",
+                    on ? "max-w-[160px] text-foreground opacity-100" : "text-muted-foreground",
                   )}
                 >
                   {s.rail}
@@ -712,7 +712,7 @@ export function CareerReportDoc({
         )}
         <div className="flex items-center gap-3">
           {loading && (
-            <span className="hidden items-center gap-1.5 text-[11.5px] text-ink-400 sm:inline-flex">
+            <span className="hidden items-center gap-1.5 text-[11.5px] text-muted-foreground sm:inline-flex">
               <span className="size-1.5 animate-pulse rounded-full bg-brand-500" /> Composing…
             </span>
           )}
@@ -781,7 +781,7 @@ export function CareerReportDoc({
             <CoverField label="Counsellor" value={counselor.name} sub={counselor.title} />
           </div>
 
-          <p className="mt-12 flex items-start gap-2 text-[10.5px] leading-relaxed text-ink-400">
+          <p className="mt-12 flex items-start gap-2 text-[10.5px] leading-relaxed text-muted-foreground">
             <ShieldCheck className="mt-px size-3.5 shrink-0 stroke-[1.5]" />
             <span>
               Strictly confidential. Prepared exclusively for {client.name} and {counselor.name}. A structured decision
@@ -799,10 +799,10 @@ export function CareerReportDoc({
                   href={`#${s.id}`}
                   className="group flex items-baseline gap-3 border-b border-hairline py-2.5 text-[13px] transition-colors hover:text-brand-500"
                 >
-                  <span className="font-mono text-[11px] tabular-nums text-ink-300">{s.no}</span>
+                  <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{s.no}</span>
                   <span className="text-ink-700 group-hover:text-brand-500">{s.title}</span>
                   <span className="mx-1 h-px flex-1 self-end bg-[repeating-linear-gradient(90deg,var(--color-ink-200)_0_1px,transparent_1px_4px)]" />
-                  <span className="font-mono text-[11px] tabular-nums text-ink-300 group-hover:text-brand-500">{s.no}</span>
+                  <span className="font-mono text-[11px] tabular-nums text-muted-foreground group-hover:text-brand-500">{s.no}</span>
                 </a>
               </li>
             ))}
@@ -950,7 +950,7 @@ export function CareerReportDoc({
                       i === 0 ? "border-brand-500 bg-brand-100 text-brand-600" : "border-hairline bg-ink-050 text-ink-700",
                     )}
                   >
-                    {a.axis} <span className="tabular-nums text-ink-400">{a.value}</span>
+                    {a.axis} <span className="tabular-nums text-muted-foreground">{a.value}</span>
                   </span>
                 ))}
               </div>
@@ -995,7 +995,7 @@ export function CareerReportDoc({
                       "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                       meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-600" : "bg-risk-100 text-risk-600",
                     )}>{meta.label}</span>
-                    <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{r.percentile}<span className="text-[10px] text-ink-300">th</span></span>
+                    <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{r.percentile}<span className="text-[10px] text-muted-foreground">th</span></span>
                   </span>
                   <div className="col-span-2"><Track value={r.percentile} tone={meta.tone} /></div>
                 </div>
@@ -1032,7 +1032,7 @@ export function CareerReportDoc({
                       meta.tone === "brand" ? "bg-brand-100 text-brand-600" : meta.tone === "warn" ? "bg-warn-100 text-warn-600" : "bg-risk-100 text-risk-600",
                     )}>{meta.label}</span>
                   </div>
-                  <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{g.similarity}<span className="text-[10px] text-ink-300">%</span></span>
+                  <span className="w-12 text-right font-display text-[16px] font-light tabular-nums text-foreground">{g.similarity}<span className="text-[10px] text-muted-foreground">%</span></span>
                   <div className="col-span-2"><Track value={g.similarity} tone={meta.tone} /></div>
                 </div>
               )
@@ -1045,7 +1045,7 @@ export function CareerReportDoc({
               {jobGroups.slice(0, 3).map((g, i) => (
                 <div key={g.name} className="avoid-break flex flex-col rounded-2xl border border-hairline bg-ink-050 p-4">
                   <div className="flex items-baseline gap-2">
-                    <span className="font-mono text-[11px] tabular-nums text-ink-300">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
                     <h4 className="font-display text-[14px] font-medium text-foreground">{g.name}</h4>
                   </div>
                   <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-brand-500">{g.similarity}% match · {BAND3_META[g.band].label}</p>
@@ -1058,7 +1058,7 @@ export function CareerReportDoc({
                           </span>
                           <span className={cn(
                             "shrink-0 text-[10px] font-semibold uppercase tracking-wide",
-                            role.level === "High" ? "text-brand-600" : role.level === "Average" ? "text-warn-600" : "text-ink-400",
+                            role.level === "High" ? "text-brand-600" : role.level === "Average" ? "text-warn-600" : "text-muted-foreground",
                           )}>{role.level}</span>
                         </li>
                       ))}
@@ -1098,11 +1098,11 @@ export function CareerReportDoc({
                 <div key={row.id} className="flex items-start justify-between gap-3 border-b border-hairline pb-2.5">
                   <div className="min-w-0">
                     <p className="text-[12.5px] font-medium text-foreground">{row.name}</p>
-                    <p className="text-[11px] text-ink-400">{row.detail}</p>
+                    <p className="text-[11px] text-muted-foreground">{row.detail}</p>
                   </div>
                   <span className={cn(
                     "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                    row.done ? "bg-well-100 text-well-600" : "bg-ink-050 text-ink-400",
+                    row.done ? "bg-well-100 text-well-600" : "bg-ink-050 text-muted-foreground",
                   )}>{row.done ? "Done" : "Pending"}</span>
                 </div>
               ))}
@@ -1188,7 +1188,7 @@ export function CareerReportDoc({
                   <h4 className="font-display text-[15px] font-medium text-foreground">{c.label}</h4>
                   <div className="flex items-center gap-2">
                     <span className="font-display text-[15px] font-light tabular-nums text-foreground">{c.score}</span>
-                    <span className="text-[11px] text-ink-300">/100</span>
+                    <span className="text-[11px] text-muted-foreground">/100</span>
                   </div>
                 </div>
                 <div className="mt-2"><Track value={c.score} tone={toneForScore(c.score)} /></div>
@@ -1215,7 +1215,7 @@ export function CareerReportDoc({
                   <ScoreRing value={c.score} size={80} sublabel={c.id.replace("cx.", "")} />
                   <div className="min-w-0">
                     <p className="text-[13px] font-medium text-foreground">{c.name}</p>
-                    <p className="font-mono text-[10.5px] text-ink-300">{c.id}</p>
+                    <p className="font-mono text-[10.5px] text-muted-foreground">{c.id}</p>
                     <div className="mt-2"><ConfBadge confidence={c.confidence} /></div>
                   </div>
                 </div>
@@ -1295,7 +1295,7 @@ export function CareerReportDoc({
                 <p className="mt-2 font-display text-[22px] font-light tabular-nums text-foreground">
                   {shortHorizon(routes[0]?.horizon)}
                 </p>
-                <p className="mt-1 text-[11px] text-ink-400">with the plan run as written</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">with the plan run as written</p>
               </div>
             </aside>
           </div>
@@ -1333,11 +1333,11 @@ export function CareerReportDoc({
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
                     <div className="grid w-28 shrink-0 place-items-center">
                       <Gauge value={r.probability} unit="%" size={108} variant="ring" ticks={28} tone={toneForScore(r.probability)} />
-                      <span className="mt-1 text-[10px] font-medium uppercase tracking-wider text-ink-300">success odds</span>
+                      <span className="mt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">success odds</span>
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-2">
-                        <span className="font-mono text-[11px] tabular-nums text-ink-300">{String(i + 1).padStart(2, "0")}</span>
+                        <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
                         <h4 className="font-display text-[16px] font-medium text-foreground">{r.title}</h4>
                       </div>
                       <p className="mt-0.5 text-[10.5px] font-medium uppercase tracking-[0.08em] text-brand-500">{r.fitTag}</p>
@@ -1365,7 +1365,7 @@ export function CareerReportDoc({
               )
             })}
           </div>
-          <p className="mt-4 text-[10.5px] leading-relaxed text-ink-300">
+          <p className="mt-4 text-[10.5px] leading-relaxed text-muted-foreground">
             Probabilities are modelled estimates on a 30–92% band, not guarantees. See the methodology footer for the exact weighting.
           </p>
         </Page>
@@ -1495,7 +1495,7 @@ export function CareerReportDoc({
                     {quotes.map((q, i) => (
                       <blockquote key={i} className="border-l-2 border-brand-500 pl-3">
                         <p className="text-[12px] italic leading-relaxed text-ink-700">“{q.text}”</p>
-                        <p className="mt-1 text-[10px] text-ink-400">{q.speaker} · {q.ts}</p>
+                        <p className="mt-1 text-[10px] text-muted-foreground">{q.speaker} · {q.ts}</p>
                       </blockquote>
                     ))}
                   </div>
@@ -1505,7 +1505,7 @@ export function CareerReportDoc({
           </div>
 
           <footer className="mt-8 border-t border-ink-200 pt-3">
-            <p className="text-[10px] leading-relaxed text-ink-300">
+            <p className="text-[10px] leading-relaxed text-muted-foreground">
               Setmycareer Career Intelligence · {client.name} · issued {fmtDate(generatedOn)} · {counselor.name}.
               Methodology: 31 pc.* signals → 5 confidence-weighted clusters → composite Career Index; route probabilities
               blend index, cluster, interest fit and stretch, discounted by confidence. Scores are point-in-time and
@@ -1514,7 +1514,7 @@ export function CareerReportDoc({
           </footer>
         </Page>
 
-        <div data-print-hide className="pb-10 text-center text-[11px] text-ink-300">
+        <div data-print-hide className="pb-10 text-center text-[11px] text-muted-foreground">
           End of report · {SECTIONS.length} chapters
         </div>
       </div>
@@ -1535,7 +1535,7 @@ function PullQuote({ text, attrib }: { text: string; attrib?: string }) {
           “{text}”
         </p>
         {attrib && (
-          <figcaption className="mt-4 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-400">
+          <figcaption className="mt-4 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
             — {attrib}
           </figcaption>
         )}
@@ -1551,7 +1551,7 @@ function PullQuote({ text, attrib }: { text: string; attrib?: string }) {
 function SessionTimeline({ sessions }: { sessions: Session[] }) {
   const ordered = [...sessions].sort((a, b) => +new Date(b.date) - +new Date(a.date))
   if (!ordered.length) {
-    return <Prose className="mt-2 italic text-ink-400">No sessions on record yet.</Prose>
+    return <Prose className="mt-2 italic text-muted-foreground">No sessions on record yet.</Prose>
   }
   return (
     <ol className="mt-3 space-y-0">
@@ -1569,11 +1569,11 @@ function SessionTimeline({ sessions }: { sessions: Session[] }) {
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline gap-2">
                 <span className="text-[12.5px] font-medium tabular-nums text-foreground">{fmtShort(s.date)}</span>
-                <span className="text-[10.5px] text-ink-400">{s.durationMin} min</span>
+                <span className="text-[10.5px] text-muted-foreground">{s.durationMin} min</span>
                 {s.indexDelta != null && s.indexDelta !== 0 && <DeltaPill value={s.indexDelta} />}
               </div>
               {s.summary && <p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-700">{s.summary}</p>}
-              {s.snippet && <p className="mt-0.5 text-[11.5px] italic text-ink-400">“{s.snippet}”</p>}
+              {s.snippet && <p className="mt-0.5 text-[11.5px] italic text-muted-foreground">“{s.snippet}”</p>}
             </div>
           </li>
         )
@@ -1587,9 +1587,9 @@ function SessionTimeline({ sessions }: { sessions: Session[] }) {
 function CoverField({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div>
-      <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-ink-300">{label}</p>
+      <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-[13px] font-medium leading-snug text-foreground">{value}</p>
-      {sub && <p className="text-[10.5px] text-ink-400">{sub}</p>}
+      {sub && <p className="text-[10.5px] text-muted-foreground">{sub}</p>}
     </div>
   )
 }
@@ -1602,7 +1602,7 @@ function WellStat({
     <div className="avoid-break flex flex-col items-center rounded-2xl border border-hairline p-4 text-center">
       <Gauge value={value} unit="" size={88} variant="radial" tone={ringTone} />
       <p className="mt-1 text-[12px] font-medium text-foreground">{label}</p>
-      <p className="text-[10px] uppercase tracking-wider text-ink-300">{band}</p>
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{band}</p>
     </div>
   )
 }

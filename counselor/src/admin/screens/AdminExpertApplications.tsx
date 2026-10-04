@@ -202,10 +202,10 @@ function ApplicationCard({ n, busy, onApprove, onReject }: {
             {services.length > 0 && <TagRow label="Services" tags={services} />}
             {industries.length > 0 && <TagRow label="Industries" tags={industries} />}
           </div>
-          {langs && <p className="text-[12px] text-muted-foreground"><span className="text-ink-400">Languages:</span> {langs}</p>}
+          {langs && <p className="text-[12px] text-muted-foreground"><span className="text-muted-foreground">Languages:</span> {langs}</p>}
           {docLines.length > 0 && (
             <div>
-              <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-400">Documents &amp; links</p>
+              <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Documents &amp; links</p>
               <ul className="space-y-1">
                 {docLines.map((line, i) => <li key={i} className="text-[12.5px] text-ink-600">{linkify(line)}</li>)}
               </ul>
@@ -215,7 +215,7 @@ function ApplicationCard({ n, busy, onApprove, onReject }: {
       )}
 
       <div className="mt-4 flex items-center justify-between border-t border-border/70 pt-3">
-        <span className="text-[11.5px] text-ink-300">Applicant #{String(n.id)}</span>
+        <span className="text-[11.5px] text-muted-foreground">Applicant #{String(n.id)}</span>
         <Link to={`/admin/counsellors/${n.id}`} className="inline-flex items-center gap-1 text-[12px] font-medium text-brand-600 hover:underline">
           Full profile <ExternalLink className="size-3" />
         </Link>
@@ -227,7 +227,7 @@ function ApplicationCard({ n, busy, onApprove, onReject }: {
 function TagRow({ label, tags }: { label: string; tags: string[] }) {
   return (
     <div>
-      <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-ink-400">{label}</p>
+      <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
       <div className="flex flex-wrap gap-1.5">
         {tags.map((t) => <span key={t} className="rounded-full bg-muted px-2.5 py-1 text-[11.5px] font-medium text-ink-600">{t}</span>)}
       </div>

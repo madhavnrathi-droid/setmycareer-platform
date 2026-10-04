@@ -43,7 +43,7 @@ export function SignatureInsight({
       <Corner className="bottom-4 left-4" rot={270} />
 
       <div className="relative mx-auto max-w-3xl text-center">
-        <div data-rise className="flex items-center justify-center gap-3 text-ink-400">
+        <div data-rise className="flex items-center justify-center gap-3 text-muted-foreground">
           <LogoMark size={18} className="text-brand-500" />
           <span className="text-[10.5px] font-semibold uppercase tracking-[0.26em]">{kicker}</span>
         </div>
@@ -77,7 +77,7 @@ function Corner({ className, rot }: { className: string; rot: number }) {
       aria-hidden
       width={18}
       height={18}
-      className={`absolute text-ink-300/70 ${className}`}
+      className={`absolute text-muted-foreground/70 ${className}`}
       style={{ transform: `rotate(${rot}deg)` }}
     >
       <path d="M1 1 H13 M1 1 V13" stroke="currentColor" strokeWidth={1} fill="none" strokeLinecap="round" />

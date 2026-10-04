@@ -27,7 +27,7 @@ function NoSource({ note }: { note?: string }) {
   return (
     <div className="grid place-items-center rounded-xl border border-dashed border-border bg-secondary/20 px-4 py-8 text-center">
       <p className="text-[12.5px] text-muted-foreground">No live source — connect the backend metric to populate.</p>
-      {note && <p className="mt-1 text-[11px] text-ink-300">{note}</p>}
+      {note && <p className="mt-1 text-[11px] text-muted-foreground">{note}</p>}
     </div>
   )
 }
@@ -42,7 +42,7 @@ export function AdminJourneys() {
         <p className="mt-0.5 text-[13px] text-muted-foreground">The guided path, as a funnel.</p>
       </div>
       <section data-reveal className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]">
-        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Journey funnel · stage-to-stage conversion</h2>
+        <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Journey funnel · stage-to-stage conversion</h2>
         <NoSource note="Per-stage journey progression isn't exposed by the backend contract yet." />
       </section>
     </div>
@@ -59,11 +59,11 @@ export function AdminReports() {
         <p className="mt-0.5 text-[13px] text-muted-foreground">Career Intelligence reports and session transcripts.</p>
       </div>
       <section data-reveal>
-        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Career Intelligence Reports</h2>
+        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Career Intelligence Reports</h2>
         <NoSource note="Reports are available per client from their profile; an admin-wide listing has no backend source yet." />
       </section>
       <section data-reveal>
-        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Recent transcripts</h2>
+        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Recent transcripts</h2>
         <NoSource note="Session transcripts have no backend source yet." />
       </section>
     </div>
@@ -128,7 +128,7 @@ export function AdminSessions() {
             <Search className="size-3.5 text-muted-foreground" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by client…" className="w-28 bg-transparent text-[13px] outline-none placeholder:text-ink-300" />
           </div>
-          <select value={couns} onChange={(e) => setCouns(e.target.value)} className="h-9 max-w-[170px] rounded-full border border-border bg-card px-3 text-[13px] outline-none">
+          <select aria-label="Filter by counsellor" value={couns} onChange={(e) => setCouns(e.target.value)} className="h-9 max-w-[170px] rounded-full border border-border bg-card px-3 text-[13px] outline-none">
             <option value="all">All counsellors</option>
             {counsellors.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -146,7 +146,7 @@ export function AdminSessions() {
 
       {/* upcoming (local schedule — does not persist to the backend) */}
       <section data-reveal>
-        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Upcoming · scheduled here (local)</h2>
+        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Upcoming · scheduled here (local)</h2>
         {upcoming.length === 0 ? (
           <p className="py-3 text-[13px] text-muted-foreground">No upcoming sessions. Use Schedule to book one — a local hold until the backend exposes a create-session endpoint.</p>
         ) : (
@@ -171,7 +171,7 @@ export function AdminSessions() {
 
       {/* live sessions from the production backend */}
       <section data-reveal>
-        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Recent sessions · live</h2>
+        <h2 className="mb-1 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Recent sessions · live</h2>
         {error ? <p className="py-3 text-[13px] text-risk-600">Couldn’t reach the backend — {error}</p> : loading ? <p className="py-3 text-[13px] text-muted-foreground">Loading live sessions…</p> : (
           <div className="divide-y divide-border">
             {recent.map((s, i) => (
@@ -224,7 +224,7 @@ export function AdminAccess() {
           </tbody>
         </table>
       </div>
-      <p data-reveal className="text-[11.5px] text-ink-300">Invite, role changes and SSO connect with the backend. Counsellors have their own scoped console logins.</p>
+      <p data-reveal className="text-[11.5px] text-muted-foreground">Invite, role changes and SSO connect with the backend. Counsellors have their own scoped console logins.</p>
     </div>
   )
 }
@@ -252,7 +252,7 @@ export function AdminSettings() {
         <p className="mt-0.5 text-[13px] text-muted-foreground">Company configuration and the integrations the platform runs on.</p>
       </div>
       <section data-reveal>
-        <h2 className="mb-2 flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"><KeyRound className="size-3.5" /> Integrations</h2>
+        <h2 className="mb-2 flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"><KeyRound className="size-3.5" /> Integrations</h2>
         <div className="divide-y divide-border">
           {INTEGRATIONS.map((p) => (
             <div key={p.name} className="flex items-center gap-4 py-3">
@@ -262,7 +262,7 @@ export function AdminSettings() {
           ))}
         </div>
       </section>
-      <p data-reveal className="text-[11.5px] text-ink-300">Keys are managed server-side as environment variables and never sent to the browser. The Core API connection is probed live on the API &amp; usage screen.</p>
+      <p data-reveal className="text-[11.5px] text-muted-foreground">Keys are managed server-side as environment variables and never sent to the browser. The Core API connection is probed live on the API &amp; usage screen.</p>
     </div>
   )
 }

@@ -33,7 +33,7 @@ export function GrowthTimeline({ milestones }: { milestones: Milestone[] }) {
 
   if (!milestones?.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-ink-400">
+      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-muted-foreground">
         The growth timeline fills in as the journey unfolds.
       </div>
     )
@@ -68,7 +68,7 @@ export function GrowthTimeline({ milestones }: { milestones: Milestone[] }) {
                 <span className={cn("size-1.5 rounded-full", live ? "bg-brand-500" : "bg-ink-300")} />
               </span>
 
-              <time className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-400">
+              <time className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 {fmtDate(m.date)}
                 {live && <span className="ml-2 text-brand-600">· now</span>}
               </time>

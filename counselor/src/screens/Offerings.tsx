@@ -58,7 +58,7 @@ function ProductBlock({ p }: { p: Product }) {
             .filter(([, v]) => v)
             .map(([k, v]) => (
               <div key={k as string} className="rounded-lg bg-secondary/50 px-3 py-2">
-                <dt className="text-[10.5px] font-medium uppercase tracking-wide text-ink-400">{k}</dt>
+                <dt className="text-[10.5px] font-medium uppercase tracking-wide text-muted-foreground">{k}</dt>
                 <dd className="mt-0.5 text-[12px] leading-relaxed text-ink-600">{v}</dd>
               </div>
             ))}
@@ -69,7 +69,7 @@ function ProductBlock({ p }: { p: Product }) {
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[520px] border-collapse text-[12px]">
             <thead>
-              <tr className="text-left text-ink-400">
+              <tr className="text-left text-muted-foreground">
                 <th className="py-1.5 pr-3 font-medium">Tier</th>
                 <th className="py-1.5 pr-3 font-medium">Price</th>
                 <th className="py-1.5 font-medium">What's included</th>
@@ -81,7 +81,7 @@ function ProductBlock({ p }: { p: Product }) {
                   <td className="py-2 pr-3 font-medium text-foreground">{t.name}</td>
                   <td className="py-2 pr-3 tabular-nums text-foreground">{fmtINR(t.price)}</td>
                   <td className="py-2 text-ink-600">
-                    {t.summary} <span className="text-ink-400">— {t.features.map((f) => `${f.label}: ${f.value}`).join(" · ")}</span>
+                    {t.summary} <span className="text-muted-foreground">— {t.features.map((f) => `${f.label}: ${f.value}`).join(" · ")}</span>
                   </td>
                 </tr>
               ))}
@@ -106,7 +106,7 @@ export function Offerings() {
   return (
     <div ref={ref} className="mx-auto max-w-[860px]">
       <header data-reveal className="mb-6">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Reference</p>
+        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Reference</p>
         <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">What we offer clients</h1>
         <p className="mt-2 max-w-[70ch] text-[13.5px] text-muted-foreground">
           The full SetMyCareer catalogue a member sees on their side — products, what's in each package, and pricing.

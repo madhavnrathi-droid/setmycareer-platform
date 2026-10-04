@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Outlet, useLocation, Navigate } from "react-router-dom"
+import { ScreenBoundary } from "./ScreenBoundary"
 import { homeForRole } from "@/lib/login"
 import { Sidebar } from "./Sidebar"
 import { Topbar } from "./Topbar"
@@ -44,7 +45,9 @@ export function AppShell() {
     <RecordingProvider>
       {/* service agreement — no client work until the counsellor accepts */}
       {!agreed && <CounsellorAgreement onDone={() => setAgreed(true)} />}
-      <div className="flex min-h-svh bg-canvas">
+      {/* inert until accepted: the overlay covered the console visually, but Tab still
+          walked into the sidebar and tools behind it */}
+      <div className="flex min-h-svh bg-canvas" inert={!agreed}>
         <Sidebar
           collapsed={navCollapsed}
           onCollapse={() => setNavCollapsed(true)}
@@ -66,7 +69,7 @@ export function AppShell() {
           />
           <main className="flex-1">
             <div className={fullBleed ? "h-[calc(100svh-4rem)]" : "mx-auto w-full max-w-[1320px] px-5 py-6 pb-28 sm:px-6"}>
-              <Outlet />
+              <ScreenBoundary home="/"><Outlet /></ScreenBoundary>
             </div>
           </main>
         </div>

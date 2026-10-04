@@ -51,7 +51,7 @@ export function CounsellorCaseloadPanel() {
       <div className="flex flex-wrap items-center gap-2 border-b border-border bg-secondary/40 px-5 py-3">
         <h2 className="flex items-center gap-1.5 text-[13px] font-semibold text-foreground"><Users className="size-4 text-brand-600" /> Recent caseload</h2>
         <span className="ml-auto text-[11.5px] text-muted-foreground">{loading ? "pulling live…" : error ? "error" : `${list.length.toLocaleString("en-IN")} total · newest first`}</span>
-        <button onClick={reload} disabled={loading} className="grid size-7 place-items-center rounded-full text-ink-400 hover:bg-secondary"><RefreshCw className={cn("size-3.5", loading && "animate-spin")} /></button>
+        <button onClick={reload} disabled={loading} aria-label={loading ? "Refreshing caseload" : "Refresh caseload"} title="Refresh caseload" className="grid size-7 place-items-center rounded-full text-ink-400 hover:bg-secondary"><RefreshCw className={cn("size-3.5", loading && "animate-spin")} /></button>
       </div>
 
       {error ? (

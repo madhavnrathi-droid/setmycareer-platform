@@ -44,7 +44,7 @@ export function StatCard({
 
   return (
     <div className={cn("rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)] transition-colors", className)}>
-      <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{label}</div>
+      <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
       <div className="mt-2 flex items-end justify-between gap-3">
         <div className="flex items-end gap-2">
           <span className="font-display text-[34px] font-extralight leading-none tracking-tight tabular-nums text-foreground">

@@ -62,7 +62,7 @@ export type CompassAction = {
    export. ---- */
 
 const popoverHeading = (text: string) => (
-  <div className="px-1 pb-1 text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300">
+  <div className="px-1 pb-1 text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
     {text}
   </div>
 )

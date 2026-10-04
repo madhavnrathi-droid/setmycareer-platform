@@ -55,7 +55,7 @@ function DeltaRow({
               {d.confidence}
             </span>
           </div>
-          <div className="mt-0.5 font-mono text-[10.5px] text-ink-300">{d.id}</div>
+          <div className="mt-0.5 font-mono text-[10.5px] text-muted-foreground">{d.id}</div>
         </div>
         {state.approved && (
           <span className="inline-flex shrink-0 items-center gap-1 text-[11px] font-medium text-well-600">
@@ -220,14 +220,14 @@ export function TranscriptReview() {
         {/* left — transcript */}
         <section data-reveal>
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Transcript</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Transcript</p>
             <span className="text-[11px] tabular-nums text-muted-foreground">{transcript.length} turns</span>
           </div>
           <div className="rounded-2xl border border-border bg-card p-5">
             <ol className="flex flex-col gap-5">
               {transcript.map((turn, i) => (
                 <li key={i} className="flex gap-3.5">
-                  <span className="w-12 shrink-0 pt-0.5 text-[11px] tabular-nums text-ink-300">{turn.ts}</span>
+                  <span className="w-12 shrink-0 pt-0.5 text-[11px] tabular-nums text-muted-foreground">{turn.ts}</span>
                   <div className="min-w-0">
                     <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-500">
                       {turn.speaker}
@@ -249,7 +249,7 @@ export function TranscriptReview() {
         {/* right — proposed deltas + sticky commit */}
         <section data-reveal className="flex flex-col">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Proposed updates</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Proposed updates</p>
             <span className="text-[11px] tabular-nums text-muted-foreground">
               {approvedCount}/{proposedDeltas.length} approved
             </span>

@@ -154,7 +154,7 @@ export function AdminClients() {
             <Search className="size-3.5 text-muted-foreground" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search clients…" className="w-36 bg-transparent text-[13px] outline-none placeholder:text-ink-300" />
           </div>
-          <select value={cat} onChange={(e) => setCat(e.target.value)} className="h-9 max-w-[170px] rounded-full border border-border bg-card px-3 text-[13px] outline-none">
+          <select aria-label="Filter by category" value={cat} onChange={(e) => setCat(e.target.value)} className="h-9 max-w-[170px] rounded-full border border-border bg-card px-3 text-[13px] outline-none">
             <option value="all">All categories</option>
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -221,7 +221,7 @@ export function AdminClients() {
           </tbody>
         </table>
       </div>
-      <p data-reveal className="text-[11.5px] text-ink-300">Names, counsellor, category, sessions, last-active and report count are live from the production session feed; registered users with no sessions show by id. Click any client for their full record. Showing the first {Math.min(rows.length, 250).toLocaleString("en-IN")} of {rows.length.toLocaleString("en-IN")} matches; refine with search. Pause / archive is a local hold the client portal honours.</p>
+      <p data-reveal className="text-[11.5px] text-muted-foreground">Names, counsellor, category, sessions, last-active and report count are live from the production session feed; registered users with no sessions show by id. Click any client for their full record. Showing the first {Math.min(rows.length, 250).toLocaleString("en-IN")} of {rows.length.toLocaleString("en-IN")} matches; refine with search. Pause / archive is a local hold the client portal honours.</p>
 
       {adding && <AddClientModal onClose={() => setAdding(false)} />}
     </div>

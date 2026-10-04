@@ -94,7 +94,7 @@ export function NotificationCenter() {
                       {n.unread && <span className="size-1.5 shrink-0 rounded-full bg-brand-500" />}
                     </div>
                     <div className="truncate text-[11.5px] text-muted-foreground">{n.text}</div>
-                    <div className="mt-0.5 text-[10.5px] text-ink-300">{n.time}</div>
+                    <div className="mt-0.5 text-[10.5px] text-muted-foreground">{n.time}</div>
                   </div>
                 </button>
               ))}
@@ -150,7 +150,7 @@ export function NotificationCenter() {
                     <div className="flex items-center gap-2">
                       <span className="text-[13px] font-medium">{n.title}</span>
                       {n.unread && <span className="size-1.5 shrink-0 rounded-full bg-brand-500" />}
-                      <span className="ml-auto shrink-0 text-[10.5px] tabular-nums text-ink-300">{n.time}</span>
+                      <span className="ml-auto shrink-0 text-[10.5px] tabular-nums text-muted-foreground">{n.time}</span>
                     </div>
                     <p className="mt-1 text-[12px] leading-snug text-ink-600">{n.text}</p>
                     <div className="mt-2.5 flex flex-wrap gap-2">

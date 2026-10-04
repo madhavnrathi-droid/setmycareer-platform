@@ -45,7 +45,7 @@ function RefCard({ r, mine }: { r: ChatRef; mine: boolean }) {
         <div className={cn("truncate text-[12.5px] font-medium", mine ? "text-white" : "text-foreground")}>{r.title}</div>
         <div className={cn("text-[10.5px]", mine ? "text-white/70" : "text-muted-foreground")}>{REF_LABEL[r.kind]}{r.meta ? ` · ${r.meta}` : ""}</div>
       </div>
-      {r.href && <ExternalLink className={cn("ml-auto size-3.5 shrink-0", mine ? "text-white/70" : "text-ink-300")} />}
+      {r.href && <ExternalLink className={cn("ml-auto size-3.5 shrink-0", mine ? "text-white/70" : "text-muted-foreground")} />}
     </div>
   )
   return r.href && r.href.startsWith("/") ? <Link to={r.href} className="block">{body}</Link>
@@ -155,7 +155,7 @@ export function ChatThread({
                   {m.refs?.map((r, i) => <RefCard key={`r${i}`} r={r} mine={mine && !onlyMedia} />)}
                   {m.attachments?.map((a, i) => <AttachmentView key={`a${i}`} a={a} mine={mine && !onlyMedia} />)}
                   {m.text && <p className="whitespace-pre-wrap">{m.text}</p>}
-                  {!onlyMedia && <span className={cn("block text-right text-[10.5px]", mine ? "text-white/70" : "text-ink-300")}>{fmtTime(m.ts)}</span>}
+                  {!onlyMedia && <span className={cn("block text-right text-[10.5px]", mine ? "text-white/70" : "text-muted-foreground")}>{fmtTime(m.ts)}</span>}
                 </div>
               </div>
             </div>
@@ -169,7 +169,7 @@ export function ChatThread({
         {/* @ / picker */}
         {picker && filtered.length > 0 && (
           <div className="absolute bottom-full left-1 z-20 mb-2 w-72 overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-e3)]">
-            <div className="border-b border-border px-3 py-1.5 text-[10.5px] font-medium uppercase tracking-[0.1em] text-ink-300">Tag a resource</div>
+            <div className="border-b border-border px-3 py-1.5 text-[10.5px] font-medium uppercase tracking-[0.1em] text-muted-foreground">Tag a resource</div>
             {filtered.map((r) => {
               const Icon = REF_ICON[r.kind]
               return (
@@ -193,7 +193,7 @@ export function ChatThread({
               return (
                 <span key={`pr${i}`} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px]">
                   <Icon className="size-3.5 text-ink-500" /> {r.title}
-                  <button onClick={() => setPendingRefs((p) => p.filter((_, j) => j !== i))} className="text-ink-300 hover:text-foreground"><X className="size-3" /></button>
+                  <button onClick={() => setPendingRefs((p) => p.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-foreground"><X className="size-3" /></button>
                 </span>
               )
             })}
@@ -201,7 +201,7 @@ export function ChatThread({
               <span key={`pa${i}`} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px]">
                 {a.kind === "image" ? <img src={a.dataUrl} alt="" className="size-4 rounded object-cover" /> : <FileText className="size-3.5 text-ink-500" />}
                 <span className="max-w-[140px] truncate">{a.name}</span>
-                <button onClick={() => setPendingAtt((p) => p.filter((_, j) => j !== i))} className="text-ink-300 hover:text-foreground"><X className="size-3" /></button>
+                <button onClick={() => setPendingAtt((p) => p.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-foreground"><X className="size-3" /></button>
               </span>
             ))}
           </div>

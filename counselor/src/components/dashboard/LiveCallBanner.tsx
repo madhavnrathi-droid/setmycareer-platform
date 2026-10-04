@@ -92,7 +92,7 @@ export function LiveCallBanner() {
             <span className={cn("relative inline-flex size-2.5 rounded-full", isLive ? "bg-background" : "bg-brand-500")} />
           </span>
           <div>
-            <div className={cn("text-[10px] font-semibold uppercase tracking-[0.14em]", isLive ? "text-background/70" : "text-ink-300")}>
+            <div className={cn("text-[10px] font-semibold uppercase tracking-[0.14em]", isLive ? "text-background/70" : "text-muted-foreground")}>
               {isLive ? "Live now" : "Next session"}
             </div>
             <div className="font-display text-[26px] font-extralight leading-none tabular-nums">

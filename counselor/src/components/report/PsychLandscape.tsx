@@ -44,7 +44,7 @@ export function PsychLandscape({
 
   if (!traits?.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-ink-400">
+      <div className="rounded-2xl border border-dashed border-ink-200 bg-canvas px-6 py-12 text-center text-[13px] text-muted-foreground">
         The psychological landscape appears once the personality profile is scored.
       </div>
     )
@@ -167,7 +167,7 @@ export function PsychLandscape({
         </svg>
       </div>
 
-      <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-2 px-1 text-[10.5px] text-ink-400">
+      <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-2 px-1 text-[10.5px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-px w-4 bg-brand-500" aria-hidden />
           Peaks — personality traits (height = strength)

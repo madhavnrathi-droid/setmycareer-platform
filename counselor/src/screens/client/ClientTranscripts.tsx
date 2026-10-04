@@ -30,7 +30,7 @@ export function ClientTranscripts({ client }: { client: Client }) {
     <div ref={ref} className="flex flex-col gap-6">
       <header data-reveal className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Transcripts</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Transcripts</p>
           <h2 className="mt-1.5 font-display text-[clamp(20px,2.4vw,26px)] font-extralight tracking-tight">
             Reviewable sessions
           </h2>
@@ -61,7 +61,7 @@ export function ClientTranscripts({ client }: { client: Client }) {
         </div>
       ) : (
         <section data-reveal className="overflow-hidden rounded-2xl border border-border bg-card">
-          <div className="hidden grid-cols-[1fr_auto_auto_auto_auto] items-center gap-6 border-b border-border px-5 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300 md:grid">
+          <div className="hidden grid-cols-[1fr_auto_auto_auto_auto] items-center gap-6 border-b border-border px-5 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground md:grid">
             <span>Session</span>
             <span className="text-right">Duration</span>
             <span className="text-right">Words</span>
@@ -88,12 +88,12 @@ export function ClientTranscripts({ client }: { client: Client }) {
                 </div>
 
                 <div className="text-[13px] tabular-nums text-ink-600 md:text-right">
-                  <span className="text-ink-300 md:hidden">Duration · </span>
+                  <span className="text-muted-foreground md:hidden">Duration · </span>
                   {s.durationMin} min
                 </div>
 
                 <div className="text-[13px] tabular-nums text-ink-600 md:text-right">
-                  <span className="text-ink-300 md:hidden">Words · </span>
+                  <span className="text-muted-foreground md:hidden">Words · </span>
                   {wordCount(s.id, s.durationMin).toLocaleString()}
                 </div>
 

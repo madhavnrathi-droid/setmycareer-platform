@@ -17,7 +17,7 @@ function Card({ title, action, children, className }: { title: string; action?: 
   return (
     <section className={cn("rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-e2)]", className)}>
       <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">{title}</h2>
+        <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">{title}</h2>
         {action}
       </div>
       {children}
@@ -30,7 +30,7 @@ function NoSource({ note }: { note?: string }) {
   return (
     <div className="grid place-items-center rounded-xl border border-dashed border-border bg-secondary/20 px-4 py-8 text-center">
       <p className="text-[12.5px] text-muted-foreground">No live source — connect the backend metric to populate.</p>
-      {note && <p className="mt-1 text-[11px] text-ink-300">{note}</p>}
+      {note && <p className="mt-1 text-[11px] text-muted-foreground">{note}</p>}
     </div>
   )
 }
@@ -54,7 +54,7 @@ export function AdminOverview() {
 
       {/* growth & retention — no live source */}
       <div>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Growth &amp; retention</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Growth &amp; retention</h2>
         <NoSource note="MRR, NRR/GRR, churn, stickiness and NPS have no backend source yet." />
       </div>
 
@@ -69,7 +69,7 @@ export function AdminOverview() {
 
       {/* segments — no live source */}
       <div>
-        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Revenue segments</h2>
+        <h2 className="mb-3 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Revenue segments</h2>
         <div className="grid gap-6 lg:grid-cols-3">
           <Card title="By plan"><NoSource /></Card>
           <Card title="By geography"><NoSource /></Card>

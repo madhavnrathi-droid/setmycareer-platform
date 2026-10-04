@@ -21,7 +21,7 @@ function TimelineFlow({ sessions }: { sessions: Session[] }) {
   const ordered = [...sessions].sort((a, b) => +new Date(a.date) - +new Date(b.date))
   return (
     <section data-reveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Session arc</p>
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Session arc</p>
       <h2 className="mt-1.5 font-display text-[clamp(20px,2.6vw,26px)] font-extralight tracking-tight">
         <span className="tabular-nums">{ordered.length}</span> sessions over the relationship
       </h2>
@@ -99,7 +99,7 @@ export function ClientSessions({ client }: { client: Client }) {
       {sessions.length > 0 && <TimelineFlow sessions={sessions} />}
 
       <section data-reveal>
-        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+        <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           All sessions · newest first
         </p>
 

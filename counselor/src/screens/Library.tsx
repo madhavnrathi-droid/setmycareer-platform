@@ -27,7 +27,7 @@ export function Library() {
     <div ref={ref}>
       <header data-reveal className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">On this device</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">On this device</p>
           <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Library</h1>
         </div>
         <span className="text-[12px] tabular-nums text-muted-foreground">{recordings.length} recording{recordings.length === 1 ? "" : "s"}</span>

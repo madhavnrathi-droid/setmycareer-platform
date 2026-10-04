@@ -19,7 +19,7 @@ function Vital({
 }) {
   return (
     <div className="flex flex-col items-start gap-2.5">
-      <div className="inline-flex items-center text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+      <div className="inline-flex items-center text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {label}
         {info}
       </div>
@@ -50,7 +50,7 @@ export function ClientOverview({ client }: { client: Client }) {
     <div ref={ref} className="flex flex-col gap-6">
       {/* headline + vitals — the numbers the client sees (REF-A) */}
       <section data-reveal className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Current read · shared with client</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Current read · shared with client</p>
         <h2 className="mt-1.5 font-display text-[clamp(22px,3vw,28px)] font-extralight tracking-tight">{bp.headline}</h2>
         <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
           <Vital
@@ -78,7 +78,7 @@ export function ClientOverview({ client }: { client: Client }) {
             }
           />
           <div>
-            <div className="inline-flex items-center text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">
+            <div className="inline-flex items-center text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
               Wellbeing
               <MetricInfo id="wellbeing" />
             </div>
@@ -92,7 +92,7 @@ export function ClientOverview({ client }: { client: Client }) {
           "climbing, and at what cost" trend (career index w/ wellbeing overlaid) */}
       <section data-reveal className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">Career fingerprint</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Career fingerprint</p>
           <p className="mt-1 text-[12.5px] text-ink-500">Five clusters, averaged from their signals</p>
           {clusterRadar.length ? (
             <Radar
@@ -109,7 +109,7 @@ export function ClientOverview({ client }: { client: Client }) {
         </div>
 
         <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-e2)]">
-          <p className="inline-flex items-center text-[11px] font-medium uppercase tracking-[0.12em] text-ink-300">
+          <p className="inline-flex items-center text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             Trajectory
             <MetricInfo id="cx.career_index" />
           </p>
@@ -182,7 +182,7 @@ export function ClientOverview({ client }: { client: Client }) {
 
         {client.clinical.notes.length > 0 && (
           <div className="mt-5 border-t border-border pt-4">
-            <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">Clinical notes</div>
+            <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Clinical notes</div>
             <ul className="flex flex-col gap-1.5">
               {client.clinical.notes.map((n, i) => (
                 <li key={i} className="text-[12.5px] text-ink-600">· {n}</li>

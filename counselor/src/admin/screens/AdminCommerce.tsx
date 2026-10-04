@@ -49,7 +49,7 @@ export function NewCouponModal({ onClose }: { onClose: () => void }) {
         <Field label="Usage limit"><input value={limit} onChange={(e) => setLimit(e.target.value.replace(/\D/g, ""))} placeholder="Unlimited" className={fieldBox} inputMode="numeric" /></Field>
         <Field label="Expiry"><input type="date" value={expiry} onChange={(e) => setExpiry(e.target.value)} className={fieldBox} /></Field>
       </div>
-      <p className="mt-3 text-[11.5px] text-ink-300">New codes track usage immediately. To discount real Razorpay orders they must also exist in the server catalog (razorpay-core) — wire your DB to make admin coupons server-authoritative.</p>
+      <p className="mt-3 text-[11.5px] text-muted-foreground">New codes track usage immediately. To discount real Razorpay orders they must also exist in the server catalog (razorpay-core) — wire your DB to make admin coupons server-authoritative.</p>
     </Modal>
   )
 }
@@ -129,7 +129,7 @@ export function AdminCommerce() {
       {/* coupons */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"><Ticket className="size-3.5" /> Coupons</h2>
+          <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"><Ticket className="size-3.5" /> Coupons</h2>
           <button onClick={() => setNewCoupon(true)} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-foreground px-3 text-[12px] font-medium text-background hover:opacity-90"><Plus className="size-3.5" /> New coupon</button>
         </div>
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-e2)]">
@@ -164,7 +164,7 @@ export function AdminCommerce() {
       {/* refunds */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300"><RotateCcw className="size-3.5" /> Refunds</h2>
+          <h2 className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground"><RotateCcw className="size-3.5" /> Refunds</h2>
           <button onClick={() => setRefund(true)} className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-[12px] font-medium text-foreground hover:bg-secondary"><Plus className="size-3.5" /> Issue refund</button>
         </div>
         {refunds.length === 0 ? <p className="py-3 text-[13px] text-muted-foreground">No refunds yet.</p> : (

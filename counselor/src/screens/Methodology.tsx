@@ -68,10 +68,12 @@ const FAQ = [
   },
 ]
 
+// Text runs one step darker than the border: the 600 shades sat at 2.6–3.8:1 on their
+// own 100 tints, under the 4.5:1 that small text needs.
 const TONE: Record<string, string> = {
-  well: "border-well-500/40 bg-well-100 text-well-600",
-  warn: "border-warn-600/40 bg-warn-100 text-warn-600",
-  mind: "border-mind-500/40 bg-mind-100 text-mind-600",
+  well: "border-well-500/40 bg-well-100 text-well-700",
+  warn: "border-warn-600/40 bg-warn-100 text-warn-700",
+  mind: "border-mind-500/40 bg-mind-100 text-mind-700",
   risk: "border-risk-500/40 bg-risk-100 text-risk-600",
 }
 
@@ -81,7 +83,7 @@ function Stage({ index, k, t, d, last }: { index: number; k: string; t: string; 
       <div className="flex-1">
         <div className="flex items-center gap-2">
           <span className="grid size-6 shrink-0 place-items-center rounded-full bg-foreground text-[11px] font-medium text-background tabular-nums">{index + 1}</span>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-300">{k}</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{k}</span>
         </div>
         <div className="mt-2.5 rounded-2xl border border-border bg-card p-4">
           <div className="text-[13px] font-medium text-foreground">{t}</div>
@@ -89,7 +91,7 @@ function Stage({ index, k, t, d, last }: { index: number; k: string; t: string; 
         </div>
       </div>
       {!last && (
-        <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden className="mt-8 hidden shrink-0 text-ink-300 md:block">
+        <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden className="mt-8 hidden shrink-0 text-muted-foreground md:block">
           <path d="M1 1l6 5-6 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
@@ -186,7 +188,7 @@ export function Methodology() {
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {clusters.map(([k, label], i) => (
             <div key={k} className="rounded-2xl border border-border bg-card p-4">
-              <div className="font-display text-[22px] font-extralight tabular-nums text-ink-300">{String(i + 1).padStart(2, "0")}</div>
+              <div className="font-display text-[22px] font-extralight tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</div>
               <div className="mt-1 text-[13px] font-medium leading-snug text-foreground">{label}</div>
             </div>
           ))}
@@ -202,7 +204,7 @@ export function Methodology() {
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           {BRIDGE.map((b) => (
             <div key={b.out} className={cn("rounded-2xl border p-4", TONE[b.tone])}>
-              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.1em] opacity-80">
+              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.1em]">
                 <span>Career {b.career}</span><span aria-hidden>·</span><span>Wellbeing {b.well}</span>
               </div>
               <div className="mt-1.5 text-[14px] font-medium">{b.out}</div>
@@ -223,7 +225,7 @@ export function Methodology() {
                 {e.steps.map((s, i) => (
                   <span key={i} className="inline-flex items-center gap-1.5">
                     <span className={cn("rounded-md border px-2 py-1 text-[10.5px]", i === e.steps.length - 1 ? "border-brand-500/40 bg-brand-100 text-brand-600" : "border-border bg-secondary text-ink-600")}>{s}</span>
-                    {i < e.steps.length - 1 && <span className="text-ink-300" aria-hidden>→</span>}
+                    {i < e.steps.length - 1 && <span className="text-muted-foreground" aria-hidden>→</span>}
                   </span>
                 ))}
               </div>

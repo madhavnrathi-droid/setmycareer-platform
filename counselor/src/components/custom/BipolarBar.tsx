@@ -29,7 +29,7 @@ export function BipolarBar({
         <span
           className={cn(
             "text-[12px] leading-tight transition-colors",
-            leftLead ? "font-medium text-foreground" : "text-ink-300",
+            leftLead ? "font-medium text-foreground" : "text-muted-foreground",
           )}
         >
           {low}
@@ -37,7 +37,7 @@ export function BipolarBar({
         <span
           className={cn(
             "text-[12px] leading-tight transition-colors",
-            rightLead ? "font-medium text-foreground" : "text-ink-300",
+            rightLead ? "font-medium text-foreground" : "text-muted-foreground",
           )}
         >
           {high}

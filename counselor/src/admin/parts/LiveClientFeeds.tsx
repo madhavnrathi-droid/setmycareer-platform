@@ -22,7 +22,7 @@ const REPORT_TONE: Record<string, string> = {
 function Stat({ icon: Icon, label, value, tone }: { icon: typeof Users; label: string; value: string; tone: string }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-e1)]">
-      <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-ink-300"><Icon className={cn("size-3.5", tone)} /> {label}</p>
+      <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground"><Icon className={cn("size-3.5", tone)} /> {label}</p>
       <p className="mt-1.5 font-display text-[26px] font-semibold tabular-nums text-foreground">{value}</p>
     </div>
   )
@@ -51,7 +51,7 @@ export function LiveClientFeeds() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-ink-300">Live client activity</h2>
+          <h2 className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Live client activity</h2>
           <p className="mt-0.5 text-[12.5px] text-muted-foreground">Real names, counsellor comments and reports — straight from the production session feed.</p>
         </div>
         <Link to="/admin/clients" className="inline-flex items-center gap-1 text-[12px] font-medium text-brand-600 hover:underline">All clients <ArrowRight className="size-3.5" /></Link>
@@ -79,10 +79,10 @@ export function LiveClientFeeds() {
                         <span className="grid size-6 shrink-0 place-items-center rounded-full bg-foreground text-[9.5px] font-medium text-background">{initials(m.clientName)}</span>
                         <span className="truncate text-[12.5px] font-medium text-foreground">{m.clientName}</span>
                       </span>
-                      <span className="shrink-0 text-[11px] tabular-nums text-ink-300">{m.date ?? ""}</span>
+                      <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">{m.date ?? ""}</span>
                     </div>
                     <p className="line-clamp-2 text-[12.5px] leading-relaxed text-ink-600">{m.text}</p>
-                    {m.navigator && <p className="mt-1 text-[11px] text-ink-400">— {m.navigator}{m.session ? ` · ${m.session}` : ""}</p>}
+                    {m.navigator && <p className="mt-1 text-[11px] text-muted-foreground">— {m.navigator}{m.session ? ` · ${m.session}` : ""}</p>}
                   </Link>
                 </li>
               ))}
@@ -105,8 +105,8 @@ export function LiveClientFeeds() {
                       <p className="truncate text-[12.5px] font-medium text-foreground">{r.clientName}</p>
                       <span className="flex items-center gap-1.5">
                         <span className={cn("inline-block rounded px-1.5 py-px text-[10px] font-semibold", REPORT_TONE[r.kind] ?? "bg-secondary text-ink-500")}>{r.kind}</span>
-                        {r.date && <span className="text-[10.5px] tabular-nums text-ink-400">{r.date}</span>}
-                        {r.navigator && <span className="truncate text-[11px] text-ink-400">{r.navigator}</span>}
+                        {r.date && <span className="text-[10.5px] tabular-nums text-muted-foreground">{r.date}</span>}
+                        {r.navigator && <span className="truncate text-[11px] text-muted-foreground">{r.navigator}</span>}
                       </span>
                     </div>
                   </Link>

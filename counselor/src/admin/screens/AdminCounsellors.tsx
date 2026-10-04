@@ -75,13 +75,13 @@ export function AdminCounsellors() {
                       <div className="min-w-0"><p className="truncate text-[13px] font-medium text-foreground">{clean(c.name) ?? `Navigator ${c.id}`}</p><p className="truncate text-[11px] text-muted-foreground">{clean(c.practicing_expertise) ?? clean(c.location) ?? "Career counsellor"}</p></div>
                     </Link>
                   </td>
-                  <td className={cn(td, "hidden pr-3 text-ink-300 xl:table-cell")}>—</td>
-                  <td className={cn(td, "pr-3 text-ink-300")}>—</td>
-                  <td className={cn(td, "pr-3 text-ink-300")}>—</td>
-                  <td className={cn(td, "pr-3 text-ink-300")}>—</td>
-                  <td className={cn(td, "hidden pr-3 text-ink-300 lg:table-cell")}>—</td>
-                  <td className={cn(td, "hidden pr-3 text-ink-300 lg:table-cell")}>—</td>
-                  <td className={cn(td, "pr-3 text-ink-300")}>—</td>
+                  <td className={cn(td, "hidden pr-3 text-muted-foreground xl:table-cell")}>—</td>
+                  <td className={cn(td, "pr-3 text-muted-foreground")}>—</td>
+                  <td className={cn(td, "pr-3 text-muted-foreground")}>—</td>
+                  <td className={cn(td, "pr-3 text-muted-foreground")}>—</td>
+                  <td className={cn(td, "hidden pr-3 text-muted-foreground lg:table-cell")}>—</td>
+                  <td className={cn(td, "hidden pr-3 text-muted-foreground lg:table-cell")}>—</td>
+                  <td className={cn(td, "pr-3 text-muted-foreground")}>—</td>
                   <td className={cn(td, "pr-3")}><span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", on ? "bg-well-50 text-well-700" : "bg-ink-100 text-ink-600")}>{on ? "active" : "inactive"}</span></td>
                 </tr>
               )
@@ -95,7 +95,7 @@ export function AdminCounsellors() {
           </tbody>
         </table>
       </div>
-      <p className="text-[11.5px] text-ink-300">Caseload, rating, utilization, notes-SLA, response time and attributed revenue aren't tracked yet and stay blank.</p>
+      <p className="text-[11.5px] text-muted-foreground">Caseload, rating, utilization, notes-SLA, response time and attributed revenue aren't tracked yet and stay blank.</p>
     </div>
   )
 }

@@ -38,7 +38,7 @@ export function UpdatesCarousel() {
               </span>
               <div className="min-w-0">
                 <div className="truncate text-[12.5px] font-medium">{f.who}</div>
-                <div className="text-[10.5px] text-ink-300">{f.time}</div>
+                <div className="text-[10.5px] text-muted-foreground">{f.time}</div>
               </div>
               <span className="ml-auto shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-ink-500">{f.topic}</span>
             </div>

@@ -130,7 +130,7 @@ export function ReportsHub() {
     <div ref={ref}>
       <header data-reveal className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-300">Deliverables</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Deliverables</p>
           <h1 className="mt-1 font-display text-[32px] font-extralight tracking-tight">Reports</h1>
         </div>
         <Button asChild size="sm" className="h-9 gap-1.5">
@@ -200,7 +200,7 @@ export function ReportsHub() {
         <div data-reveal className="overflow-hidden rounded-2xl border border-border bg-card">
           <div className="hidden grid-cols-[1fr_auto_auto_auto] items-center gap-6 border-b border-border px-5 py-3 md:grid">
             {["Report", "Type", "Date", "Open"].map((h) => (
-              <div key={h} className="text-[10px] font-medium uppercase tracking-[0.12em] text-ink-300">{h}</div>
+              <div key={h} className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{h}</div>
             ))}
           </div>
           <div className="flex flex-col divide-y divide-border">

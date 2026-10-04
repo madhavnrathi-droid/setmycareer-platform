@@ -117,7 +117,7 @@ export function RecordOverlay() {
 
             {/* live transcript */}
             <div className="mx-auto w-full max-w-[680px]">
-              <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.14em] text-ink-300">
+              <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Transcript {rec.source === "meeting" ? "· bot" : ""}
               </p>
               <div
@@ -145,7 +145,7 @@ export function RecordOverlay() {
                       </div>
                     ))}
                     {interim && (
-                      <span className="text-[13px] leading-relaxed text-ink-400">{interim}</span>
+                      <span className="text-[13px] leading-relaxed text-muted-foreground">{interim}</span>
                     )}
                   </>
                 )}
