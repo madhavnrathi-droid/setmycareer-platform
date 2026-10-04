@@ -93,7 +93,7 @@ export function Counsellors() {
           <p data-reveal className="lead mt-6 max-w-xl text-paper/60">Your caseload, your morning, your reports — the actual screens, shown here with a sample caseload.</p>
 
           <div className="mt-12">
-            <ProductShot src="/product/console-overview.webp" alt="The counsellor console dashboard — active clients, caseload by package, delivery mode and the day's sessions" chrome="app.setmycareer.com/overview" label="Dashboard" />
+            <ProductShot src="/product/console-overview.webp" alt="The counsellor console dashboard — active clients, caseload by package, delivery mode and the upcoming sessions" chrome="app.setmycareer.com/overview" label="Dashboard" />
           </div>
           <div className="mt-8 grid gap-8 md:grid-cols-2">
             <ProductShot src="/product/console-clients.webp" alt="The counsellor caseload — every client, their packages and last session, searchable" chrome="app.setmycareer.com/clients" label="Caseload" imgClassName="object-top" />
